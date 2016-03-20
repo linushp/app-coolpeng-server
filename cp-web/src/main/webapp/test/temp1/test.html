@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="angular.js"></script>
+    <script src="test.js"></script>
+</head>
+<body ng-app="testApp" ng-controller="testController">
+    <div class="testApp">
+        <div class="row" ng-repeat="row in data" >
+            <div class="cell" ng-repeat="x in row" style="height: 122px;width: 122px;float: left;text-align: center;line-height: 120px;">{{x}}</div>
+        </div>
+    </div>
+
+    <img src="2222.png" style="float: left;margin-left: 150px;width: 328px;"/>
+
+    <div style="clear:both;"></div>
+    <div class="path">
+        {{path.join("")}}
+    </div>
+    <div class="buttons">
+        <div style="height:30px;"></div>
+
+        <button ng-click="R1()">R1</button>
+        <button ng-click="R2()">R2</button>
+        <button ng-click="R3()">R3</button>
+        <button ng-click="R4()">R4</button>
+
+        <div style="height:30px;"></div>
+
+        <button ng-click="r1()">r1</button>
+        <button ng-click="r2()">r2</button>
+        <button ng-click="r3()">r3</button>
+        <button ng-click="r4()">r4</button>
+    </div>
+
+
+    <div class="buttons">
+
+        <div style="height:30px;"></div>    
+        <input ng-model="str" type="text"> 
+        <button style="width:100px;" ng-click="parseStr()">解析操作流</button>
+    </div>
+
+<style>
+
+    button{
+        width: 60px;
+    }
+
+    .path{
+        line-height: 50px;
+        padding-left: 20px;
+    }
+    .buttons{
+        padding-left: 20px;
+    }
+
+     .cell{
+         transition:width 2s;
+        -moz-transition:width 2s; /* Firefox 4 */
+        -webkit-transition:width 2s; /* Safari and Chrome */
+        -o-transition:width 2s; /* Opera */
+        font-size: 30px;
+     }
+     
+    .testApp{
+        float: left;
+        background: url("./11111.png") no-repeat ;
+        width: 378px;
+        height: 378px;
+    }
+
+</style>
+</body>
+</html>

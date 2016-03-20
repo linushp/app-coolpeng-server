@@ -1,0 +1,150 @@
+<div class="admin-module">
+
+    <div class="admin-module-group">
+        <h2 style="cursor: pointer" ng-click="listModule()">模块组列表</h2>
+        <div>
+            <span class="layout-submit" ng-click="addNewGroup()">新建Group</span>
+            <div style="height: 3px"></div>
+            <span class="layout-submit" ng-click="addNewModule()">新建Module</span>
+        </div>
+        <ul>
+            <li ng-repeat="g in groupList">
+                <div>
+                    <span class="group-name  group-name{{g.status}}" ng-click="modifyGroup(g)">{{g.id}}--{{g.groupName}}</span>
+                </div>
+                <ul class="sub-ul">
+                    <li ng-repeat="m in g.moduleList" ng-click="modifyModule(m)" class="module-list-item">
+                        <span class="">{{m.id}}</span>
+                        <span class="group-name group-name{{m.status}}">{{m.moduleName}}</span>
+                        <span style="color: blue">[{{m.moduleType|moduleType}}]</span>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <div class="admin-module-list" ng-show="showType===1||showType===11">
+        <h2 ng-show="showType===1">修改Group</h2>
+        <h2 ng-show="showType===11">新建Group</h2>
+        <div style="width: 500px;">
+            <table class="layout-table" width="100%">
+                <tr>
+                    <th>Group标题</th>
+                    <td>
+                        <input type="text" ng-model="moduleGroupData.groupName" class="input">
+                    </td>
+                </tr>
+                <tr>
+                    <th>Group描述</th>
+                    <td>
+                        <input type="text" ng-model="moduleGroupData.groupDesc" class="input">
+                    </td>
+                </tr>
+                <tr>
+                    <th>Group Status</th>
+                    <td>
+                        <input type="text" ng-model="moduleGroupData.status" class="input">
+                        正常（0） 已删除（1）
+                    </td>
+                </tr>
+                <tr>
+                    <th>&nbsp;</th>
+                    <td>
+                        <span class="layout-submit" ng-click="doModifyGroup()">确认修改</span>
+                    </td>
+                </tr>
+
+            </table>
+        </div>
+    </div>
+
+
+    <div class="admin-module-list" ng-show="showType===2||showType===22">
+        <h2  ng-show="showType===2">修改Module</h2>
+        <h2  ng-show="showType===22">新建Module</h2>
+        <div style="width: 650px;">
+            <table class="layout-table" width="100%">
+                <tr>
+                    <th style="width: 150px;">Module标题</th>
+                    <td>
+                        <input type="text" ng-model="modifyModuleData.moduleName" class="input">
+                    </td>
+                </tr>
+                <tr>
+                    <th>Module描述</th>
+                    <td>
+                        <input type="text" ng-model="modifyModuleData.moduleDesc" class="input">
+                    </td>
+                </tr>
+                <tr>
+                    <th>moduleIcon</th>
+                    <td>
+                        <input type="text" ng-model="modifyModuleData.moduleIcon" class="input">
+                    </td>
+                </tr>
+                <tr>
+                    <th>moduleType</th>
+                    <td>
+                        <input type="text" ng-model="modifyModuleData.moduleType" class="input">
+                        {{modifyModuleData.moduleType|moduleType}}
+                    </td>
+                </tr>
+                <tr>
+                    <th>forumGroupId</th>
+                    <td>
+                        <input type="text" ng-model="modifyModuleData.forumGroupId" class="input">
+                    </td>
+                </tr>
+                <tr>
+                    <th>postCount</th>
+                    <td>
+                        <input type="text" ng-model="modifyModuleData.postCount" class="input">
+                    </td>
+                </tr>
+                <tr>
+                    <th>Module Status</th>
+                    <td>
+                        <input type="text" ng-model="modifyModuleData.status" class="input">
+                        正常（0） 已删除（1）
+                    </td>
+                </tr>
+                <tr>
+                    <th>&nbsp;</th>
+                    <td>
+                        <span class="layout-submit" ng-click="doModifyModule()">确认修改</span>
+                    </td>
+                </tr>
+
+            </table>
+        </div>
+    </div>
+
+    <div class="admin-module-list" ng-show="showType===0">
+        <h2>模块列表</h2>
+
+        <table class="common-table">
+            <tr>
+                <th><span style="width: 60px;display: block">模块ID</span></th>
+                <th>模块名字</th>
+                <th>模块描述</th>
+                <th>模块图标</th>
+                <th><span style="width: 60px;display: block">模块类型</span></th>
+                <th><span style="width: 70px;display: block">所属模块组</span></th>
+                <th><span style="width: 60px;display: block">帖子数量</span></th>
+                <th><span style="width: 60px;display: block">操作</span></th>
+            </tr>
+            <tr ng-repeat="m in moduleList">
+                <td>{{m.id}}</td>
+                <td>{{m.moduleName}}</td>
+                <td>{{m.moduleDesc}}</td>
+                <td>{{m.moduleIcon}}</td>
+                <td>{{m.moduleType}}</td>
+                <td>{{m.forumGroupId}}</td>
+                <td>{{m.postCount}}</td>
+                <td><span class="layout-submit">操作</span></td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="clear20"></div>
+</div>

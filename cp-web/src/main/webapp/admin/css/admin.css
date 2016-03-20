@@ -1,0 +1,114 @@
+.admin-header{
+    line-height: 50px;
+    height: 50px;
+    background-color: #0066cc;
+    font-size: 18px;
+    text-indent: 20px;
+    color: #FFF;
+}
+
+ul,li{
+    margin: 0px;
+    padding: 0;
+}
+
+
+.common-table{
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+}
+.common-table tr{
+    height: 40px;
+    line-height: 40px;
+}
+
+.common-table tr th{
+    background: #F0F0F0;
+}
+
+.common-table tr td,.common-table tr th{
+    border: 1px solid #dddddd;
+    padding: 0 5px;
+}
+
+.common-table tr td .input{
+    width: 90%;
+    margin: 0 auto;
+    height: 25px;
+    display: block;
+}
+
+
+
+.admin-left{
+    width: 150px;
+    background-color: #111;
+    float: left;
+    min-height: 500px;
+}
+
+.admin-left-menu li{
+    padding: 8px 0;
+    color: #FFFFFF;
+    text-indent: 30px;
+}
+
+
+.admin-left-menu li a{
+    display: block;
+    color: #FFFFFF;
+    line-height: 30px;
+}
+
+.admin-left-menu li a:hover{
+    color: #0066cc;
+    background-color: #2D93CA;
+}
+
+
+.admin-content{
+    margin-left: 170px;
+}
+
+
+.admin-module-group {
+    float: left;
+    width: 170px
+}
+
+
+.admin-module-group .sub-ul{
+    margin-left: 30px;
+}
+
+.admin-module-list{
+    margin-left: 171px;
+}
+.admin-module-list .layout-submit{
+    /*width: 60px;*/
+    text-indent: 0px;
+    line-height: 25px;
+    height: 25px;
+}
+
+.admin-module-group{
+    line-height: 30px;
+}
+.admin-module-group .group-name{
+    cursor: pointer;
+}
+.admin-module-group .group-name1{
+    text-decoration: line-through;
+}
+.admin-module-group .module-list-item{
+    cursor: pointer;
+}
+
+.admin-module .layout-table{
+    line-height: 40px;
+}
+
+.admin-module .layout-table .input{
+    height: 28px;
+}

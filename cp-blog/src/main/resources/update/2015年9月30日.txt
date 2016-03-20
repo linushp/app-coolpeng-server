@@ -1,0 +1,11 @@
+DROP TABLE IF EXISTS `t_sys_setting`;
+CREATE TABLE `t_sys_setting` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(256) DEFAULT NULL,
+  `content` longtext,
+  `create_time` varchar(256) DEFAULT NULL,
+  `update_time` varchar(256) DEFAULT NULL,
+  `create_user_id` varchar(256) DEFAULT NULL,
+  `update_user_id` varchar(256) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;

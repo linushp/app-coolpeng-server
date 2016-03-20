@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<taglib xmlns="http://java.sun.com/xml/ns/javaee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-jsptaglibrary_2_1.xsd"
+        version="2.1">
+
+    <tlib-version>1.0</tlib-version>
+    <short-name>blog</short-name>
+
+    <tag>
+        <name>blogList</name>
+        <tag-class>com.coolpeng.blog.widget.BlogListWidget</tag-class>
+        <body-content>JSP</body-content>
+        <attribute>
+            <name>pageResult</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+
+    <tag>
+        <name>moduleList</name>
+        <tag-class>com.coolpeng.blog.widget.ModuleListWidget</tag-class>
+        <body-content>JSP</body-content>
+        <attribute>
+            <name>moduleList</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+
+    <tag>
+        <name>lastReply</name>
+        <tag-class>com.coolpeng.blog.widget.LastReplyWidget</tag-class>
+        <body-content>JSP</body-content>
+        <attribute>
+            <name>replyList</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>breadWidget</name>
+        <tag-class>com.coolpeng.blog.widget.BreadWidget</tag-class>
+        <body-content>JSP</body-content>
+        <attribute>
+            <name>pageMainObject</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+
+
+</taglib>

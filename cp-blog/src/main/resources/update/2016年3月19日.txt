@@ -1,0 +1,6 @@
+
+ALTER TABLE `app_coolpeng`.`t_user_entity`
+ADD COLUMN `last_login_token` VARCHAR(300) NULL COMMENT '' AFTER `mail`,
+ADD COLUMN `last_login_dev_platform` VARCHAR(100) NULL COMMENT '' AFTER `last_login_token`,
+ADD COLUMN `last_login_dev_uid` VARCHAR(100) NULL COMMENT '' AFTER `last_login_dev_platform`,
+ADD COLUMN `last_login_time` VARCHAR(100) NULL COMMENT '' AFTER `last_login_dev_uid`;

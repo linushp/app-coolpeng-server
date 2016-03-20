@@ -1,0 +1,112 @@
+.cpw-msg *{
+    padding: 0px;
+    margin: 0px;
+    line-height: 21px;
+    word-wrap: break-word;
+    font-family: 'microsoft yahei';
+    font-size: 14px;
+}
+.cpw-msg {
+    background-color: transparent !important;
+    background-image: none !important;
+    border: 0 none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border-width: 0px;
+    height: auto;
+}
+
+.cpw-msg-clear {
+    clear: both;
+}
+
+.cpw-msg-info a {
+    display: block;
+    color: #333;
+    width: 267px;
+    overflow: hidden;
+    font-size: 14px;
+    margin-top: 5px;
+    text-decoration: none;
+}
+
+.cpw-msg-info a:hover {
+    color: #ff8838;
+    text-decoration: none;
+}
+
+.cpw-msg-info p {
+    position: relative;
+    color: #666;
+    background: #fafafa;
+    border: 1px solid #e6e6e6;
+    -webkit-border-radius: 2px 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px 2px;
+    -webkit-box-shadow: 0 4px 3px -3px rgba(0,0,0,0.1);
+    -moz-box-shadow: 0 4px 3px -3px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 3px -3px rgba(0,0,0,0.1);
+    padding: 7px 10px;
+    font-size: 13px;
+    width: 240px;
+    height: 61px;
+    margin-top: 12px;
+}
+.cpw-msg-item {
+    margin-top: 20px;
+}
+
+.cpw-msg-item:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}
+
+.cpw-msg-info p i {
+    position: absolute;
+    left: 20px;
+    top: -7px;
+    border-top: 1px solid #e6e6e6;
+    border-right: 1px solid #e6e6e6;
+    background: #fafafa;
+    display: block;
+    width: 12px;
+    height: 12px;
+    -webkit-transform: rotate(-45deg);
+    -moz-transform: rotate(-45deg);
+    -o-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+}
+.cpw-msg-pic {
+    float: left;
+    width: 48px;
+    height: 48px;
+    text-align: center;
+}
+.cpw-msg-pic img {
+    border: 0px;
+    border-radius: 50%;
+}
+
+.cpw-msg-info {
+    float: right;
+    width: 270px;
+    overflow: hidden;
+}
+
+.cpw-msg-item:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}
+
+.cpw-msg-info span {
+    display: block;
+    color: #ff8838;
+    font-size: 14px;
+}

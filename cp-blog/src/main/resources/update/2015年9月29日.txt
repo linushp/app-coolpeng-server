@@ -1,0 +1,20 @@
+
+DROP TABLE IF EXISTS `t_forum_group`;
+CREATE TABLE `t_forum_group` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `group_name` varchar(256) DEFAULT NULL,
+  `group_desc` varchar(256) DEFAULT NULL,
+  `create_time` varchar(256) DEFAULT NULL,
+  `update_time` varchar(256) DEFAULT NULL,
+  `create_user_id` varchar(256) DEFAULT NULL,
+  `update_user_id` varchar(256) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+
+ALTER TABLE  `t_forum_module` ADD  `forum_group_id` VARCHAR( 100 ) NOT NULL AFTER  `hide_header` ;
+ALTER TABLE  `t_forum_module` ADD  `module_type` INT( 11 ) NOT NULL AFTER  `forum_group_id` ;
+
+
+
+

@@ -1,0 +1,1 @@
+ALTER TABLE  `t_forum_module` ADD  `module_icon` VARCHAR( 500 ) NULL AFTER  `module_desc` ;
