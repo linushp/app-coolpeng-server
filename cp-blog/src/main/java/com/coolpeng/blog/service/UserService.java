@@ -48,6 +48,13 @@ public class UserService {
         return TMSResponse.error(3, "未知异常");
     }
 
+
+    /**
+     * 根据用户的tokenId获取
+     * @param tokenId
+     * @return
+     * @throws FieldNotFoundException
+     */
     public UserEntity getUserEntityByTokenId(String tokenId) throws FieldNotFoundException {
 
         if (tokenId == null) {
@@ -70,6 +77,15 @@ public class UserService {
         return null;
     }
 
+
+    /**
+     * 根据用户的tokenId获取
+     * @param tokenId
+     * @param devicePlatform
+     * @param deviceUuid
+     * @return
+     * @throws FieldNotFoundException
+     */
     public UserEntity getUserEntityByTokenId(String tokenId, String devicePlatform, String deviceUuid) throws FieldNotFoundException {
 
         if (devicePlatform == null || deviceUuid == null || tokenId == null) {
@@ -93,6 +109,12 @@ public class UserService {
     }
 
 
+    /**
+     * 根据用户名获取用户实体
+     * @param username
+     * @return
+     * @throws FieldNotFoundException
+     */
     public UserEntity getUserEntity(String username) throws FieldNotFoundException {
         Map<String, Object> params = new HashMap<>();
         params.put("username", username);
@@ -100,6 +122,11 @@ public class UserService {
     }
 
 
+    /**
+     * 保存或者需改用户信息
+     * @param user
+     * @throws UpdateErrorException
+     */
     public void saveAndFlush(UserEntity user) throws UpdateErrorException {
         UserEntity.DAO.insertOrUpdate(user);
     }

@@ -33,13 +33,15 @@ public class ForumModuleService {
             MODULE_MAP.put(m.getId(), m);
         }
 
-        for (ForumGroup g : GROUP_LIST)
+        for (ForumGroup g : GROUP_LIST) {
             GROUP_MAP.put(g.getId(), g);
+        }
     }
 
     private void makeSureNotNull() {
-        if ((MODULE_LIST == null) || (GROUP_LIST == null))
+        if ((MODULE_LIST == null) || (GROUP_LIST == null)) {
             updateCache();
+        }
     }
 
     public List<ForumModule> getForumModuleList(boolean hasGroup) {
@@ -62,6 +64,7 @@ public class ForumModuleService {
     }
 
     public List<ForumGroup> getForumGroupList(boolean hasModuleList) {
+
         makeSureNotNull();
 
         List<ForumModule> allModuleList = getForumModuleList(false);
