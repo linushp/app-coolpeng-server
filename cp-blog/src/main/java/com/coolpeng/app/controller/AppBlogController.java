@@ -32,6 +32,17 @@ public class AppBlogController {
     private ForumService forumService;
 
 
+    /**
+     * 获取所有话题列表
+     * @return
+     * @throws FieldNotFoundException
+     * @throws UpdateErrorException
+     * @throws ParameterErrorException
+     * @throws InvocationTargetException
+     * @throws NoSuchMethodException
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     */
     @ResponseBody
     @RequestMapping({"/getAllModuleList"})
     public TMSResponse getAllModuleList()
@@ -41,7 +52,15 @@ public class AppBlogController {
     }
 
 
-
+    /**
+     * 获取所有文章列表
+     * @param moduleId
+     * @param pageSize
+     * @param pageNumber
+     * @return
+     * @throws ClassNotFoundException
+     * @throws FieldNotFoundException
+     */
     @ResponseBody
     @RequestMapping({"/getPostList"})
     public TMSResponse getPostList(String moduleId,int pageSize,int pageNumber) throws ClassNotFoundException, FieldNotFoundException {
@@ -50,6 +69,18 @@ public class AppBlogController {
     }
 
 
+
+    /**
+     * 获取一篇文章及其回复
+     * @param postId
+     * @param pageSize
+     * @param pageNumber
+     * @return
+     * @throws ClassNotFoundException
+     * @throws FieldNotFoundException
+     * @throws ParameterErrorException
+     * @throws UpdateErrorException
+     */
     @ResponseBody
     @RequestMapping({"/getPostWithReply"})
     public TMSResponse getPostWithReply(String postId,int pageSize,int pageNumber) throws ClassNotFoundException, FieldNotFoundException, ParameterErrorException, UpdateErrorException {

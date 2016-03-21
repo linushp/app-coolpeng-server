@@ -17,32 +17,38 @@
     </bean>
 
 
-    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
-        <!-- åºæ¬å±æ§ urlãuserãpassword -->
-        <property name="url" value="${connection.url}" />
-        <property name="username" value="${connection.username}" />
+    <!--<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">-->
+        <!--<property name="url" value="${connection.url}" />-->
+        <!--<property name="username" value="${connection.username}" />-->
+        <!--<property name="password" value="${connection.password}" />-->
+        <!--&lt;!&ndash;<property name="driverClassName" value="com.p6spy.engine.spy.P6SpyDriver" />&ndash;&gt;-->
+
+        <!--<property name="initialSize" value="${druid.initialSize}" />-->
+        <!--<property name="minIdle" value="${druid.minIdle}" />-->
+        <!--<property name="maxActive" value="${druid.maxActive}" />-->
+
+        <!--<property name="maxWait" value="${druid.maxWait}" />-->
+        <!--<property name="timeBetweenEvictionRunsMillis" value="${druid.timeBetweenEvictionRunsMillis}" />-->
+
+        <!--<property name="minEvictableIdleTimeMillis" value="${druid.minEvictableIdleTimeMillis}" />-->
+
+        <!--<property name="validationQuery" value="${druid.validationQuery}" />-->
+        <!--<property name="testWhileIdle" value="${druid.testWhileIdle}" />-->
+        <!--<property name="testOnBorrow" value="${druid.testOnBorrow}" />-->
+        <!--<property name="testOnReturn" value="${druid.testOnReturn}" />-->
+
+        <!--<property name="poolPreparedStatements" value="${druid.poolPreparedStatements}" />-->
+        <!--<property name="maxPoolPreparedStatementPerConnectionSize"-->
+                  <!--value="${druid.maxPoolPreparedStatementPerConnectionSize}" />-->
+
+        <!--<property name="filters" value="${druid.filters}" />-->
+    <!--</bean>-->
+
+
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+        <property name="jdbcUrl" value="${connection.url}" />
+        <property name="user" value="${connection.username}" />
         <property name="password" value="${connection.password}" />
-        <!--<property name="driverClassName" value="com.p6spy.engine.spy.P6SpyDriver" />-->
-
-        <property name="initialSize" value="${druid.initialSize}" />
-        <property name="minIdle" value="${druid.minIdle}" />
-        <property name="maxActive" value="${druid.maxActive}" />
-
-        <property name="maxWait" value="${druid.maxWait}" />
-        <property name="timeBetweenEvictionRunsMillis" value="${druid.timeBetweenEvictionRunsMillis}" />
-
-        <property name="minEvictableIdleTimeMillis" value="${druid.minEvictableIdleTimeMillis}" />
-
-        <property name="validationQuery" value="${druid.validationQuery}" />
-        <property name="testWhileIdle" value="${druid.testWhileIdle}" />
-        <property name="testOnBorrow" value="${druid.testOnBorrow}" />
-        <property name="testOnReturn" value="${druid.testOnReturn}" />
-
-        <property name="poolPreparedStatements" value="${druid.poolPreparedStatements}" />
-        <property name="maxPoolPreparedStatementPerConnectionSize"
-                  value="${druid.maxPoolPreparedStatementPerConnectionSize}" />
-
-        <property name="filters" value="${druid.filters}" />
     </bean>
 
 

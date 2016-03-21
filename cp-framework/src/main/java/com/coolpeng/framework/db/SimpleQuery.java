@@ -22,332 +22,302 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class SimpleQuery<T>
-{
-	private static Logger logger = LoggerFactory.getLogger(SimpleQuery.class);
+public class SimpleQuery<T> {
+    private static Logger logger = LoggerFactory.getLogger(SimpleQuery.class);
 
-	private NamedParameterJdbcTemplate jdbcTemplate = SpringBeanFactory.getNamedParameterJdbcTemplate();
-	private TemplateSQL sqlTemplate;
-	private Class<T> clazz;
+    private NamedParameterJdbcTemplate jdbcTemplate = SpringBeanFactory.getNamedParameterJdbcTemplate();
+    private TemplateSQL sqlTemplate;
+    private Class<T> clazz;
 
-	public SimpleQuery(Class<T> clazz)
-	{
-		this.sqlTemplate = new TemplateSQL(clazz);
-		this.clazz = clazz;
-	}
+    public SimpleQuery(Class<T> clazz) {
+        this.sqlTemplate = new TemplateSQL(clazz);
+        this.clazz = clazz;
+    }
 
-	public List<T> findAll()
-	{
-		String sql = this.sqlTemplate.getSelectSQL();
-		return queryForList(sql, null);
-	}
+    public List<T> findAll() {
+        String sql = this.sqlTemplate.getSelectSQL();
+        return queryForList(sql, null);
+    }
 
-	public T queryForObject(String sql, Map<String, Object> params)
-	{
-		MapSqlParameterSource sps = new MapSqlParameterSource(params);
-		try {
-			return (T)this.jdbcTemplate.queryForObject(sql, sps, new BeanPropertyRowMapper(this.clazz));
-		}
-		catch (EmptyResultDataAccessException e1){
-			logger.info("no result , params is {}", params);
-		}
-		catch (Exception e) {
-			logger.error("no result , params is {}", params,e);
-		}
-		return null;
-	}
+    public T queryForObject(String sql, Map<String, Object> params) {
+        MapSqlParameterSource sps = new MapSqlParameterSource(params);
+        try {
+            return (T) this.jdbcTemplate.queryForObject(sql, sps, new BeanPropertyRowMapper(this.clazz));
+        } catch (EmptyResultDataAccessException e1) {
+            logger.info("no result , params is {}", params);
+        } catch (Exception e) {
+            logger.error("no result , params is {}", params, e);
+        }
+        return null;
+    }
 
-	public int count(Map<String, Object> params)
-			throws FieldNotFoundException
-	{
-		MapSqlParameterSource sps = new MapSqlParameterSource(params);
-		String sql = this.sqlTemplate.getCountSQL(params.keySet());
-		Integer count = (Integer)this.jdbcTemplate.queryForObject(sql, sps, Integer.class);
-		return count.intValue();
-	}
+    public int count(Map<String, Object> params)
+            throws FieldNotFoundException {
+        MapSqlParameterSource sps = new MapSqlParameterSource(params);
+        String sql = this.sqlTemplate.getCountSQL(params.keySet());
+        Integer count = (Integer) this.jdbcTemplate.queryForObject(sql, sps, Integer.class);
+        return count.intValue();
+    }
 
-	public T queryForObject(Map<String, Object> params)
-			throws FieldNotFoundException
-	{
-		String sql = null;
-		if (params == null)
-			sql = this.sqlTemplate.getSelectSQL();
-		else {
-			sql = this.sqlTemplate.getSelectSQL(params.keySet());
-		}
+    public T queryForObject(Map<String, Object> params)
+            throws FieldNotFoundException {
+        String sql = null;
+        if (params == null)
+            sql = this.sqlTemplate.getSelectSQL();
+        else {
+            sql = this.sqlTemplate.getSelectSQL(params.keySet());
+        }
 
-		return queryForObject(sql, params);
-	}
+        return queryForObject(sql, params);
+    }
 
-	public T queryForObject(String id)
-			throws FieldNotFoundException, ParameterErrorException
-	{
-		if ((id == null) || (id.isEmpty())) {
-			throw new ParameterErrorException("id 不能为空");
-		}
-		Map params = new HashMap();
-		params.put("id", id);
-		return (T)queryForObject(params);
-	}
+    public T queryForObject(String id)
+            throws FieldNotFoundException, ParameterErrorException {
+        if ((id == null) || (id.isEmpty())) {
+            throw new ParameterErrorException("id 不能为空");
+        }
+        Map params = new HashMap();
+        params.put("id", id);
+        return (T) queryForObject(params);
+    }
 
-	public T queryForObject(String id, String[] leftJoinFieldNameArray)
-			throws ClassNotFoundException, FieldNotFoundException
-	{
-		Map params = new HashMap();
-		params.put("id", id);
+    public T queryForObject(String id, String[] leftJoinFieldNameArray)
+            throws ClassNotFoundException, FieldNotFoundException {
+        Map params = new HashMap();
+        params.put("id", id);
 
-		QueryCondition qc = new QueryCondition();
-		qc.setParams(params);
+        QueryCondition qc = new QueryCondition();
+        qc.setParams(params);
 
-		List<T> result = queryForList(qc, leftJoinFieldNameArray);
-		if (CollectionUtil.isEmpty(result)) {
-			return null;
-		}
-		return result.get(0);
-	}
+        List<T> result = queryForList(qc, leftJoinFieldNameArray);
+        if (CollectionUtil.isEmpty(result)) {
+            return null;
+        }
+        return result.get(0);
+    }
 
-	public List<T> queryForList(String[] leftJoinFieldNameArray)
-			throws FieldNotFoundException, ClassNotFoundException
-	{
-		return queryForList(null, leftJoinFieldNameArray);
-	}
+    public List<T> queryForList(String[] leftJoinFieldNameArray)
+            throws FieldNotFoundException, ClassNotFoundException {
+        return queryForList(null, leftJoinFieldNameArray);
+    }
 
-	public List<T> queryForList(QueryCondition qc, String[] leftJoinFieldNameArray)
-			throws FieldNotFoundException, ClassNotFoundException
-	{
-		Set where = null;
-		MapSqlParameterSource sps = null;
-		if ((qc != null) && (qc.getParams() != null)) {
-			where = qc.getParams().keySet();
-			sps = new MapSqlParameterSource(qc.getParams());
-		}
+    public List<T> queryForList(QueryCondition qc, String[] leftJoinFieldNameArray)
+            throws FieldNotFoundException, ClassNotFoundException {
+        Set where = null;
+        MapSqlParameterSource sps = null;
+        if ((qc != null) && (qc.getParams() != null)) {
+            where = qc.getParams().keySet();
+            sps = new MapSqlParameterSource(qc.getParams());
+        }
 
-		Tuple t = this.sqlTemplate.getLeftJoinSelectSQL(where, qc, -1, -1, leftJoinFieldNameArray);
-		String sql = (String)t.first();
+        Tuple t = this.sqlTemplate.getLeftJoinSelectSQL(where, qc, -1, -1, leftJoinFieldNameArray);
+        String sql = (String) t.first();
 
-		Map fieldAliasMap = (Map)t.third();
+        Map fieldAliasMap = (Map) t.third();
 
-		List result = null;
+        List result = null;
 
-		if (sps != null)
-			result = this.jdbcTemplate.query(sql, sps, new BeanRowMapper(this.clazz, fieldAliasMap));
-		else {
-			result = this.jdbcTemplate.query(sql, new BeanRowMapper(this.clazz, fieldAliasMap));
-		}
+        if (sps != null)
+            result = this.jdbcTemplate.query(sql, sps, new BeanRowMapper(this.clazz, fieldAliasMap));
+        else {
+            result = this.jdbcTemplate.query(sql, new BeanRowMapper(this.clazz, fieldAliasMap));
+        }
 
-		logger.debug(sql);
-		logger.debug(fieldAliasMap.toString());
-		return result;
-	}
+        logger.debug(sql);
+        logger.debug(fieldAliasMap.toString());
+        return result;
+    }
 
-	public List<T> queryForList(Map<String, Object> params)
-			throws FieldNotFoundException
-	{
-		String sql = null;
-		if (CollectionUtil.isEmpty(params))
-			sql = this.sqlTemplate.getSelectSQL();
-		else {
-			sql = this.sqlTemplate.getSelectSQL(params.keySet());
-		}
+    public List<T> queryForList(Map<String, Object> params)
+            throws FieldNotFoundException {
+        String sql = null;
+        if (CollectionUtil.isEmpty(params))
+            sql = this.sqlTemplate.getSelectSQL();
+        else {
+            sql = this.sqlTemplate.getSelectSQL(params.keySet());
+        }
 
-		return queryForList(sql, params);
-	}
+        return queryForList(sql, params);
+    }
 
-	public List<T> queryForList(String sql, Map<String, Object> params)
-	{
-		try
-		{
-			if ((params != null) && (!params.isEmpty())) {
-				MapSqlParameterSource sps = new MapSqlParameterSource(params);
-				return this.jdbcTemplate.query(sql, sps, new BeanPropertyRowMapper(this.clazz));
-			}
-			return this.jdbcTemplate.query(sql, new BeanPropertyRowMapper(this.clazz));
-		}
-		catch (EmptyResultDataAccessException e)
-		{
-			logger.info("no result , params is {}", params);
-		}
-		return null;
-	}
+    public List<T> queryForList(String sql, Map<String, Object> params) {
+        try {
+            if ((params != null) && (!params.isEmpty())) {
+                MapSqlParameterSource sps = new MapSqlParameterSource(params);
+                return this.jdbcTemplate.query(sql, sps, new BeanPropertyRowMapper(this.clazz));
+            }
+            return this.jdbcTemplate.query(sql, new BeanPropertyRowMapper(this.clazz));
+        } catch (EmptyResultDataAccessException e) {
+            logger.info("no result , params is {}", params);
+        }
+        return null;
+    }
 
-	public List<T> queryByNamingSQL(String namingSqlID, Map<String, Object> params)
-	{
-		String sql = NamingSQL.getNamingSqlById(namingSqlID);
+    public List<T> queryByNamingSQL(String namingSqlID, Map<String, Object> params) {
+        String sql = NamingSQL.getNamingSqlById(namingSqlID);
 
-		if (sql == null) {
-			logger.info("error to get naming sql , id = {} ", namingSqlID);
-			return null;
-		}
+        if (sql == null) {
+            logger.info("error to get naming sql , id = {} ", namingSqlID);
+            return null;
+        }
 
-		return queryForList(sql, params);
-	}
+        return queryForList(sql, params);
+    }
 
-	public PageResult<T> queryForPage(int pageNumber, int pageSize)
-			throws ClassNotFoundException, FieldNotFoundException
-	{
-		QueryCondition qc = new QueryCondition();
-		return queryForPage(qc, pageNumber, pageSize, new String[0]);
-	}
+    public PageResult<T> queryForPage(int pageNumber, int pageSize)
+            throws ClassNotFoundException, FieldNotFoundException {
+        QueryCondition qc = new QueryCondition();
+        return queryForPage(qc, pageNumber, pageSize, new String[0]);
+    }
 
-	public PageResult<T> queryForPage(QueryCondition qc, int pageNumber, int pageSize, String[] leftJoinFieldNameArray)
-			throws ClassNotFoundException, FieldNotFoundException
-	{
-		Set where = null;
-		MapSqlParameterSource sps = null;
-		if ((qc != null) && (qc.getParams() != null)) {
-			where = qc.getParams().keySet();
-			sps = new MapSqlParameterSource(qc.getParams());
-		}
+    public PageResult<T> queryForPage(QueryCondition qc, int pageNumber, int pageSize, String[] leftJoinFieldNameArray)
+            throws ClassNotFoundException, FieldNotFoundException {
+        Set where = null;
+        MapSqlParameterSource sps = null;
+        if ((qc != null) && (qc.getParams() != null)) {
+            where = qc.getParams().keySet();
+            sps = new MapSqlParameterSource(qc.getParams());
+        }
 
-		Tuple t = this.sqlTemplate.getLeftJoinSelectSQL(where, qc, pageNumber, pageSize, leftJoinFieldNameArray);
+        Tuple t = this.sqlTemplate.getLeftJoinSelectSQL(where, qc, pageNumber, pageSize, leftJoinFieldNameArray);
 
-		String countSql = (String)t.forth();
-		Integer totalCount = (Integer)this.jdbcTemplate.queryForObject(countSql, sps, Integer.class);
+        String countSql = (String) t.forth();
+        Integer totalCount = (Integer) this.jdbcTemplate.queryForObject(countSql, sps, Integer.class);
 
-		String sql = (String)t.first();
+        String sql = (String) t.first();
 
-		Map fieldAliasMap = (Map)t.third();
+        Map fieldAliasMap = (Map) t.third();
 
-		List pageData = null;
+        List pageData = null;
 
-		if (sps != null)
-			pageData = this.jdbcTemplate.query(sql, sps, new BeanRowMapper(this.clazz, fieldAliasMap));
-		else {
-			pageData = this.jdbcTemplate.query(sql, new BeanRowMapper(this.clazz, fieldAliasMap));
-		}
+        if (sps != null)
+            pageData = this.jdbcTemplate.query(sql, sps, new BeanRowMapper(this.clazz, fieldAliasMap));
+        else {
+            pageData = this.jdbcTemplate.query(sql, new BeanRowMapper(this.clazz, fieldAliasMap));
+        }
 
-		logger.debug(sql);
-		logger.debug(fieldAliasMap.toString());
+        logger.debug(sql);
+        logger.debug(fieldAliasMap.toString());
 
-		return new PageResult(totalCount.intValue(), pageSize, pageNumber, pageData);
-	}
+        return new PageResult(totalCount.intValue(), pageSize, pageNumber, pageData);
+    }
 
-	public int delete(String id)
-	{
-		String sql = this.sqlTemplate.getDeleteSQL();
-		MapSqlParameterSource sps = new MapSqlParameterSource("id", id);
-		return this.jdbcTemplate.update(sql, sps);
-	}
+    public int delete(String id) {
+        String sql = this.sqlTemplate.getDeleteSQL();
+        MapSqlParameterSource sps = new MapSqlParameterSource("id", id);
+        return this.jdbcTemplate.update(sql, sps);
+    }
 
-	public int delete(Map<String, Object> params)
-			throws FieldNotFoundException
-	{
-		Set where = params.keySet();
-		String[] whereArray = this.sqlTemplate.toStringArray(where);
-		String sql = this.sqlTemplate.getDeleteSQL(whereArray);
-		MapSqlParameterSource sps = new MapSqlParameterSource(params);
-		return this.jdbcTemplate.update(sql, sps);
-	}
+    public int delete(Map<String, Object> params)
+            throws FieldNotFoundException {
+        Set where = params.keySet();
+        String[] whereArray = this.sqlTemplate.toStringArray(where);
+        String sql = this.sqlTemplate.getDeleteSQL(whereArray);
+        MapSqlParameterSource sps = new MapSqlParameterSource(params);
+        return this.jdbcTemplate.update(sql, sps);
+    }
 
-	public int insert(T entity)
-	{
-		if ((entity instanceof BaseEntity)) {
-			BaseEntity entity1 = (BaseEntity)entity;
-			entity1.setId(null);
-		}
+    public int insert(T entity) {
+        if ((entity instanceof BaseEntity)) {
+            BaseEntity entity1 = (BaseEntity) entity;
+            entity1.setId(null);
+        }
 
-		String sql = this.sqlTemplate.getInsertSQL();
-		SqlParameterSource sps = new BeanPropertySqlParameterSource(entity);
-		KeyHolder generatedKeyHolder = new GeneratedKeyHolder();
-		int insertResult = this.jdbcTemplate.update(sql, sps, generatedKeyHolder);
+        String sql = this.sqlTemplate.getInsertSQL();
+        SqlParameterSource sps = new BeanPropertySqlParameterSource(entity);
+        KeyHolder generatedKeyHolder = new GeneratedKeyHolder();
+        int insertResult = this.jdbcTemplate.update(sql, sps, generatedKeyHolder);
 
-		Number key = generatedKeyHolder.getKey();
+        Number key = generatedKeyHolder.getKey();
 
-		int id = key.intValue();
-		BaseEntity entity1 = (BaseEntity)entity;
-		entity1.setId("" + id);
+        int id = key.intValue();
+        BaseEntity entity1 = (BaseEntity) entity;
+        entity1.setId("" + id);
 
-		return insertResult;
-	}
+        return insertResult;
+    }
 
-	public int save(T entity) {
-		return insert(entity);
-	}
+    public int save(T entity) {
+        return insert(entity);
+    }
 
-	public int update(T entity)
-			throws UpdateErrorException
-	{
-		if ((entity instanceof BaseEntity)) {
-			BaseEntity entity1 = (BaseEntity)entity;
-			String id = entity1.getId();
-			if ((id == null) || (id.isEmpty())) {
-				throw new UpdateErrorException(entity);
-			}
-		}
+    public int update(T entity)
+            throws UpdateErrorException {
+        if ((entity instanceof BaseEntity)) {
+            BaseEntity entity1 = (BaseEntity) entity;
+            String id = entity1.getId();
+            if ((id == null) || (id.isEmpty())) {
+                throw new UpdateErrorException(entity);
+            }
+        }
 
-		String sql = this.sqlTemplate.getUpdateSQL();
-		SqlParameterSource sps = new BeanPropertySqlParameterSource(entity);
-		return this.jdbcTemplate.update(sql, sps);
-	}
+        String sql = this.sqlTemplate.getUpdateSQL();
+        SqlParameterSource sps = new BeanPropertySqlParameterSource(entity);
+        return this.jdbcTemplate.update(sql, sps);
+    }
 
-	public int updateFields(String entityId, Map<String, Object> fieldsAndValue)
-			throws UpdateErrorException
-	{
-		fieldsAndValue.remove("id");
+    public int updateFields(String entityId, Map<String, Object> fieldsAndValue)
+            throws UpdateErrorException {
+        fieldsAndValue.remove("id");
 
-		if (fieldsAndValue.isEmpty()) {
-			return -1;
-		}
+        if (fieldsAndValue.isEmpty()) {
+            return -1;
+        }
 
-		String sql = this.sqlTemplate.getUpdateSQL(fieldsAndValue.keySet(), null);
+        String sql = this.sqlTemplate.getUpdateSQL(fieldsAndValue.keySet(), null);
 
-		fieldsAndValue.put("id", entityId);
+        fieldsAndValue.put("id", entityId);
 
-		SqlParameterSource sps = new MapSqlParameterSource(fieldsAndValue);
+        SqlParameterSource sps = new MapSqlParameterSource(fieldsAndValue);
 
-		return this.jdbcTemplate.update(sql, sps);
-	}
+        return this.jdbcTemplate.update(sql, sps);
+    }
 
-	public int batchUpdateFields(String whereKey, String whereValue, Map<String, Object> fieldsAndValue)
-			throws UpdateErrorException
-	{
-		fieldsAndValue.remove("id");
+    public int batchUpdateFields(String whereKey, String whereValue, Map<String, Object> fieldsAndValue)
+            throws UpdateErrorException {
+        fieldsAndValue.remove("id");
 
-		if (fieldsAndValue.isEmpty()) {
-			return -1;
-		}
+        if (fieldsAndValue.isEmpty()) {
+            return -1;
+        }
 
-		String sql = this.sqlTemplate.getUpdateSQL(fieldsAndValue.keySet(), whereKey);
+        String sql = this.sqlTemplate.getUpdateSQL(fieldsAndValue.keySet(), whereKey);
 
-		fieldsAndValue.put(whereKey, whereValue);
+        fieldsAndValue.put(whereKey, whereValue);
 
-		SqlParameterSource sps = new MapSqlParameterSource(fieldsAndValue);
+        SqlParameterSource sps = new MapSqlParameterSource(fieldsAndValue);
 
-		return this.jdbcTemplate.update(sql, sps);
-	}
+        return this.jdbcTemplate.update(sql, sps);
+    }
 
-	public int insertOrUpdate(T entity)
-			throws UpdateErrorException
-	{
-		if ((entity instanceof BaseEntity)) {
-			BaseEntity object1 = (BaseEntity)entity;
-			String id = object1.getId();
-			if ((id != null) && (id.length() > 0))
-			{
-				int updateResult = update(entity);
-				return updateResult;
-			}
-			return insert(entity);
-		}
+    public int insertOrUpdate(T entity)
+            throws UpdateErrorException {
+        if ((entity instanceof BaseEntity)) {
+            BaseEntity object1 = (BaseEntity) entity;
+            String id = object1.getId();
+            if ((id != null) && (id.length() > 0)) {
+                int updateResult = update(entity);
+                return updateResult;
+            }
+            return insert(entity);
+        }
 
-		logger.error("entity is not BaseEntity");
+        logger.error("entity is not BaseEntity");
 
-		return -1;
-	}
+        return -1;
+    }
 
-	public int deleteAndInsert(T entity, Map<String, Object> params)
-			throws FieldNotFoundException
-	{
-		delete(params);
-		return insert(entity);
-	}
+    public int deleteAndInsert(T entity, Map<String, Object> params)
+            throws FieldNotFoundException {
+        delete(params);
+        return insert(entity);
+    }
 
-	public int deleteAndInsert(T entity, String entityId)
-			throws FieldNotFoundException
-	{
-		Map params = new HashMap();
-		params.put("id", entityId);
-		delete(params);
-		return insert(entity);
-	}
+    public int deleteAndInsert(T entity, String entityId)
+            throws FieldNotFoundException {
+        Map params = new HashMap();
+        params.put("id", entityId);
+        delete(params);
+        return insert(entity);
+    }
 }

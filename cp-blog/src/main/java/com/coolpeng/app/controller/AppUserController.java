@@ -27,7 +27,15 @@ public class AppUserController extends AppBaseController {
     private UserService userService;
 
 
-
+    /**
+     * 登录
+     * @param username
+     * @param password
+     * @return
+     * @throws TMSMsgException
+     * @throws UpdateErrorException
+     * @throws FieldNotFoundException
+     */
     @ResponseBody
     @RequestMapping("/login")
     public TMSResponse login(String username, String password) throws TMSMsgException, UpdateErrorException, FieldNotFoundException {
@@ -68,7 +76,14 @@ public class AppUserController extends AppBaseController {
     }
 
 
-
+    /**
+     * 退出
+     * @param tokenId
+     * @return
+     * @throws TMSMsgException
+     * @throws UpdateErrorException
+     * @throws FieldNotFoundException
+     */
     @ResponseBody
     @RequestMapping("/logout")
     public TMSResponse logout(String tokenId) throws TMSMsgException, UpdateErrorException, FieldNotFoundException {
@@ -84,6 +99,15 @@ public class AppUserController extends AppBaseController {
     }
 
 
+    /**
+     * 注册
+     * @param username
+     * @param password
+     * @return
+     * @throws TMSMsgException
+     * @throws FieldNotFoundException
+     * @throws UpdateErrorException
+     */
     @ResponseBody
     @RequestMapping("/register")
     public TMSResponse register(String username, String password) throws TMSMsgException, FieldNotFoundException, UpdateErrorException {
@@ -112,6 +136,12 @@ public class AppUserController extends AppBaseController {
     }
 
 
+    /**
+     * 获取用户信息
+     * @return
+     * @throws TMSMsgException
+     * @throws FieldNotFoundException
+     */
     @ResponseBody
     @RequestMapping("/getCurrentUserInfo")
     public TMSResponse<UserEntity> getCurrentUserInfo() throws TMSMsgException, FieldNotFoundException {

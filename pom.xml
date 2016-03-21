@@ -287,18 +287,7 @@
             <artifactId>spring-orm</artifactId>
             <version>${spring.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-struts</artifactId>
-            <!--<version>${spring.version}</version>-->
-            <version>3.2.8.RELEASE</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>struts</groupId>
-                    <artifactId>struts</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+
 
 
         <dependency>
@@ -444,12 +433,12 @@
         </dependency>
 
 
-        <!--尝试使用druid-->
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>druid</artifactId>
-            <version>1.0.7</version>
-        </dependency>
+        <!--&lt;!&ndash;尝试使用druid&ndash;&gt;-->
+        <!--<dependency>-->
+            <!--<groupId>com.alibaba</groupId>-->
+            <!--<artifactId>druid</artifactId>-->
+            <!--<version>1.0.7</version>-->
+        <!--</dependency>-->
         <!--alibaba's json-->
         <dependency>
             <groupId>com.alibaba</groupId>
