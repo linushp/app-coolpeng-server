@@ -1,14 +1,12 @@
 package com.coolpeng.blog.entity;
 
 import com.coolpeng.blog.entity.base.BlogBaseEntity;
-import com.coolpeng.framework.db.BaseEntity;
-import com.coolpeng.framework.db.SimpleQuery;
+import com.coolpeng.framework.db.SimpleDAO;
 import com.coolpeng.framework.db.annotation.FieldDef;
-import com.coolpeng.framework.utils.CollectionUtil;
 
 public class DBallProfile extends BlogBaseEntity {
 
-    public static SimpleQuery<DBallProfile> DAO = new SimpleQuery<>(DBallProfile.class);
+    public static SimpleDAO<DBallProfile> DAO = new SimpleDAO<>(DBallProfile.class);
 
     // 人物名称
     private String personName;

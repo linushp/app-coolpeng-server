@@ -1,11 +1,11 @@
 package com.coolpeng.blog.entity;
 
 import com.coolpeng.blog.entity.base.BlogBaseEntity;
-import com.coolpeng.framework.db.SimpleQuery;
+import com.coolpeng.framework.db.SimpleDAO;
 import com.coolpeng.framework.db.annotation.FieldDef;
 
 public class ForumPostReply extends BlogBaseEntity {
-    public static SimpleQuery<ForumPostReply> DAO = new SimpleQuery(ForumPostReply.class);
+    public static SimpleDAO<ForumPostReply> DAO = new SimpleDAO(ForumPostReply.class);
     private String forumPostId;
     private String forumPostTitle;
     private ForumPost forumPost;

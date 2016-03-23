@@ -22,12 +22,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class SimpleQuery<T> {
-    private static Logger logger = LoggerFactory.getLogger(SimpleQuery.class);
+public class SimpleDAO<T> {
+    private static Logger logger = LoggerFactory.getLogger(SimpleDAO.class);
     private TemplateSQL sqlTemplate;
     private Class<T> clazz;
 
-    public SimpleQuery(Class<T> clazz) {
+    public SimpleDAO(Class<T> clazz) {
         this.sqlTemplate = new TemplateSQL(clazz);
         this.clazz = clazz;
     }

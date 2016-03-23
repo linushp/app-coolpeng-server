@@ -1,13 +1,13 @@
 package com.coolpeng.blog.entity;
 
-import com.coolpeng.framework.db.SimpleQuery;
+import com.coolpeng.framework.db.SimpleDAO;
 import com.coolpeng.framework.mvc.TmsUserEntity;
 import com.coolpeng.framework.utils.CollectionUtil;
 
 import java.util.Collection;
 
 public class UserEntity extends TmsUserEntity {
-    public static SimpleQuery<UserEntity> DAO = new SimpleQuery(UserEntity.class);
+    public static SimpleDAO<UserEntity> DAO = new SimpleDAO(UserEntity.class);
 
     public UserEntity() {
 

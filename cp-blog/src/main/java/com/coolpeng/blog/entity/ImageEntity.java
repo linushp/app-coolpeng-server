@@ -1,7 +1,7 @@
 package com.coolpeng.blog.entity;
 
 import com.coolpeng.blog.entity.base.BlogBaseEntity;
-import com.coolpeng.framework.db.SimpleQuery;
+import com.coolpeng.framework.db.SimpleDAO;
 import com.coolpeng.framework.db.annotation.FieldDef;
 
 /*  
@@ -21,7 +21,7 @@ import com.coolpeng.framework.db.annotation.FieldDef;
  */
 public class ImageEntity extends BlogBaseEntity {
 
-    public static SimpleQuery<ImageEntity> DAO = new SimpleQuery<>(ImageEntity.class);
+    public static SimpleDAO<ImageEntity> DAO = new SimpleDAO<>(ImageEntity.class);
 
     private String imageName;
     private String imageDesc;

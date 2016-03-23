@@ -1,11 +1,11 @@
 package com.coolpeng.blog.entity;
 
 import com.coolpeng.blog.entity.base.BlogBaseEntity;
-import com.coolpeng.framework.db.SimpleQuery;
+import com.coolpeng.framework.db.SimpleDAO;
 import com.coolpeng.framework.db.annotation.VOTemp;
 
 public class ForumModule extends BlogBaseEntity {
-    public static final SimpleQuery<ForumModule> DAO = new SimpleQuery(ForumModule.class);
+    public static final SimpleDAO<ForumModule> DAO = new SimpleDAO(ForumModule.class);
     private String moduleName;
     private String moduleDesc;
     private String moduleIcon;

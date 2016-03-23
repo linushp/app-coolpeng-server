@@ -1,13 +1,13 @@
 package com.coolpeng.blog.entity;
 
 import com.coolpeng.blog.entity.base.BlogBaseEntity;
-import com.coolpeng.framework.db.SimpleQuery;
+import com.coolpeng.framework.db.SimpleDAO;
 import com.coolpeng.framework.db.annotation.VOTemp;
 
 import java.util.List;
 
 public class ForumGroup extends BlogBaseEntity {
-    public static SimpleQuery<ForumGroup> DAO = new SimpleQuery(ForumGroup.class);
+    public static SimpleDAO<ForumGroup> DAO = new SimpleDAO(ForumGroup.class);
     private String groupName;
     private String groupDesc;
 

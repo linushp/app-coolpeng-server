@@ -1,7 +1,7 @@
 package com.coolpeng.blog.entity;
 
 import com.coolpeng.blog.entity.base.BlogBaseEntity;
-import com.coolpeng.framework.db.SimpleQuery;
+import com.coolpeng.framework.db.SimpleDAO;
 import com.coolpeng.framework.db.annotation.FieldDef;
 
 /**
@@ -9,7 +9,7 @@ import com.coolpeng.framework.db.annotation.FieldDef;
  */
 public class SysSetting extends BlogBaseEntity {
 
-    public static SimpleQuery<SysSetting> DAO = new SimpleQuery<>(SysSetting.class);
+    public static SimpleDAO<SysSetting> DAO = new SimpleDAO<>(SysSetting.class);
 
     private String name;
 

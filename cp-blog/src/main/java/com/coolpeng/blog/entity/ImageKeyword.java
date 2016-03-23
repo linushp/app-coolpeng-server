@@ -1,7 +1,7 @@
 package com.coolpeng.blog.entity;
 
 import com.coolpeng.blog.entity.base.BlogBaseEntity;
-import com.coolpeng.framework.db.SimpleQuery;
+import com.coolpeng.framework.db.SimpleDAO;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class ImageKeyword extends BlogBaseEntity {
 
-    public static SimpleQuery<ImageKeyword> DAO = new SimpleQuery<>(ImageKeyword.class);
+    public static SimpleDAO<ImageKeyword> DAO = new SimpleDAO<>(ImageKeyword.class);
 
     private String keyword;
 

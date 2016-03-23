@@ -3,7 +3,7 @@ package com.coolpeng.blog.entity;
 import com.alibaba.fastjson.JSON;
 import com.coolpeng.blog.entity.base.BlogBaseEntity;
 import com.coolpeng.framework.db.PageResult;
-import com.coolpeng.framework.db.SimpleQuery;
+import com.coolpeng.framework.db.SimpleDAO;
 import com.coolpeng.framework.db.annotation.FieldDef;
 import com.coolpeng.framework.db.annotation.VOTemp;
 import com.coolpeng.framework.utils.DateUtil;
@@ -12,7 +12,7 @@ import com.coolpeng.framework.utils.StringUtils;
 import java.util.*;
 
 public class ForumPost extends BlogBaseEntity {
-    public static SimpleQuery<ForumPost> DAO = new SimpleQuery(ForumPost.class);
+    public static SimpleDAO<ForumPost> DAO = new SimpleDAO(ForumPost.class);
     private String forumModuleId;
     private int moduleType;
     private String postTitle;
