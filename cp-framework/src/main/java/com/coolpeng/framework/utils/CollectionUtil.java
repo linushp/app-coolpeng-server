@@ -353,4 +353,14 @@ public class CollectionUtil {
 	}
 
 
+	public static List<Class> toList(Class<?>[] jsonColumns) {
+		if (jsonColumns==null){
+			return null;
+		}
+		List<Class> list = new ArrayList();
+		for (Class clazz : jsonColumns){
+			list.add(clazz);
+		}
+		return list;
+	}
 }

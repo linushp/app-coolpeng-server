@@ -9,9 +9,7 @@ import com.coolpeng.framework.db.annotation.VOTemp;
 import com.coolpeng.framework.utils.DateUtil;
 import com.coolpeng.framework.utils.StringUtils;
 
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
+import java.util.*;
 
 public class ForumPost extends BlogBaseEntity {
     public static SimpleQuery<ForumPost> DAO = new SimpleQuery(ForumPost.class);
@@ -58,6 +56,21 @@ public class ForumPost extends BlogBaseEntity {
     private String image8;
     private String image9;
     private String moreImages;
+
+//    @FieldDef(jsonColumn={List.class,ForumGroup.class})
+//    private List<ForumGroup> moreImages1;
+//
+//    @FieldDef(jsonColumn={Set.class,ForumGroup.class})
+//    private List<ForumGroup> moreImages2;
+//
+//    @FieldDef(jsonColumn={Map.class,ForumGroup.class})
+//    private Map<String,ForumGroup> moreImages3;
+//
+//    @FieldDef(jsonColumn={ForumGroup.class})
+//    private ForumGroup moreImages4;
+
+    public ForumPost() {
+    }
 
     public int getRecommend() {
         return this.recommend;
@@ -314,6 +327,7 @@ public class ForumPost extends BlogBaseEntity {
     public void setCreateMail(String createMail) {
         this.createMail = createMail;
     }
+
 
     public void createTempImageEntity(int maxCount, boolean isThumb) {
         if (this.imageList == null) {

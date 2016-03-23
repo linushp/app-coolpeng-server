@@ -4,6 +4,7 @@ import com.coolpeng.framework.db.BaseEntity;
 import com.coolpeng.framework.exception.FieldNotFoundException;
 import org.apache.commons.collections.map.MultiKeyMap;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
@@ -11,17 +12,17 @@ import java.util.*;
 public class ReflectUtils {
 
     /**
-     * 只过滤出基本数据类型的字�?
+     * 只过滤出基本数据类型的字
      */
     public static final int FIELD_FILTER_ONLY_BASIC = 1;
 
     /**
-     * 只过滤出是实体类的字�?
+     * 只过滤出是实体类的字
      */
     public static final int FIELD_FILTER_ONLY_ENTITY = 2;
 
     /**
-     * 不进行过�?
+     * 不进行过过滤
      */
     public static final int FIELD_FILTER_ALL = 3;
 
@@ -57,30 +58,31 @@ public class ReflectUtils {
         Method[] method = clazz.getMethods();
         List<Field> list = new ArrayList<Field>();
 
-        // 获取有get方法的字�?
+        // 获取有get方法的字段
         Field[] fields = toArray(getClassFields(clazz, true));// clazz.getDeclaredFields();
         Map<String, Field> staticFields = getStaticFields(clazz);
         for (int j = 0; j < fields.length; j++) {
             Field f = fields[j];
+            f.setAccessible(true);
 
-            // 当只显示基本属�?�时，过滤掉非基本属�?
+            // 当只显示基本属性时，过滤掉非基本属性
             if (FIELD_FILTER_ONLY_BASIC == fieldFilter && !isBasicField(f)) {
                 continue;
             }
 
-            // 当只要实体字段属性时，过滤掉非实体字段的属�??
+            // 当只要实体字段属性时，过滤掉非实体字段的属性
             if (FIELD_FILTER_ONLY_ENTITY == fieldFilter && !isEntityField(f)) {
                 continue;
             }
 
             String fieldName = f.getName();
 
-            // 过滤掉静态属�?
+            // 过滤掉静态属性
             if (staticFields.containsKey(fieldName)) {
                 continue;
             }
 
-            // 找到有get方法的属�?
+            // 找到有get方法的属性
             String m = "get" + fieldName.toUpperCase().charAt(0) + fieldName.substring(1);
             for (int i = 0; i < method.length; i++) {
                 if (method[i].getName().endsWith(m)) {
@@ -89,7 +91,7 @@ public class ReflectUtils {
             }
         }
 
-        // 转换成数�?
+        // 转换成数组
         Field[] fieldArray = toArray(list);
 
         return fieldArray;
@@ -124,7 +126,6 @@ public class ReflectUtils {
      */
     private static boolean isEntityField(Field field) {
         Class<?> fieldType = field.getType();
-        // BaseEntity是fieldType的父�?
         return BaseEntity.class.isAssignableFrom(fieldType);
     }
 
@@ -229,4 +230,19 @@ public class ReflectUtils {
         return "java.lang.String".equals(f.getType().getName());
     }
 
+    public static <T extends Annotation>  List<Field> getClassFieldsWithAnnotation(Class<?> clazz, Class<T> annotationClazz) {
+        Field[] fields = ReflectUtils.getObjectFieldsNoCache(clazz, FIELD_FILTER_ALL);
+        List<Field> result = new ArrayList<>();
+        if (fields != null) {
+            for (Field field : fields) {
+                T annotation = field.getAnnotation(annotationClazz);
+                field.setAccessible(true);
+                if (annotation != null) {
+                    result.add(field);
+                }
+            }
+        }
+        return result;
+
+    }
 }

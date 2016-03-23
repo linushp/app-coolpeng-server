@@ -13,6 +13,16 @@ public @interface FieldDef {
 	
 	public static String DBTYPE_LONGTEXT = "longtext";
 
+	/**
+	 * 为了生存建表语句
+	 * @return
+	 */
 	public String dbType() default "";
-	
+
+
+	/**
+	 * 配置了此字段
+	 * @return
+	 */
+	Class<?>[] jsonColumn() default {};
 }

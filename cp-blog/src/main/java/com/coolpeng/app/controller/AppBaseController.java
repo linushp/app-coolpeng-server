@@ -50,11 +50,11 @@ public class AppBaseController {
 
 
     public UserEntity getSessionLoginUser() {
-        return (UserEntity) getHttpSession().getAttribute("LoginUser");
+        return (UserEntity) TmsCurrentRequest.getCurrentUser();
     }
 
     public void setSessionLoginUser(UserEntity user) {
-        getHttpSession().setAttribute("LoginUser", user);
+        TmsCurrentRequest.setCurrentUser(user);
     }
 
     public Object getSessionAttribute(String attr) {

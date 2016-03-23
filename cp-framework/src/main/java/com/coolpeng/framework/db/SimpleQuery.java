@@ -9,7 +9,7 @@ import com.coolpeng.framework.utils.Tuple;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
+//import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -24,8 +24,6 @@ import java.util.Set;
 
 public class SimpleQuery<T> {
     private static Logger logger = LoggerFactory.getLogger(SimpleQuery.class);
-
-    private NamedParameterJdbcTemplate jdbcTemplate = SpringBeanFactory.getNamedParameterJdbcTemplate();
     private TemplateSQL sqlTemplate;
     private Class<T> clazz;
 
@@ -39,10 +37,11 @@ public class SimpleQuery<T> {
         return queryForList(sql, null);
     }
 
+
     public T queryForObject(String sql, Map<String, Object> params) {
         MapSqlParameterSource sps = new MapSqlParameterSource(params);
         try {
-            return (T) this.jdbcTemplate.queryForObject(sql, sps, new BeanPropertyRowMapper(this.clazz));
+            return (T) getJdbcTemplate().queryForObject(sql, sps, new TMSBeanRowMapper<>(this.clazz));
         } catch (EmptyResultDataAccessException e1) {
             logger.info("no result , params is {}", params);
         } catch (Exception e) {
@@ -55,7 +54,7 @@ public class SimpleQuery<T> {
             throws FieldNotFoundException {
         MapSqlParameterSource sps = new MapSqlParameterSource(params);
         String sql = this.sqlTemplate.getCountSQL(params.keySet());
-        Integer count = (Integer) this.jdbcTemplate.queryForObject(sql, sps, Integer.class);
+        Integer count = (Integer) getJdbcTemplate().queryForObject(sql, sps, Integer.class);
         return count.intValue();
     }
 
@@ -118,9 +117,9 @@ public class SimpleQuery<T> {
         List result = null;
 
         if (sps != null)
-            result = this.jdbcTemplate.query(sql, sps, new BeanRowMapper(this.clazz, fieldAliasMap));
+            result = getJdbcTemplate().query(sql, sps, new TMSBeanRowMapper(this.clazz, fieldAliasMap));
         else {
-            result = this.jdbcTemplate.query(sql, new BeanRowMapper(this.clazz, fieldAliasMap));
+            result = getJdbcTemplate().query(sql, new TMSBeanRowMapper(this.clazz, fieldAliasMap));
         }
 
         logger.debug(sql);
@@ -144,9 +143,9 @@ public class SimpleQuery<T> {
         try {
             if ((params != null) && (!params.isEmpty())) {
                 MapSqlParameterSource sps = new MapSqlParameterSource(params);
-                return this.jdbcTemplate.query(sql, sps, new BeanPropertyRowMapper(this.clazz));
+                return getJdbcTemplate().query(sql, sps, new TMSBeanRowMapper(this.clazz));
             }
-            return this.jdbcTemplate.query(sql, new BeanPropertyRowMapper(this.clazz));
+            return getJdbcTemplate().query(sql, new TMSBeanRowMapper(this.clazz));
         } catch (EmptyResultDataAccessException e) {
             logger.info("no result , params is {}", params);
         }
@@ -182,7 +181,7 @@ public class SimpleQuery<T> {
         Tuple t = this.sqlTemplate.getLeftJoinSelectSQL(where, qc, pageNumber, pageSize, leftJoinFieldNameArray);
 
         String countSql = (String) t.forth();
-        Integer totalCount = (Integer) this.jdbcTemplate.queryForObject(countSql, sps, Integer.class);
+        Integer totalCount = (Integer) getJdbcTemplate().queryForObject(countSql, sps, Integer.class);
 
         String sql = (String) t.first();
 
@@ -191,9 +190,9 @@ public class SimpleQuery<T> {
         List pageData = null;
 
         if (sps != null)
-            pageData = this.jdbcTemplate.query(sql, sps, new BeanRowMapper(this.clazz, fieldAliasMap));
+            pageData = getJdbcTemplate().query(sql, sps, new TMSBeanRowMapper(this.clazz, fieldAliasMap));
         else {
-            pageData = this.jdbcTemplate.query(sql, new BeanRowMapper(this.clazz, fieldAliasMap));
+            pageData = getJdbcTemplate().query(sql, new TMSBeanRowMapper(this.clazz, fieldAliasMap));
         }
 
         logger.debug(sql);
@@ -205,7 +204,7 @@ public class SimpleQuery<T> {
     public int delete(String id) {
         String sql = this.sqlTemplate.getDeleteSQL();
         MapSqlParameterSource sps = new MapSqlParameterSource("id", id);
-        return this.jdbcTemplate.update(sql, sps);
+        return getJdbcTemplate().update(sql, sps);
     }
 
     public int delete(Map<String, Object> params)
@@ -214,81 +213,13 @@ public class SimpleQuery<T> {
         String[] whereArray = this.sqlTemplate.toStringArray(where);
         String sql = this.sqlTemplate.getDeleteSQL(whereArray);
         MapSqlParameterSource sps = new MapSqlParameterSource(params);
-        return this.jdbcTemplate.update(sql, sps);
-    }
-
-    public int insert(T entity) {
-        if ((entity instanceof BaseEntity)) {
-            BaseEntity entity1 = (BaseEntity) entity;
-            entity1.setId(null);
-        }
-
-        String sql = this.sqlTemplate.getInsertSQL();
-        SqlParameterSource sps = new BeanPropertySqlParameterSource(entity);
-        KeyHolder generatedKeyHolder = new GeneratedKeyHolder();
-        int insertResult = this.jdbcTemplate.update(sql, sps, generatedKeyHolder);
-
-        Number key = generatedKeyHolder.getKey();
-
-        int id = key.intValue();
-        BaseEntity entity1 = (BaseEntity) entity;
-        entity1.setId("" + id);
-
-        return insertResult;
+        return getJdbcTemplate().update(sql, sps);
     }
 
     public int save(T entity) {
         return insert(entity);
     }
 
-    public int update(T entity)
-            throws UpdateErrorException {
-        if ((entity instanceof BaseEntity)) {
-            BaseEntity entity1 = (BaseEntity) entity;
-            String id = entity1.getId();
-            if ((id == null) || (id.isEmpty())) {
-                throw new UpdateErrorException(entity);
-            }
-        }
-
-        String sql = this.sqlTemplate.getUpdateSQL();
-        SqlParameterSource sps = new BeanPropertySqlParameterSource(entity);
-        return this.jdbcTemplate.update(sql, sps);
-    }
-
-    public int updateFields(String entityId, Map<String, Object> fieldsAndValue)
-            throws UpdateErrorException {
-        fieldsAndValue.remove("id");
-
-        if (fieldsAndValue.isEmpty()) {
-            return -1;
-        }
-
-        String sql = this.sqlTemplate.getUpdateSQL(fieldsAndValue.keySet(), null);
-
-        fieldsAndValue.put("id", entityId);
-
-        SqlParameterSource sps = new MapSqlParameterSource(fieldsAndValue);
-
-        return this.jdbcTemplate.update(sql, sps);
-    }
-
-    public int batchUpdateFields(String whereKey, String whereValue, Map<String, Object> fieldsAndValue)
-            throws UpdateErrorException {
-        fieldsAndValue.remove("id");
-
-        if (fieldsAndValue.isEmpty()) {
-            return -1;
-        }
-
-        String sql = this.sqlTemplate.getUpdateSQL(fieldsAndValue.keySet(), whereKey);
-
-        fieldsAndValue.put(whereKey, whereValue);
-
-        SqlParameterSource sps = new MapSqlParameterSource(fieldsAndValue);
-
-        return this.jdbcTemplate.update(sql, sps);
-    }
 
     public int insertOrUpdate(T entity)
             throws UpdateErrorException {
@@ -320,4 +251,90 @@ public class SimpleQuery<T> {
         delete(params);
         return insert(entity);
     }
+
+
+
+
+
+
+
+    //TODO 数据插入或更新时候需要将特殊字段转义
+    public int insert(T entity) {
+        if ((entity instanceof BaseEntity)) {
+            BaseEntity entity1 = (BaseEntity) entity;
+            entity1.setId(null);
+        }
+
+        String sql = this.sqlTemplate.getInsertSQL();
+        SqlParameterSource sps = new BeanPropertySqlParameterSource(entity);
+        KeyHolder generatedKeyHolder = new GeneratedKeyHolder();
+        int insertResult = getJdbcTemplate().update(sql, sps, generatedKeyHolder);
+
+        Number key = generatedKeyHolder.getKey();
+
+        int id = key.intValue();
+        BaseEntity entity1 = (BaseEntity) entity;
+        entity1.setId("" + id);
+
+        return insertResult;
+    }
+
+
+
+    public int update(T entity)
+            throws UpdateErrorException {
+        if ((entity instanceof BaseEntity)) {
+            BaseEntity entity1 = (BaseEntity) entity;
+            String id = entity1.getId();
+            if ((id == null) || (id.isEmpty())) {
+                throw new UpdateErrorException(entity);
+            }
+        }
+
+        String sql = this.sqlTemplate.getUpdateSQL();
+        SqlParameterSource sps = new BeanPropertySqlParameterSource(entity);
+        return getJdbcTemplate().update(sql, sps);
+    }
+
+    public int updateFields(String entityId, Map<String, Object> fieldsAndValue)
+            throws UpdateErrorException {
+        fieldsAndValue.remove("id");
+
+        if (fieldsAndValue.isEmpty()) {
+            return -1;
+        }
+
+        String sql = this.sqlTemplate.getUpdateSQL(fieldsAndValue.keySet(), null);
+
+        fieldsAndValue.put("id", entityId);
+
+        SqlParameterSource sps = new MapSqlParameterSource(fieldsAndValue);
+
+        return getJdbcTemplate().update(sql, sps);
+    }
+
+    public int batchUpdateFields(String whereKey, String whereValue, Map<String, Object> fieldsAndValue)
+            throws UpdateErrorException {
+        fieldsAndValue.remove("id");
+
+        if (fieldsAndValue.isEmpty()) {
+            return -1;
+        }
+
+        String sql = this.sqlTemplate.getUpdateSQL(fieldsAndValue.keySet(), whereKey);
+
+        fieldsAndValue.put(whereKey, whereValue);
+
+        SqlParameterSource sps = new MapSqlParameterSource(fieldsAndValue);
+
+        return getJdbcTemplate().update(sql, sps);
+    }
+
+
+
+    private static NamedParameterJdbcTemplate getJdbcTemplate(){
+        NamedParameterJdbcTemplate jdbcTemplate = SpringBeanFactory.getNamedParameterJdbcTemplate();
+        return jdbcTemplate;
+    }
+
 }

@@ -42,16 +42,16 @@ public class TmsUserEntity extends BaseEntity {
 
         super(user);
 
-        this.avatar=user.avatar;
-        this.lastLoginDevPlatform=user.lastLoginDevPlatform;
-        this.lastLoginDevUid=user.lastLoginDevUid;
-        this.lastLoginTime=user.lastLoginTime;
-        this.lastLoginToken=user.lastLoginToken;
-        this.mail=user.mail;
-        this.nickname=user.nickname;
-        this.password=user.password;
-        this.permission=user.permission;
-        this.username=user.username;
+        this.avatar = user.avatar;
+        this.lastLoginDevPlatform = user.lastLoginDevPlatform;
+        this.lastLoginDevUid = user.lastLoginDevUid;
+        this.lastLoginTime = user.lastLoginTime;
+        this.lastLoginToken = user.lastLoginToken;
+        this.mail = user.mail;
+        this.nickname = user.nickname;
+        this.password = user.password;
+        this.permission = user.permission;
+        this.username = user.username;
     }
 
     public TmsUserEntity() {
