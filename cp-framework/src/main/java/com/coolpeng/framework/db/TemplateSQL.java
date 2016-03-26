@@ -1,5 +1,6 @@
 package com.coolpeng.framework.db;
 
+import com.coolpeng.framework.db.annotation.FieldDef;
 import com.coolpeng.framework.exception.FieldNotFoundException;
 import com.coolpeng.framework.utils.*;
 import org.slf4j.Logger;
@@ -8,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -52,7 +54,18 @@ public class TemplateSQL
 
 	private void initBasicField(Class<?> clazz)
 	{
-		this.basicFields = ReflectUtils.getObjectFields(clazz, 1);
+
+		//TODO 在这里JSON类型的字段也被看做是基本数据类型。
+		List<Field> basicFieldsList = CollectionUtil.toList(ReflectUtils.getObjectFields(clazz, ReflectUtils.FIELD_FILTER_ONLY_BASIC));
+
+		List<Field> annoList = ReflectUtils.getClassFieldsWithAnnotation(clazz, FieldDef.class);
+		for (Field field:annoList){
+			if (ReflectUtils.isJSONColumn(field)){
+				basicFieldsList.add(field);
+			}
+		}
+		this.basicFields = CollectionUtil.toArray(basicFieldsList);
+
 
 		if (!CollectionUtil.isEmpty(this.basicFields))
 		{

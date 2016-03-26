@@ -7,7 +7,7 @@ import com.coolpeng.blog.entity.ForumPost;
 import com.coolpeng.blog.service.ForumModuleService;
 import com.coolpeng.blog.utils.ForumUrlUtils;
 import com.coolpeng.framework.mvc.TmsCurrentRequest;
-import com.coolpeng.framework.utils.SpringBeanFactory;
+import com.coolpeng.framework.utils.ServiceUtils;
 import com.coolpeng.framework.utils.StringUtils;
 import com.coolpeng.framework.utils.Tuple;
 
@@ -64,7 +64,7 @@ public class BreadWidget extends TagSupport {
 
     private List<Tuple> getBreadList() {
         if ((this.pageMainObject instanceof ForumPost)) {
-            ForumModuleService forumModuleService = (ForumModuleService) SpringBeanFactory.getBean("forumModuleService");
+            ForumModuleService forumModuleService = (ForumModuleService) ServiceUtils.getBean("forumModuleService");
 
             ForumPost forumPost = (ForumPost) this.pageMainObject;
             ForumModule forumModule = forumModuleService.getForumModule(forumPost.getForumModuleId(), true);
@@ -86,7 +86,7 @@ public class BreadWidget extends TagSupport {
             return bread;
         }
         if ((this.pageMainObject instanceof ForumModule)) {
-            ForumModuleService forumModuleService = (ForumModuleService) SpringBeanFactory.getBean("forumModuleService");
+            ForumModuleService forumModuleService = (ForumModuleService) ServiceUtils.getBean("forumModuleService");
 
             ForumModule forumModule = (ForumModule) this.pageMainObject;
             ForumGroup forumGroup = forumModuleService.getForumGroup(forumModule.getForumGroupId());

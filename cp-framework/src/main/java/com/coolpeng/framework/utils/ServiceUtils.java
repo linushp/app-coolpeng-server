@@ -11,21 +11,21 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import java.util.ResourceBundle;
 
-public class SpringBeanFactory
+public class ServiceUtils
 		implements BeanFactoryAware
 {
-	private static Logger logger = LoggerFactory.getLogger(SpringBeanFactory.class);
+	private static Logger logger = LoggerFactory.getLogger(ServiceUtils.class);
 
 	private static BeanFactory beanFactory = null;
 	private static JdbcTemplate jdbcTemplateService;
 	private static NamedParameterJdbcTemplate namedParameterJdbcTemplateService;
-	private static final ResourceBundle RB = ResourceBundle.getBundle("db-connection");
+	private static ResourceBundle RB = ResourceBundle.getBundle("db-connection");
 
 	public static ResourceBundle getResourceBundle() {
 		return RB;
 	}
 
-	public static JdbcTemplate getJdbcTemplateService()
+	public static JdbcTemplate getJdbcTemplate()
 	{
 		if (jdbcTemplateService == null) {
 			Object jdbcTemplateService = getBean("jdbcTemplate");
@@ -41,7 +41,7 @@ public class SpringBeanFactory
 				t.setDataSource(ds);
 				jdbcTemplateService = t;
 			}
-			SpringBeanFactory.jdbcTemplateService = (JdbcTemplate)jdbcTemplateService;
+			ServiceUtils.jdbcTemplateService = (JdbcTemplate)jdbcTemplateService;
 		}
 		return jdbcTemplateService;
 	}
@@ -50,14 +50,14 @@ public class SpringBeanFactory
 		if (namedParameterJdbcTemplateService == null) {
 			Object namedParameterJdbcTemplateService = getBean("namedParameterJdbcTemplate");
 			if (namedParameterJdbcTemplateService == null) {
-				JdbcTemplate jdbcTemplate = getJdbcTemplateService();
+				JdbcTemplate jdbcTemplate = getJdbcTemplate();
 				if (jdbcTemplate == null) {
 					logger.error("jdbcTemplate is null");
 					return null;
 				}
 				namedParameterJdbcTemplateService = new NamedParameterJdbcTemplate(jdbcTemplate);
 			}
-			SpringBeanFactory.namedParameterJdbcTemplateService = (NamedParameterJdbcTemplate)namedParameterJdbcTemplateService;
+			ServiceUtils.namedParameterJdbcTemplateService = (NamedParameterJdbcTemplate)namedParameterJdbcTemplateService;
 		}
 		return namedParameterJdbcTemplateService;
 	}

@@ -1,6 +1,7 @@
 package com.coolpeng.framework.utils;
 
 import com.coolpeng.framework.db.BaseEntity;
+import com.coolpeng.framework.db.annotation.FieldDef;
 import com.coolpeng.framework.exception.FieldNotFoundException;
 import org.apache.commons.collections.map.MultiKeyMap;
 
@@ -214,13 +215,14 @@ public class ReflectUtils {
         }
         if (includeParentClass) {
             Class superClazz0 = clazz.getSuperclass();
-            String className = superClazz0.getName();
-            if (BaseEntity.class.getName().equals(className)) {
-                fieldList.addAll(getClassFields(superClazz0, false));
-            } else {
-                fieldList.addAll(getClassFields(superClazz0, true));
+            if (superClazz0!=null){
+                String className = superClazz0.getName();
+                if (BaseEntity.class.getName().equals(className)) {
+                    fieldList.addAll(getClassFields(superClazz0, false));
+                } else {
+                    fieldList.addAll(getClassFields(superClazz0, true));
+                }
             }
-
         }
 
         return fieldList;
@@ -244,5 +246,23 @@ public class ReflectUtils {
         }
         return result;
 
+    }
+
+    /**
+     * 判断一个字段是否是JSON字段
+     * @param entityField
+     * @return
+     */
+    public static boolean isJSONColumn(Field entityField){
+        if (entityField!=null){
+            FieldDef anno = entityField.getAnnotation(FieldDef.class);
+            if (anno!=null){
+                Class<?>[] jsonColumns = anno.jsonColumn();
+                if (jsonColumns!=null && jsonColumns.length > 0){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

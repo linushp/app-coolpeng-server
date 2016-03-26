@@ -4,13 +4,12 @@ import com.coolpeng.framework.exception.FieldNotFoundException;
 import com.coolpeng.framework.exception.ParameterErrorException;
 import com.coolpeng.framework.exception.UpdateErrorException;
 import com.coolpeng.framework.utils.CollectionUtil;
-import com.coolpeng.framework.utils.SpringBeanFactory;
+import com.coolpeng.framework.utils.DateUtil;
+import com.coolpeng.framework.utils.ServiceUtils;
 import com.coolpeng.framework.utils.Tuple;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
-//import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -21,6 +20,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+//import org.springframework.jdbc.core.BeanPropertyRowMapper;
 
 public class SimpleDAO<T> {
     private static Logger logger = LoggerFactory.getLogger(SimpleDAO.class);
@@ -258,15 +259,22 @@ public class SimpleDAO<T> {
 
 
 
+
+
+
+
     //TODO 数据插入或更新时候需要将特殊字段转义
     public int insert(T entity) {
         if ((entity instanceof BaseEntity)) {
             BaseEntity entity1 = (BaseEntity) entity;
+            entity1.setUpdateTime(DateUtil.currentTimeFormat());
+            entity1.setCreateTime(DateUtil.currentTimeFormat());
             entity1.setId(null);
         }
 
+
         String sql = this.sqlTemplate.getInsertSQL();
-        SqlParameterSource sps = new BeanPropertySqlParameterSource(entity);
+        SqlParameterSource sps = new TMSBeanPropertySqlParameterSource(entity);
         KeyHolder generatedKeyHolder = new GeneratedKeyHolder();
         int insertResult = getJdbcTemplate().update(sql, sps, generatedKeyHolder);
 
@@ -285,6 +293,7 @@ public class SimpleDAO<T> {
             throws UpdateErrorException {
         if ((entity instanceof BaseEntity)) {
             BaseEntity entity1 = (BaseEntity) entity;
+            entity1.setUpdateTime(DateUtil.currentTimeFormat());
             String id = entity1.getId();
             if ((id == null) || (id.isEmpty())) {
                 throw new UpdateErrorException(entity);
@@ -292,7 +301,7 @@ public class SimpleDAO<T> {
         }
 
         String sql = this.sqlTemplate.getUpdateSQL();
-        SqlParameterSource sps = new BeanPropertySqlParameterSource(entity);
+        SqlParameterSource sps = new TMSBeanPropertySqlParameterSource(entity);
         return getJdbcTemplate().update(sql, sps);
     }
 
@@ -308,7 +317,7 @@ public class SimpleDAO<T> {
 
         fieldsAndValue.put("id", entityId);
 
-        SqlParameterSource sps = new MapSqlParameterSource(fieldsAndValue);
+        SqlParameterSource sps = new TMSMapSqlParameterSource(fieldsAndValue,this.clazz);
 
         return getJdbcTemplate().update(sql, sps);
     }
@@ -325,7 +334,7 @@ public class SimpleDAO<T> {
 
         fieldsAndValue.put(whereKey, whereValue);
 
-        SqlParameterSource sps = new MapSqlParameterSource(fieldsAndValue);
+        SqlParameterSource sps = new TMSMapSqlParameterSource(fieldsAndValue,this.clazz);
 
         return getJdbcTemplate().update(sql, sps);
     }
@@ -333,7 +342,7 @@ public class SimpleDAO<T> {
 
 
     private static NamedParameterJdbcTemplate getJdbcTemplate(){
-        NamedParameterJdbcTemplate jdbcTemplate = SpringBeanFactory.getNamedParameterJdbcTemplate();
+        NamedParameterJdbcTemplate jdbcTemplate = ServiceUtils.getNamedParameterJdbcTemplate();
         return jdbcTemplate;
     }
 

@@ -363,4 +363,31 @@ public class CollectionUtil {
 		}
 		return list;
 	}
+
+	public static List<Field> toList(Field[] jsonColumns) {
+		if (jsonColumns==null){
+			return null;
+		}
+		List<Field> list = new ArrayList();
+		for (Field clazz : jsonColumns){
+			list.add(clazz);
+		}
+		return list;
+	}
+
+	public static Field[] toArray(List<Field> basicFieldsList) {
+		if (basicFieldsList==null){
+			return null;
+		}
+
+		Field [] fields = new Field[basicFieldsList.size()];
+
+		int index = 0;
+		for (Field field:basicFieldsList){
+			fields[index] = field;
+			index++;
+		}
+
+		return fields;
+	}
 }

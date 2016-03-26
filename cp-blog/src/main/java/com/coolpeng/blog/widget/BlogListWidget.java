@@ -8,7 +8,7 @@ import com.coolpeng.framework.db.PageResult;
 import com.coolpeng.framework.mvc.TmsCurrentRequest;
 import com.coolpeng.framework.utils.CollectionUtil;
 import com.coolpeng.framework.utils.DateUtil;
-import com.coolpeng.framework.utils.SpringBeanFactory;
+import com.coolpeng.framework.utils.ServiceUtils;
 import com.coolpeng.framework.utils.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 
@@ -58,7 +58,7 @@ public class BlogListWidget extends TagSupport {
         List<ForumPost> postList = this.pageResult.getPageData();
 
         if (!CollectionUtil.isEmpty(postList)) {
-            ForumModuleService forumModuleService = (ForumModuleService) SpringBeanFactory.getBean("forumModuleService");
+            ForumModuleService forumModuleService = (ForumModuleService) ServiceUtils.getBean("forumModuleService");
 
             StringBuffer sb = new StringBuffer();
             sb.append("<div class='blog-list'>");

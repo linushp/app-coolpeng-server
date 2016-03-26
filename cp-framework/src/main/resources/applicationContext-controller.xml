@@ -70,7 +70,7 @@
     </bean>
 
 
-    <bean id="coolpengSpringBeanFactory" class="com.coolpeng.framework.utils.SpringBeanFactory"></bean>
+    <bean id="coolpengSpringBeanFactory" class="com.coolpeng.framework.utils.ServiceUtils"></bean>
 
 
 

@@ -11,7 +11,7 @@ import com.baidubce.services.bos.BosClient;
 import com.baidubce.services.bos.BosClientConfiguration;
 import com.baidubce.services.bos.model.PutObjectResponse;
 //import com.coolpeng.framework.utils.ImageUtil;
-import com.coolpeng.framework.utils.SpringBeanFactory;
+import com.coolpeng.framework.utils.ServiceUtils;
 import org.springframework.util.StreamUtils;
 
 
@@ -21,7 +21,7 @@ public class BAEUtils {
     public static void PutObject(InputStream inputStream, String fileName) throws IOException {
 
         //资源包
-        ResourceBundle rb = SpringBeanFactory.getResourceBundle();
+        ResourceBundle rb = ServiceUtils.getResourceBundle();
 
         String ACCESS_KEY_ID = rb.getString("application.bae.ACCESS_KEY_ID");
         ;                   // 用户的Access Key ID

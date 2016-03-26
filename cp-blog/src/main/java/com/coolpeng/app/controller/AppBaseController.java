@@ -5,7 +5,7 @@ import com.coolpeng.blog.service.UserService;
 import com.coolpeng.framework.exception.FieldNotFoundException;
 import com.coolpeng.framework.exception.TMSMsgException;
 import com.coolpeng.framework.mvc.TmsCurrentRequest;
-import com.coolpeng.framework.utils.SpringBeanFactory;
+import com.coolpeng.framework.utils.ServiceUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -26,7 +26,7 @@ public class AppBaseController {
             String devicePlatform = request.getHeader("tmsApp.device.platform");
             String deviceUuid = request.getHeader("tmsApp.device.uuid");
 
-            UserService userService = (UserService) SpringBeanFactory.getBean("userService");
+            UserService userService = (UserService) ServiceUtils.getBean("userService");
             user = userService.getUserEntityByTokenId(tokenId, devicePlatform, deviceUuid);
             if (user != null) {
                 setSessionLoginUser(user);
