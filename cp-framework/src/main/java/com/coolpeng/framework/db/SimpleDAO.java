@@ -1,5 +1,6 @@
 package com.coolpeng.framework.db;
 
+import com.coolpeng.framework.event.TMSEventBus;
 import com.coolpeng.framework.exception.FieldNotFoundException;
 import com.coolpeng.framework.exception.ParameterErrorException;
 import com.coolpeng.framework.exception.UpdateErrorException;
@@ -254,15 +255,6 @@ public class SimpleDAO<T> {
     }
 
 
-
-
-
-
-
-
-
-
-
     //TODO 数据插入或更新时候需要将特殊字段转义
     public int insert(T entity) {
         if ((entity instanceof BaseEntity)) {
@@ -272,6 +264,7 @@ public class SimpleDAO<T> {
             entity1.setId(null);
         }
 
+        TMSEventBus.sendEvent(new SimpleDAOEvent(SimpleDAOEventEnum.beforeInsert, this.clazz, entity));
 
         String sql = this.sqlTemplate.getInsertSQL();
         SqlParameterSource sps = new TMSBeanPropertySqlParameterSource(entity);
@@ -284,13 +277,15 @@ public class SimpleDAO<T> {
         BaseEntity entity1 = (BaseEntity) entity;
         entity1.setId("" + id);
 
+        TMSEventBus.sendEvent(new SimpleDAOEvent(SimpleDAOEventEnum.afterInsert, this.clazz, entity));
+
         return insertResult;
     }
 
 
-
     public int update(T entity)
             throws UpdateErrorException {
+
         if ((entity instanceof BaseEntity)) {
             BaseEntity entity1 = (BaseEntity) entity;
             entity1.setUpdateTime(DateUtil.currentTimeFormat());
@@ -300,9 +295,13 @@ public class SimpleDAO<T> {
             }
         }
 
+        TMSEventBus.sendEvent(new SimpleDAOEvent(SimpleDAOEventEnum.beforeUpdate, this.clazz, entity));
+
         String sql = this.sqlTemplate.getUpdateSQL();
         SqlParameterSource sps = new TMSBeanPropertySqlParameterSource(entity);
-        return getJdbcTemplate().update(sql, sps);
+        int result = getJdbcTemplate().update(sql, sps);
+        TMSEventBus.sendEvent(new SimpleDAOEvent(SimpleDAOEventEnum.afterUpdate, this.clazz, entity));
+        return result;
     }
 
     public int updateFields(String entityId, Map<String, Object> fieldsAndValue)
@@ -313,13 +312,19 @@ public class SimpleDAO<T> {
             return -1;
         }
 
+        TMSEventBus.sendEvent(new SimpleDAOEvent(SimpleDAOEventEnum.beforeUpdateFields, this.clazz, fieldsAndValue));
+
         String sql = this.sqlTemplate.getUpdateSQL(fieldsAndValue.keySet(), null);
 
         fieldsAndValue.put("id", entityId);
 
-        SqlParameterSource sps = new TMSMapSqlParameterSource(fieldsAndValue,this.clazz);
+        SqlParameterSource sps = new TMSMapSqlParameterSource(fieldsAndValue, this.clazz);
 
-        return getJdbcTemplate().update(sql, sps);
+        int result = getJdbcTemplate().update(sql, sps);
+
+        TMSEventBus.sendEvent(new SimpleDAOEvent(SimpleDAOEventEnum.afterUpdateFields, this.clazz, fieldsAndValue));
+
+        return result;
     }
 
     public int batchUpdateFields(String whereKey, String whereValue, Map<String, Object> fieldsAndValue)
@@ -334,14 +339,13 @@ public class SimpleDAO<T> {
 
         fieldsAndValue.put(whereKey, whereValue);
 
-        SqlParameterSource sps = new TMSMapSqlParameterSource(fieldsAndValue,this.clazz);
+        SqlParameterSource sps = new TMSMapSqlParameterSource(fieldsAndValue, this.clazz);
 
         return getJdbcTemplate().update(sql, sps);
     }
 
 
-
-    private static NamedParameterJdbcTemplate getJdbcTemplate(){
+    private static NamedParameterJdbcTemplate getJdbcTemplate() {
         NamedParameterJdbcTemplate jdbcTemplate = ServiceUtils.getNamedParameterJdbcTemplate();
         return jdbcTemplate;
     }

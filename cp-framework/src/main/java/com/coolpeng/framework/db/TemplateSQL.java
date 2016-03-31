@@ -57,7 +57,6 @@ public class TemplateSQL
 
 		//TODO 在这里JSON类型的字段也被看做是基本数据类型。
 		List<Field> basicFieldsList = CollectionUtil.toList(ReflectUtils.getObjectFields(clazz, ReflectUtils.FIELD_FILTER_ONLY_BASIC));
-
 		List<Field> annoList = ReflectUtils.getClassFieldsWithAnnotation(clazz, FieldDef.class);
 		for (Field field:annoList){
 			if (ReflectUtils.isJSONColumn(field)){
@@ -81,6 +80,11 @@ public class TemplateSQL
 		}
 	}
 
+	/**
+	 * 获取表名称：就是根据类名称
+	 * @param clazz
+	 * @return
+	 */
 	public String getTableName(Class<?> clazz)
 	{
 		String clazzName = clazz.getSimpleName();
