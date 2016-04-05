@@ -1,6 +1,6 @@
 <%@ page isELIgnored="false" language="java" pageEncoding="UTF-8" contentType="text/html;charset=utf-8"%>
 <%@ include file="/common/jsp/taglibs.jsp"%>
-<tms:view require="ueditor">
+<tms:view require="ueditor" title=" ${postContent.postTitle}">
 
   <link rel="stylesheet" href="<%=application.getAttribute("ctx")%>/forum/css/forum.css" />
 

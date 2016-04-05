@@ -1,6 +1,6 @@
 <%@ page isELIgnored="false" language="java" pageEncoding="UTF-8" contentType="text/html;charset=utf-8" %>
 <%@ include file="/common/jsp/taglibs.jsp" %>
-<tms:view>
+<tms:view title="我的世界" >
 
     <div class="mainContent">
         <c:forEach var="g" items="${groupList}">

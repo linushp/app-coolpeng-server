@@ -173,7 +173,7 @@ public class ForumService {
             throws FieldNotFoundException, ClassNotFoundException {
         PageResult p = ForumPost.DAO.queryForPage(qc, pageNumber, pageSize, new String[0]);
 
-        EntityUtils.addDefaultUser(p);
+        EntityUtils.addDefaultUser(p,TmsCurrentRequest.getContext());
 
         EntityUtils.setAvatarUrl(p, TmsCurrentRequest.getContext());
 
@@ -223,16 +223,17 @@ public class ForumService {
             createUser = (UserEntity) UserEntity.DAO.queryForObject(createUserId);
         }
         if (createUser == null) {
-            createUser = EntityUtils.getDefaultUser();
+            createUser = EntityUtils.getDefaultUser(TmsCurrentRequest.getContext());
         }
         p.setCreateUser(createUser);
 
         QueryCondition qc = new QueryCondition();
         qc.addEqualCondition("forumPostId", postId);
 
-        PageResult replyPageResult = ForumPostReply.DAO.queryForPage(qc, pageNumber, pageSize, new String[]{"createUser"});
+        PageResult<ForumPostReply> replyPageResult = ForumPostReply.DAO.queryForPage(qc, pageNumber, pageSize, new String[]{"createUser"});
 
-        EntityUtils.addDefaultUser(replyPageResult);
+        EntityUtils.addDefaultUser(replyPageResult,TmsCurrentRequest.getContext());
+        EntityUtils.setReplyAvatarUrl(replyPageResult, TmsCurrentRequest.getContext());
 
         p.setReplyPageResult(replyPageResult);
 

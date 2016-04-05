@@ -53,7 +53,7 @@ public class ForumController {
         }
         List<ForumPost> list = postList.getPageData();
         for (ForumPost p : list) {
-            p.createTempImageEntity(9, false);
+            p.createTempImageEntity(9);
         }
         return new ModelAndView("forum/jsp/post-list", modelMap);
     }

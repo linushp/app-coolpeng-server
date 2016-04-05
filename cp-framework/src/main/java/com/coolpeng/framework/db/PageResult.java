@@ -1,5 +1,6 @@
 package com.coolpeng.framework.db;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PageResult<T> {
@@ -43,6 +44,9 @@ public class PageResult<T> {
 	}
 
 	public List<T> getPageData() {
+		if (pageData==null){
+			return new ArrayList<>();
+		}
 		return pageData;
 	}
 

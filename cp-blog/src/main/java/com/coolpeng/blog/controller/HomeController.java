@@ -38,7 +38,7 @@ public class HomeController {
 
         List<ForumPost> list = postList.getPageData();
         for (ForumPost p : list) {
-            p.createTempImageEntity(1, false);
+            p.createTempImageEntity(1);
         }
 
         List moduleList = this.forumModuleService.getForumModuleList(true);

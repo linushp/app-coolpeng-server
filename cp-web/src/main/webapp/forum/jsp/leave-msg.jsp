@@ -1,6 +1,6 @@
 <%@ page isELIgnored="false" language="java" pageEncoding="UTF-8" contentType="text/html;charset=utf-8" %>
 <%@ include file="/common/jsp/taglibs.jsp" %>
-<tms:view>
+<tms:view title="留言板">
     <link rel="stylesheet" href="${ctx}/forum/css/leave-msg.css"/>
 
     <div class="mainContent">

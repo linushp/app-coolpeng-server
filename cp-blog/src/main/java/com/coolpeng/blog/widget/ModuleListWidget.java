@@ -5,12 +5,11 @@ import com.coolpeng.blog.entity.ForumModule;
 import com.coolpeng.blog.utils.ForumUrlUtils;
 import com.coolpeng.framework.utils.CollectionUtil;
 
-import java.io.IOException;
-import java.util.List;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.TagSupport;
+import java.io.IOException;
+import java.util.List;
 
 public class ModuleListWidget extends TagSupport {
     private List<ForumModule> moduleList;

@@ -3,9 +3,11 @@ package com.coolpeng.blog.service;
 import com.coolpeng.blog.entity.ForumGroup;
 import com.coolpeng.blog.entity.ForumModule;
 import com.coolpeng.blog.entity.ForumPost;
+import com.coolpeng.blog.utils.EntityUtils;
 import com.coolpeng.framework.exception.FieldNotFoundException;
 import com.coolpeng.framework.exception.ParameterErrorException;
 import com.coolpeng.framework.exception.UpdateErrorException;
+import com.coolpeng.framework.mvc.TmsCurrentRequest;
 import com.coolpeng.framework.utils.CollectionUtil;
 import com.coolpeng.framework.utils.StringUtils;
 import org.springframework.stereotype.Service;
@@ -36,6 +38,8 @@ public class ForumModuleService {
         for (ForumGroup g : GROUP_LIST) {
             GROUP_MAP.put(g.getId(), g);
         }
+
+        EntityUtils.setModuleDefaultIcon(MODULE_LIST, TmsCurrentRequest.getContext());
     }
 
     private void makeSureNotNull() {

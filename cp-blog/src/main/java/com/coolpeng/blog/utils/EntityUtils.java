@@ -1,17 +1,19 @@
 package com.coolpeng.blog.utils;
 
+import com.coolpeng.blog.entity.ForumModule;
 import com.coolpeng.blog.entity.ForumPost;
 import com.coolpeng.blog.entity.ForumPostReply;
 import com.coolpeng.blog.entity.UserEntity;
 import com.coolpeng.blog.entity.base.BlogBaseEntity;
 import com.coolpeng.framework.db.PageResult;
+import com.coolpeng.framework.utils.CollectionUtil;
 import com.coolpeng.framework.utils.StringUtils;
 
 import java.util.Iterator;
 import java.util.List;
 
 public class EntityUtils {
-    public static UserEntity getDefaultUser() {
+    public static UserEntity getDefaultUser(String ctx) {
         UserEntity defaultUser = new UserEntity();
         defaultUser.setNickname("匿名");
         defaultUser.setId("default");
@@ -19,8 +21,8 @@ public class EntityUtils {
         return defaultUser;
     }
 
-    public static void addDefaultUser(PageResult pageResult) {
-        UserEntity defaultUser = getDefaultUser();
+    public static void addDefaultUser(PageResult pageResult,String ctx) {
+        UserEntity defaultUser = getDefaultUser(ctx);
 
         if (pageResult == null) {
             return;
@@ -66,7 +68,7 @@ public class EntityUtils {
         if (pageResult.getPageData() == null) {
             return;
         }
-        UserEntity defaultUser = getDefaultUser();
+        UserEntity defaultUser = getDefaultUser(context);
 
         List<ForumPost> dataList = pageResult.getPageData();
         for (ForumPost p : dataList) {
@@ -86,6 +88,54 @@ public class EntityUtils {
             String nickname = p.getCreateNickname();
             if (StringUtils.isBlank(nickname))
                 p.setCreateNickname(user.getNickname());
+        }
+    }
+
+
+    public static void setReplyAvatarUrl(PageResult<ForumPostReply> pageResult, String context) {
+        if (pageResult == null) {
+            return;
+        }
+        if (pageResult.getPageData() == null) {
+            return;
+        }
+        UserEntity defaultUser = getDefaultUser(context);
+
+        List<ForumPostReply> dataList = pageResult.getPageData();
+        for (ForumPostReply p : dataList) {
+            UserEntity user = (p.getCreateUser() != null) ? p.getCreateUser() : defaultUser;
+
+            String avatar = p.getCreateAvatar();
+            if (StringUtils.isNotBlank(avatar)) {
+                if (!avatar.startsWith("http"))
+                    p.setCreateAvatar(context + avatar);
+            } else {
+                String userAvatar = user.getAvatar();
+                if (!userAvatar.startsWith("http")) {
+                    p.setCreateAvatar(context + userAvatar);
+                }
+            }
+
+            String nickname = p.getCreateNickname();
+            if (StringUtils.isBlank(nickname))
+                p.setCreateNickname(user.getNickname());
+        }
+    }
+
+
+    public static void setModuleDefaultIcon(List<ForumModule> moduleList,String context){
+        String [] imgList = new String[]{"001.png","002.png","003.png","004.png","005.png","006.png","007.png","008.jpg","009.jpg","010.jpg","011.png"};
+        if (!CollectionUtil.isEmpty(moduleList)){
+            int i=0;
+            int imgLength = imgList.length;
+            for (ForumModule m : moduleList){
+                String icon = m.getModuleIcon();
+                if (StringUtils.isBlank(icon) || (!icon.endsWith(".png") && !icon.endsWith(".jpg"))){
+                    int index = i % imgLength;
+                    m.setModuleIcon(context + "/forum/images/modules/"+ imgList[index]);
+                }
+                i++;
+            }
         }
     }
 }

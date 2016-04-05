@@ -1,10 +1,15 @@
 package com.coolpeng.framework.utils;
 
-import java.text.ParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class DateUtil {
+
+    private static Logger logger = LoggerFactory.getLogger(DateUtil.class);
+
     private static final long minute = 60000L;
     private static final long hour = 3600000L;
     private static final long day = 86400000L;
@@ -21,12 +26,19 @@ public class DateUtil {
     }
 
     public static String toPrettyString(String date) {
+
+        if (StringUtils.isBlank(date)) {
+            return "";
+        }
+
         Date d;
         try {
             d = DATE_FORMAT.parse(date);
-        } catch (ParseException e) {
-            return date;
+        } catch (Throwable e) {
+            logger.error(e.getMessage() + ", and the date is " + date);
+            return "";
         }
+
         return toPrettyString(d);
     }
 
@@ -36,24 +48,24 @@ public class DateUtil {
         }
         long diff = new Date().getTime() - date.getTime();
         long r = 0L;
-        if (diff > 32140800000L) {
-            r = diff / 32140800000L;
+        if (diff > year) {
+            r = diff / year;
             return r + "年前";
         }
-        if (diff > 2678400000L) {
-            r = diff / 2678400000L;
+        if (diff > month) {
+            r = diff / month;
             return r + "个月前";
         }
-        if (diff > 86400000L) {
-            r = diff / 86400000L;
+        if (diff > day) {
+            r = diff / day;
             return r + "天前";
         }
-        if (diff > 3600000L) {
-            r = diff / 3600000L;
+        if (diff > hour) {
+            r = diff / hour;
             return r + "个小时前";
         }
-        if (diff > 60000L) {
-            r = diff / 60000L;
+        if (diff > minute) {
+            r = diff / minute;
             return r + "分钟前";
         }
         return "刚刚";

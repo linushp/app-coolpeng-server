@@ -329,7 +329,7 @@ public class ForumPost extends BlogBaseEntity {
     }
 
 
-    public void createTempImageEntity(int maxCount, boolean isThumb) {
+    public void createTempImageEntity(int maxCount) {
         if (this.imageList == null) {
             this.imageList = new ArrayList();
         }
@@ -371,14 +371,6 @@ public class ForumPost extends BlogBaseEntity {
             this.imageList = this.imageList.subList(0, maxCount);
         }
 
-        if (isThumb) {
-            List thumbList = new ArrayList();
-            for (String url : this.imageList) {
-                String thumb = url.replaceFirst("http://coolpeng.bj.bcebos.com/dragon_ball/upload/", "http://coolpeng.bj.bcebos.com/dragon_ball/upload_thumb/");
-                thumbList.add(thumb);
-            }
-            this.imageList = thumbList;
-        }
     }
 
     public void addImageList(List<String> images) {

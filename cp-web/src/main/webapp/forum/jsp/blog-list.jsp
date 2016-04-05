@@ -1,6 +1,6 @@
 <%@ page isELIgnored="false" language="java" pageEncoding="UTF-8" contentType="text/html;charset=utf-8" %>
 <%@ include file="/common/jsp/taglibs.jsp" %>
-<tms:view require="ueditor">
+<tms:view require="ueditor" title="${belongModule.moduleName}">
     <link rel="stylesheet" href="${ctx}/forum/css/forum.css"/>
     <script src="${ctx}/common/lib/layer/layer.js"></script>
     <style>
