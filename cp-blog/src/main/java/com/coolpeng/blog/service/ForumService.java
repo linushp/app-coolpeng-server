@@ -200,12 +200,40 @@ public class ForumService {
         return qc;
     }
 
+    public List<ForumPostReply> getLastPostReplyByModuleId(int pageCount,String moduleId) {
+
+        //如果需要多schema切换，还需要注意
+        String schemaPrefix = "";
+
+        String sql = "" +
+                "SELECT a.*,b.forum_module_id  " +
+                "FROM t_forum_post_reply a left join t_forum_post b on a.forum_post_id=b.id " +
+                "where b.forum_module_id = :moduleId  " +
+                "order by id desc  " +
+                "limit 0,:pageCount";
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("pageCount", pageCount);
+        params.put("moduleId", moduleId);
+
+        List<ForumPostReply> replyPageResult = ForumPostReply.DAO.queryForList(sql, params);
+        PageResult pageResult = new PageResult(100000, pageCount, 1, replyPageResult);
+
+        EntityUtils.addDefaultUser(pageResult, TmsCurrentRequest.getContext());
+        EntityUtils.setReplyAvatarUrl(pageResult, TmsCurrentRequest.getContext());
+
+        return pageResult.getPageData();
+    }
+
     public List<ForumPostReply> getLastPostReply(int pageCount) throws FieldNotFoundException, ClassNotFoundException {
         QueryCondition qc = new QueryCondition();
 
         qc.setOrderDesc("id");
 
-        PageResult replyPageResult = ForumPostReply.DAO.queryForPage(qc, 1, pageCount, new String[0]);
+        PageResult<ForumPostReply> replyPageResult = ForumPostReply.DAO.queryForPage(qc, 1, pageCount, new String[0]);
+
+        EntityUtils.addDefaultUser(replyPageResult,TmsCurrentRequest.getContext());
+        EntityUtils.setReplyAvatarUrl(replyPageResult, TmsCurrentRequest.getContext());
 
         return replyPageResult.getPageData();
     }

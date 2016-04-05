@@ -481,4 +481,5 @@ public class TemplateSQL
 	public void setSchemaPrefix(String schemaPrefix) {
 		this.schemaPrefix = schemaPrefix;
 	}
+	
 }

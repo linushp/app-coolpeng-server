@@ -29,6 +29,7 @@ public class SimpleDAO<T> {
     private TemplateSQL sqlTemplate;
     private Class<T> clazz;
 
+
     public SimpleDAO(Class<T> clazz) {
         this.sqlTemplate = new TemplateSQL(clazz);
         this.clazz = clazz;
@@ -164,6 +165,7 @@ public class SimpleDAO<T> {
 
         return queryForList(sql, params);
     }
+
 
     public PageResult<T> queryForPage(int pageNumber, int pageSize)
             throws ClassNotFoundException, FieldNotFoundException {

@@ -7,8 +7,9 @@ import com.coolpeng.framework.db.annotation.FieldDef;
 public class ForumPostReply extends BlogBaseEntity {
     public static SimpleDAO<ForumPostReply> DAO = new SimpleDAO(ForumPostReply.class);
     private String forumPostId;
-    private String forumPostTitle;
     private ForumPost forumPost;
+
+    private String forumPostTitle;
     private String replyTitle;
     private String floorNumber;
 

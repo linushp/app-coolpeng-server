@@ -2,6 +2,7 @@ package com.coolpeng.blog.controller;
 
 import com.coolpeng.blog.entity.ForumModule;
 import com.coolpeng.blog.entity.ForumPost;
+import com.coolpeng.blog.entity.ForumPostReply;
 import com.coolpeng.blog.entity.enums.ModuleTypeEnum;
 import com.coolpeng.blog.service.ForumModuleService;
 import com.coolpeng.blog.service.ForumService;
@@ -49,8 +50,11 @@ public class ForumController {
         if (module.getModuleType() == ModuleTypeEnum.GOSSIP.getValue())
             return new ModelAndView("forum/jsp/leave-msg", modelMap);
         if (module.getModuleType() == ModuleTypeEnum.BLOG.getValue()) {
+            List<ForumPostReply> lastReplyList = this.forumService.getLastPostReplyByModuleId(5,moduleId);
+            modelMap.put("lastReplyList",lastReplyList);
             return new ModelAndView("forum/jsp/blog-list", modelMap);
         }
+
         List<ForumPost> list = postList.getPageData();
         for (ForumPost p : list) {
             p.createTempImageEntity(9);

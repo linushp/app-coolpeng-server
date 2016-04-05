@@ -15,7 +15,7 @@ import java.util.List;
 public class EntityUtils {
     public static UserEntity getDefaultUser(String ctx) {
         UserEntity defaultUser = new UserEntity();
-        defaultUser.setNickname("匿名");
+        defaultUser.setNickname("孙悟空");
         defaultUser.setId("default");
         defaultUser.setAvatar("/forum/images/sys_avatar.png");
         return defaultUser;
@@ -107,8 +107,9 @@ public class EntityUtils {
 
             String avatar = p.getCreateAvatar();
             if (StringUtils.isNotBlank(avatar)) {
-                if (!avatar.startsWith("http"))
+                if (!avatar.startsWith("http")){
                     p.setCreateAvatar(context + avatar);
+                }
             } else {
                 String userAvatar = user.getAvatar();
                 if (!userAvatar.startsWith("http")) {
@@ -117,8 +118,9 @@ public class EntityUtils {
             }
 
             String nickname = p.getCreateNickname();
-            if (StringUtils.isBlank(nickname))
+            if (StringUtils.isBlank(nickname)){
                 p.setCreateNickname(user.getNickname());
+            }
         }
     }
 

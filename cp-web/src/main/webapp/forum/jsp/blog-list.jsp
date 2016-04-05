@@ -74,6 +74,7 @@
                 <h2 class="title">
                     <span>最新回复</span>
                 </h2>
+                <blog:lastReply replyList="${lastReplyList}"></blog:lastReply>
             </div>
             <div class="clear"></div>
         </div>
@@ -110,5 +111,13 @@
         </div>
         <script src="${ctx}/forum/js/forum.js" type="text/javascript"></script>
     </c:if>
+
+    <style>
+
+        .cpw-msg-info {
+            width: 204px;
+        }
+
+    </style>
 
 </tms:view>

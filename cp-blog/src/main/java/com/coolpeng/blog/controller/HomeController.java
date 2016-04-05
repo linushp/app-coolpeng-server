@@ -1,6 +1,8 @@
 package com.coolpeng.blog.controller;
 
+import com.coolpeng.blog.entity.ForumModule;
 import com.coolpeng.blog.entity.ForumPost;
+import com.coolpeng.blog.entity.ForumPostReply;
 import com.coolpeng.blog.entity.enums.ModuleTypeEnum;
 import com.coolpeng.blog.service.ForumModuleService;
 import com.coolpeng.blog.service.ForumService;
@@ -41,9 +43,9 @@ public class HomeController {
             p.createTempImageEntity(1);
         }
 
-        List moduleList = this.forumModuleService.getForumModuleList(true);
+        List<ForumModule>  moduleList = this.forumModuleService.getForumModuleList(true);
 
-        List lastReplyList = this.forumService.getLastPostReply(5);
+        List<ForumPostReply> lastReplyList = this.forumService.getLastPostReply(5);
 
         ModelMap modelMap = new ModelMap();
         modelMap.put("postList", postList);

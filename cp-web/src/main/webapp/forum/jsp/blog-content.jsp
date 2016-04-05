@@ -45,25 +45,29 @@
     </div>
 
 
-    <%--<div style="margin:0 auto;width: 95%">--%>
-      <%--<div class="forum-new-tips">--%>
-        <%--<span class="forum-new-tips-icon"></span>--%>
-        <%--<span style="font-weight: 700;color: #000;font-size: 13px;">发表回复</span>--%>
-      <%--</div>--%>
-      <%--<form id="forum-new-form" action="${ctx}/forum/createPost.shtml" method="post">--%>
-        <%--<div style="height: 20px"></div>--%>
-        <%--<input class="forum-new-button" type="submit" value="回复">--%>
-        <%--<div style="height: 20px"></div>--%>
+    <%--<c:if test="${tms:isAdmin()}">--%>
 
-        <%--<div style="display: none;">--%>
-          <%--<input type="text" class="postTitle" name="postTitle">--%>
-          <%--<input type="text" class="postContent" name="postContent">--%>
-          <%--<input type="text" class="parentId" name="parentId" value="${postContent.id}">--%>
-          <%--<input type="text" class="method" name="method" value="reply">--%>
-        <%--</div>--%>
 
-      <%--</form>--%>
-    <%--</div>--%>
+      <div style="margin:0 auto;width: 95%">
+        <div class="forum-new-tips">
+          <span class="forum-new-tips-icon"></span>
+          <span style="font-weight: 700;color: #000;font-size: 13px;">发表回复</span>
+        </div>
+          <%--<input type="text" placeholder="请输入标题" class="forum-new-title">--%>
+        <div id="forum-editor" style="height: 250px"></div>
+        <div style="height: 20px"></div>
+        <span class="forum-new-button">发布新帖</span>
+        <div style="height: 20px"></div>
+        <form style="display: none" id="forum-new-form" action="${ctx}/forum/createPost.shtml" method="post">
+          <input type="text" class="postTitle" name="postTitle">
+          <input type="text" class="postContent" name="postContent">
+          <input type="text" class="parentId" name="parentId" value="${postContent.id}">
+          <input type="text" class="method" name="method" value="reply">
+        </form>
+      </div>
+      <script src="<%=application.getAttribute("ctx")%>/forum/js/forum.js" type="text/javascript"></script>
+
+    <%--</c:if>--%>
 
 
 

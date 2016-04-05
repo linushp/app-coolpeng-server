@@ -21,13 +21,15 @@
 }
 
 .cpw-msg-info a {
+    font-weight: normal;
     display: block;
     color: #333;
-    width: 267px;
     overflow: hidden;
-    font-size: 14px;
+    font-size: 13px;
     margin-top: 5px;
     text-decoration: none;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .cpw-msg-info a:hover {
@@ -36,6 +38,7 @@
 }
 
 .cpw-msg-info p {
+    word-wrap: break-word;
     position: relative;
     color: #666;
     background: #fafafa;
@@ -48,8 +51,9 @@
     box-shadow: 0 4px 3px -3px rgba(0,0,0,0.1);
     padding: 7px 10px;
     font-size: 13px;
-    width: 229px;
-    height: 61px;
+    /*width: 229px;*/
+    max-height: 61px;
+    min-height: 20px;
     margin-top: 12px;
 }
 .cpw-msg-item {
@@ -108,9 +112,12 @@
 .cpw-msg-info span {
     display: block;
     color: #ff8838;
-    font-size: 14px;
+    font-size: 13px;
+    font-weight: normal;
 }
-
+.cpw-msg-info h3{
+    margin-top: 0px;
+}
 
 
 
