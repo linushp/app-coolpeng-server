@@ -17,10 +17,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 //import org.springframework.jdbc.core.BeanPropertyRowMapper;
 
@@ -152,7 +149,7 @@ public class SimpleDAO<T> {
         } catch (EmptyResultDataAccessException e) {
             logger.info("no result , params is {}", params);
         }
-        return null;
+        return new ArrayList<>();
     }
 
     public List<T> queryByNamingSQL(String namingSqlID, Map<String, Object> params) {

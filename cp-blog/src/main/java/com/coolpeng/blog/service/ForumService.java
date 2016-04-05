@@ -217,6 +217,10 @@ public class ForumService {
         params.put("moduleId", moduleId);
 
         List<ForumPostReply> replyPageResult = ForumPostReply.DAO.queryForList(sql, params);
+        if (replyPageResult == null) {
+            replyPageResult = new ArrayList<>();
+        }
+
         PageResult pageResult = new PageResult(100000, pageCount, 1, replyPageResult);
 
         EntityUtils.addDefaultUser(pageResult, TmsCurrentRequest.getContext());
