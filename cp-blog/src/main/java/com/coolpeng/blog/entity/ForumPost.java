@@ -329,7 +329,7 @@ public class ForumPost extends BlogBaseEntity {
     }
 
 
-    public void createTempImageEntity(int maxCount) {
+    public List<String> createTempImageEntity(int maxCount) {
         if (this.imageList == null) {
             this.imageList = new ArrayList();
         }
@@ -371,6 +371,9 @@ public class ForumPost extends BlogBaseEntity {
             this.imageList = this.imageList.subList(0, maxCount);
         }
 
+
+        return this.imageList;
+
     }
 
     public void addImageList(List<String> images) {
@@ -383,8 +386,9 @@ public class ForumPost extends BlogBaseEntity {
             List newImages = new ArrayList(imageSet);
             this.moreImages = JSON.toJSONString(newImages, true);
         } else {
-            for (String img : images)
+            for (String img : images){
                 addImage(img);
+            }
         }
     }
 

@@ -24,6 +24,14 @@ public class BaseEntity
 	public BaseEntity() {
 	}
 
+	public void copyBaseEntity(BaseEntity e){
+		this.createTime = e.createTime;
+		this.updateTime = e.updateTime;
+		this.createUserId = e.createUserId;
+		this.updateUserId = e.updateUserId;
+		this.status = e.status;
+	}
+
 	public String getId() {
 		return this.id;
 	}

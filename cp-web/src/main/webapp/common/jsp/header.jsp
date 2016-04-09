@@ -58,6 +58,8 @@
                 </c:if>
 
             </c:forEach>
+
+            <li class="header_blog_nav_li"><a href="${ctx}/images.shtml">图片</a></li>
         </ul>
     </div>
     <!--nav end-->

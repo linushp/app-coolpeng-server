@@ -38,6 +38,20 @@ public class ForumService {
     @Autowired
     private ForumModuleService forumModuleService;
 
+    @Autowired
+    private ForumImageService forumImageService;
+
+
+    /**
+     * 创建一篇新的帖子
+     * @param moduleId
+     * @param postTitle
+     * @param postContent
+     * @return
+     * @throws FieldNotFoundException
+     * @throws UpdateErrorException
+     * @throws ParameterErrorException
+     */
     public ForumPost createPost(String moduleId, String postTitle, String postContent)
             throws FieldNotFoundException, UpdateErrorException, ParameterErrorException {
         ForumPost forumPost = toForumPost(moduleId, postTitle, postContent);
@@ -50,7 +64,7 @@ public class ForumService {
         ForumModule module = forumPost.getForumModule();
 
         String content = forumPost.getPostContent();
-        List images = getImageUrlListFromContent(content);
+        List<String> images = getImageUrlListFromContent(content);
         forumPost.addImageList(images);
 
         if (TmsCurrentRequest.isLogin()) {
@@ -69,15 +83,17 @@ public class ForumService {
 
         this.forumHomeService.updateForumHome(forumPost, images);
 
+        this.forumImageService.saveForumPostImageByNewPost(forumPost,images);
+
         return forumPost;
     }
 
     public ForumPostReply createPostReply(String postId, String postContent)
             throws FieldNotFoundException, UpdateErrorException, ParameterErrorException {
-        ForumPost p = (ForumPost) ForumPost.DAO.queryForObject(postId);
+        ForumPost p = ForumPost.DAO.queryForObject(postId);
         int replyCount = p.getReplyCount();
         p.setReplyCount(replyCount + 1);
-        List images = getImageUrlListFromContent(postContent);
+        List<String> images = getImageUrlListFromContent(postContent);
         p.addImageList(images);
 
         String summary = HtmlUtil.getTextFromHtml2(postContent);
@@ -115,6 +131,9 @@ public class ForumService {
         }
 
         ForumPostReply.DAO.insert(reply);
+
+        this.forumImageService.saveForumPostImageByNewReply(reply, images);
+
         return reply;
     }
 

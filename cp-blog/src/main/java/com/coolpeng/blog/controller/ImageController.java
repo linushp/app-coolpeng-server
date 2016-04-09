@@ -1,16 +1,16 @@
 package com.coolpeng.blog.controller;
 
 import com.coolpeng.blog.entity.ForumPost;
-import com.coolpeng.blog.entity.ImageKeyword;
-import com.coolpeng.framework.db.PageResult;
+import com.coolpeng.blog.entity.ForumPostImage;
+import com.coolpeng.framework.mvc.TMSResponse;
+import com.coolpeng.framework.utils.CollectionUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -20,28 +20,79 @@ import java.util.Map;
 @Controller
 public class ImageController {
 
+
+
+    @RequestMapping(value = {"/images"}, method = {org.springframework.web.bind.annotation.RequestMethod.GET})
+    public ModelAndView getPostContent() {
+        ModelMap modelMap = new ModelMap();
+        return new ModelAndView("forum/jsp/image-list", modelMap);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     /**
      * 获取论坛所有的帖子
      *
      * @return
      */
-    @RequestMapping(value = "/forum/post-list", method = RequestMethod.POST)
-    public ModelAndView getPostList(@RequestParam(value = "imgSrc", required = false, defaultValue = "") String imgSrc,
-                                    @RequestParam(value = "category", required = false, defaultValue = "") String category,
-                                    @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword,
-                                    @RequestParam(value = "desc", required = false, defaultValue = "") String desc) {
+    @ResponseBody
+    @RequestMapping("/images/updateForumImages")
+    public TMSResponse updateForumImages() {
 
+        List<ForumPostImage> images = ForumPostImage.DAO.findAll();
 
-//        Map<String, Object> params = new HashMap<>();
-//        params.put("")
-//
-//        ImageKeyword.DAO.queryForObject(params);
-//
+        List<ForumPost> posts = ForumPost.DAO.findAll();
 
+        List<ForumPostImage> insertImages = new ArrayList<>();
+
+        try {
+            Map<String, Object> oldImages = CollectionUtil.toMap(images, "imagePath");
+
+            for (ForumPost post:posts){
+                List<String> imageList = post.createTempImageEntity(10000);
+
+                for (String imagePath:imageList){
+                    if (!oldImages.containsKey(imagePath)){
+                        insertImages.add(createImageInfo(imagePath,post));
+                    }
+                }
+            }
+
+            for (ForumPostImage img:insertImages){
+                ForumPostImage.DAO.insertOrUpdate(img);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         return null;
     }
 
-    ;
+    public ForumPostImage createImageInfo(String imagePath, ForumPost post) {
+        ForumPostImage image = new ForumPostImage();
+        image.setCreateTime(post.getCreateTime());
+        image.setCreateUserId(post.getCreateUserId());
+        image.setImageDesc(post.getSummary());
+        image.setImageName(post.getPostTitle());
+        image.setForumPostId(post.getId());
+        image.setForumPostTitle(post.getPostTitle());
+        image.setImagePath(imagePath);
+
+        return image;
+    }
+
+
 
 }

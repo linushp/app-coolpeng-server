@@ -1,5 +1,6 @@
-package com.coolpeng.blog.entity;
+package coolpeng.test;
 
+import com.coolpeng.blog.entity.ForumGroup;
 import com.coolpeng.framework.db.BaseEntity;
 import com.coolpeng.framework.db.SimpleDAO;
 import com.coolpeng.framework.db.annotation.FieldDef;
@@ -13,6 +14,7 @@ import java.util.Map;
 
 /**
  * Created by 栾海鹏 on 2016/3/26.
+ * TODO 需要删除，这只是一个测试类
  */
 public class MenuEntity extends BaseEntity {
 

@@ -20,6 +20,10 @@ public class ForumPostReply extends BlogBaseEntity {
     private String createAvatar;
     private String createMail;
     private String createIpAddr;
+
+    /**
+     * 下面这些字段，暂时没用到
+     */
     private String image1;
     private String image2;
     private String image3;
