@@ -85,13 +85,13 @@ public class ForumController {
         if ("post".equals(method)) {
             String moduleId = parentId;
             this.forumService.createPost(moduleId, postTitle, postContent);
-            return "redirect:/" + ForumUrlUtils.toPostListURL(moduleId, orderBy);
+            return "redirect:/" + ForumUrlUtils.toPostListURLNoCtx(moduleId, orderBy);
         }
 
         if ("reply".equals(method)) {
             String postId = parentId;
             this.forumService.createPostReply(postId, postContent);
-            return "redirect:/" + ForumUrlUtils.toPostContentURL(postId);
+            return "redirect:/" + ForumUrlUtils.toPostContentURLNoCtx(postId);
         }
 
         return "redirect:/forum/post-list.shtml";
@@ -133,7 +133,7 @@ public class ForumController {
 
                 this.forumModuleService.updatePostCount(module);
             }
-            return "redirect:/" + ForumUrlUtils.toPostListURL(moduleId, orderBy);
+            return "redirect:/" + ForumUrlUtils.toPostListURLNoCtx(moduleId, orderBy);
         }
 
         return "redirect:/forum/post-list.shtml";

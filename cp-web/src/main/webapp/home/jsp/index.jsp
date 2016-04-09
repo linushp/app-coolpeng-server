@@ -3,10 +3,10 @@
 <!doctype html>
 <html>
 <head>
-<title>我是朱凤珠</title>
-<meta name="Keywords" content="朱凤珠的技术博客,C语言" >
-<meta name="Description" content="朱凤珠的技术博客" >
-
+<title>朱凤珠和栾海鹏</title>
+<meta name="Keywords" content="朱凤珠栾海鹏的技术博客,C语言" >
+<meta name="Description" content="朱凤珠栾海鹏的技术博客" >
+  <meta http-equiv='X-UA-Compatible' content='IE=EDGE'>
 <!--[if lt IE 9]>
 <script src="${ctx}/home/js/modernizr.js"></script>
 <![endif]-->
@@ -141,6 +141,19 @@
     <div class="about_boy"><span><a href="/"><img src="${ctx}/home/images/boy.jpg"  style="width: 130px;height: 130px"></a></span>
       <p>初遇时，她的热情，她腼腆的微笑、可爱和气质，两个人共度的愉快时刻，一一印在我的回忆里...</p>
     </div>
+
+    <div class="about_girl">
+      <span><a href="https://github.com/luanhaipeng">
+      <img src="${ctx}/home/images/github.png"  style="width: 130px;height: 130px"></a></span>
+      <p>喜欢编程的人就要有一个自己的Github账号。分享的内容虽然不多，但是我一直在努力。嘻嘻嘻~~~~ &nbsp;&nbsp;&nbsp;
+        去看一看 <a style="color: #C5C5C5" href="https://github.com/luanhaipeng" target="_blank">栾海鹏的GitHub</a></p>
+    </div>
+
+    <div class="about_boy"><span><a href="http://www.cnblogs.com/lhp2012/"><img src="${ctx}/home/images/222.png"  style="width: 130px;height: 130px"></a></span>
+      <p>我也有一个自己的cnblog账号，自己太懒了，很少写东西，希望以后能好好写博客。。囧囧囧~~~ &nbsp;&nbsp;&nbsp;
+        去看一看 <a style="color: #78964C" href="http://www.cnblogs.com/lhp2012/" target="_blank">栾海鹏的cnblog</a></p>
+    </div>
+
   </ul>
 </div>
 <div class="blank"></div>

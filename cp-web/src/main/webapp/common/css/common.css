@@ -46,7 +46,7 @@ a:link, a:visited {
 .header_blog .text5 { position: absolute; left: 0px; top: 160px; font-family: "微软雅黑"; font-size: 30px; color: #FFF; -webkit-box-reflect: below -3px -webkit-gradient(linear, 0 0, 0 100%, from(transparent), to(white)); }/* below文字倒影方向向下，距离3px 颜色渐变由上往下 */
 .header_blog .flower { position: absolute; right: 0; top: 60px; background: url(../../home/images/flower.png) no-repeat; width: 173px; height: 175px; z-index: 2 }
 .header_blog .flower img { margin: 22px 0 0 17px; display: block; }
-.header_blog #nav { width: 100%; line-height: 50px; height: 50px; font-family: "微软雅黑"; font-size: 16px; background: rgba(98, 134, 49, 0.8); text-align: center; position: relative; border-bottom: #559765 1px solid }
+.header_blog #nav { width: 100%; line-height: 50px; height: 50px; font-family: "微软雅黑"; font-size: 16px;background: #78964C; background: rgba(98, 134, 49, 0.8); text-align: center; position: relative; border-bottom: #559765 1px solid }
 .header_blog #nav ul { width: 1024px; margin: auto; }
 .header_blog #nav ul li { text-align: center; }
 .header_blog #nav ul li a { color: #fff; }

@@ -79,19 +79,24 @@ public class ForumService {
         p.setReplyCount(replyCount + 1);
         List images = getImageUrlListFromContent(postContent);
         p.addImageList(images);
-        if (TmsCurrentRequest.isLogin()) {
-            TmsUserEntity user = TmsCurrentRequest.getCurrentUser();
-            p.setLastReplyUserId(user.getId());
-            p.setLastReplyAvatar(user.getAvatar());
-            p.setLastReplyMail(user.getMail());
-            p.setLastReplyNickname(user.getNickname());
-        }
 
         String summary = HtmlUtil.getTextFromHtml2(postContent);
         summary = StringUtils.maxSize(summary, 200);
-        p.setLastReplyMsg(summary);
-        p.setLastReplyTime(DateUtil.currentTimeFormat());
+        if (StringUtils.isNotBlank(summary)){
+            p.setLastReplyMsg(summary);
+            p.setLastReplyTime(DateUtil.currentTimeFormat());
+
+            if (TmsCurrentRequest.isLogin()) {
+                TmsUserEntity user = TmsCurrentRequest.getCurrentUser();
+                p.setLastReplyUserId(user.getId());
+                p.setLastReplyAvatar(user.getAvatar());
+                p.setLastReplyMail(user.getMail());
+                p.setLastReplyNickname(user.getNickname());
+            }
+        }
+
         ForumPost.DAO.update(p);
+
 
         ForumPostReply reply = new ForumPostReply();
         reply.setForumPostId(postId);

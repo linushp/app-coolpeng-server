@@ -20,4 +20,13 @@ public class ForumUrlUtils {
         String ctx = TmsCurrentRequest.getContext();
         return ctx + "/forum/post-list.shtml?orderBy=" + orderBy + "&moduleId=" + moduleId;
     }
+
+
+    public static String toPostContentURLNoCtx(String postId) {
+        return "forum/post-content.shtml?postId=" + postId;
+    }
+
+    public static String toPostListURLNoCtx(String moduleId, String orderBy) {
+        return "forum/post-list.shtml?orderBy=" + orderBy + "&moduleId=" + moduleId;
+    }
 }
