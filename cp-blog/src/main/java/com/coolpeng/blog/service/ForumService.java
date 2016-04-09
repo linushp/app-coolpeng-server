@@ -202,44 +202,51 @@ public class ForumService {
 
     public List<ForumPostReply> getLastPostReplyByModuleId(int pageCount,String moduleId) {
 
-        //如果需要多schema切换，还需要注意
-        String schemaPrefix = "";
-
-        String sql = "" +
-                "SELECT a.*,b.forum_module_id  " +
-                "FROM t_forum_post_reply a left join t_forum_post b on a.forum_post_id=b.id " +
-                "where b.forum_module_id = :moduleId  " +
-                "order by id desc  " +
-                "limit 0,:pageCount";
-
         Map<String, Object> params = new HashMap<>();
-        params.put("pageCount", pageCount);
-        params.put("moduleId", moduleId);
+        params.put("moduleId",moduleId);
 
-        List<ForumPostReply> replyPageResult = ForumPostReply.DAO.queryForList(sql, params);
-        if (replyPageResult == null) {
-            replyPageResult = new ArrayList<>();
+        List<ForumPost> posts = ForumPost.DAO.queryForList("SELECT * FROM t_forum_post where last_reply_msg !='' and forum_module_id=:moduleId order by last_reply_time desc limit 0,100;", params);
+
+        List<ForumPostReply> replyList = new ArrayList<>();
+        for (ForumPost post:posts){
+            //过滤掉空回复
+            if (StringUtils.isNotBlank(post.getLastReplyMsg())){
+                replyList.add(post.extractLastReply());
+            }
         }
 
-        PageResult pageResult = new PageResult(100000, pageCount, 1, replyPageResult);
+        if (replyList.size()>pageCount){
+            replyList = replyList.subList(0,pageCount);
+        }
 
-        EntityUtils.addDefaultUser(pageResult, TmsCurrentRequest.getContext());
-        EntityUtils.setReplyAvatarUrl(pageResult, TmsCurrentRequest.getContext());
+        EntityUtils.addDefaultUser(replyList,TmsCurrentRequest.getContext());
+        EntityUtils.setReplyAvatarUrl(replyList, TmsCurrentRequest.getContext());
 
-        return pageResult.getPageData();
+        return replyList;
     }
 
     public List<ForumPostReply> getLastPostReply(int pageCount) throws FieldNotFoundException, ClassNotFoundException {
-        QueryCondition qc = new QueryCondition();
 
-        qc.setOrderDesc("id");
 
-        PageResult<ForumPostReply> replyPageResult = ForumPostReply.DAO.queryForPage(qc, 1, pageCount, new String[0]);
+        List<ForumPost> posts = ForumPost.DAO.queryForList("SELECT * FROM t_forum_post where last_reply_msg !='' order by last_reply_time desc limit 0,100", null);
 
-        EntityUtils.addDefaultUser(replyPageResult,TmsCurrentRequest.getContext());
-        EntityUtils.setReplyAvatarUrl(replyPageResult, TmsCurrentRequest.getContext());
+        List<ForumPostReply> replyList = new ArrayList<>();
+        for (ForumPost post:posts){
+            //过滤掉空回复
+            if (StringUtils.isNotBlank(post.getLastReplyMsg())){
+                replyList.add(post.extractLastReply());
+            }
+        }
 
-        return replyPageResult.getPageData();
+        if (replyList.size()>pageCount){
+            replyList = replyList.subList(0,pageCount);
+        }
+
+        EntityUtils.addDefaultUser(replyList,TmsCurrentRequest.getContext());
+        EntityUtils.setReplyAvatarUrl(replyList, TmsCurrentRequest.getContext());
+
+        return replyList;
+
     }
 
     public ForumPost getPostWithReply(String postId, int pageNumber, int pageSize)

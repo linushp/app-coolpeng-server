@@ -417,4 +417,24 @@ public class ForumPost extends BlogBaseEntity {
             this.moreImages = JSON.toJSONString(images, true);
         }
     }
+
+
+    public ForumPostReply extractLastReply(){
+        ForumPost post = this;
+        ForumPostReply reply = new ForumPostReply();
+        reply.setCreateTime(post.getLastReplyTime());
+        reply.setUpdateTime(post.getLastReplyTime());
+        reply.setForumPostId(post.getId());
+        reply.setForumPostTitle(post.getPostTitle());
+        reply.setReplyContent(post.getLastReplyMsg());
+        reply.setReplySummary(post.getLastReplyMsg());
+        reply.setCreateNickname(post.getLastReplyNickname());
+        reply.setCreateAvatar(post.getLastReplyAvatar());
+        reply.setCreateMail(post.getLastReplyMail());
+        reply.setCreateUserId(post.getLastReplyUserId());
+        reply.setUpdateUserId(post.getLastReplyUserId());
+
+        return reply;
+    }
+
 }

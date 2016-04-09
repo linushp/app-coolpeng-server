@@ -6,12 +6,11 @@ import com.coolpeng.framework.mvc.jsptag.TmsFunctions;
 import com.coolpeng.framework.utils.CollectionUtil;
 import com.coolpeng.framework.utils.StringUtils;
 
-import java.io.IOException;
-import java.util.List;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.TagSupport;
+import java.io.IOException;
+import java.util.List;
 
 public class LastReplyWidget extends TagSupport {
     private List<ForumPostReply> replyList;
@@ -26,7 +25,19 @@ public class LastReplyWidget extends TagSupport {
 
         String url = ForumUrlUtils.toPostContentURL(m.getForumPostId());
 
-        String x = "<li class=\"cpw-msg-item\">\n    <div class=\"cpw-msg-pic\"><img src=\"" + avatar + "\" width=\"40\" height=\"40\"></div>\n" + "    <div class=\"cpw-msg-info\">\n" + "        <h3><span>" + createName + "</span>" + "           <a href='" + url + "' target=\"_blank\">" + title + "</a>\n" + "        </h3>\n" + "        <p>" + replyMsg + "<i></i></p>\n" + "    </div>\n" + "</li>";
+        String x = "" +
+                "<li class=\"cpw-msg-item\">\n" +
+                "    <div class=\"cpw-msg-pic\">" +
+                "       <img src=\"" + avatar + "\" width=\"40\" height=\"40\">" +
+                "    </div>\n" + "" +
+                "    <div class=\"cpw-msg-info\">\n" +
+                "        <h3>" +
+                "           <span>" + createName + "</span>" +
+                "           <a href='" + url + "' target=\"_blank\">" + title + "</a>\n" +
+                "        </h3>\n" +
+                "        <p>" + replyMsg + "<i></i></p>\n" +
+                "    </div>\n" +
+                "</li>";
 
         sb.append(x);
     }

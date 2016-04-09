@@ -33,6 +33,17 @@ public class EntityUtils {
 
         List dataList = pageResult.getPageData();
 
+        addDefaultUser(dataList,ctx);
+    }
+
+
+    public static void addDefaultUser(List dataList,String ctx) {
+
+        if (dataList == null) {
+            return;
+        }
+        UserEntity defaultUser = getDefaultUser(ctx);
+
         for (Iterator localIterator = dataList.iterator(); localIterator.hasNext(); ) {
             Object d0 = localIterator.next();
             if ((d0 instanceof BlogBaseEntity)) {
@@ -60,6 +71,7 @@ public class EntityUtils {
             }
         }
     }
+
 
     public static void setAvatarUrl(PageResult<ForumPost> pageResult, String context) {
         if (pageResult == null) {
@@ -102,6 +114,36 @@ public class EntityUtils {
         UserEntity defaultUser = getDefaultUser(context);
 
         List<ForumPostReply> dataList = pageResult.getPageData();
+        for (ForumPostReply p : dataList) {
+            UserEntity user = (p.getCreateUser() != null) ? p.getCreateUser() : defaultUser;
+
+            String avatar = p.getCreateAvatar();
+            if (StringUtils.isNotBlank(avatar)) {
+                if (!avatar.startsWith("http")){
+                    p.setCreateAvatar(context + avatar);
+                }
+            } else {
+                String userAvatar = user.getAvatar();
+                if (!userAvatar.startsWith("http")) {
+                    p.setCreateAvatar(context + userAvatar);
+                }
+            }
+
+            String nickname = p.getCreateNickname();
+            if (StringUtils.isBlank(nickname)){
+                p.setCreateNickname(user.getNickname());
+            }
+        }
+    }
+
+    public static void setReplyAvatarUrl(List<ForumPostReply> dataList, String context) {
+
+        if (dataList == null) {
+            return;
+        }
+
+        UserEntity defaultUser = getDefaultUser(context);
+
         for (ForumPostReply p : dataList) {
             UserEntity user = (p.getCreateUser() != null) ? p.getCreateUser() : defaultUser;
 
