@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+    <div id="main"></div>
+    <script>
+        var source=new window.EventSource("server.jsp");
+        source.addEventListener('message', function (e) {
+            var node = document.createElement("p");
+            node.innerText = e.data;
+            document.getElementById("main").appendChild(node)
+        }, false);
+    </script>
+</body>
+</html>

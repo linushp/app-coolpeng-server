@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<div id="main"></div>
+<script>
+    var xhr;
+    if(window.XMLHttpRequest){
+        xhr = new window.XMLHttpRequest();
+    }else if (window.ActiveXObject){
+        xhr=new ActiveXObject("Microsoft.XMLHTTP");
+    }
+
+    xhr.onreadystatechange = function(a,b,c,d){
+        var srcElement = a.srcElement || a.target;
+
+        var m = srcElement.responseText;
+        var readyState = xhr.readyState;
+//        console.log(readyState,m)
+
+        var node = document.createElement("p");
+        node.innerHTML = (readyState) +"  ,  " + m;
+        document.getElementById("main").appendChild(node)
+    };
+
+    xhr.open("GET","server_comet.jsp",true);
+    xhr.send();
+
+</script>
+</body>
+</html>

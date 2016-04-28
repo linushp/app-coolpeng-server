@@ -21,9 +21,31 @@ import java.util.List;
 public class BlogListWidget extends TagSupport {
     private PageResult<ForumPost> pageResult;
 
+
+    private String getImage1(ForumPost post) {
+        if (CollectionUtil.isEmpty(post.getImageList())) {
+            post.createTempImageEntity(10);
+        }
+
+        if (CollectionUtil.isEmpty(post.getImageList())) {
+            return null;
+        }
+
+        List<String> imgList = post.getImageList();
+
+        for (String img : imgList) {
+            if (img != null) {
+                if (img.endsWith(".png") || img.endsWith(".jpg")) {
+                    return img;
+                }
+            }
+        }
+        return null;
+    }
+
     private void appendPostHtml(StringBuffer sb, ForumPost post, ForumModuleService forumModuleService) {
         String postId = post.getId();
-        String image1 = post.getImage1();
+        String image1 = getImage1(post);
         String postUrl = ForumUrlUtils.toPostContentHttpURL(postId);
         ForumModule module = forumModuleService.getForumModule(post.getForumModuleId());
         String createTime = DateUtil.toPrettyString(post.getCreateTime());
@@ -44,12 +66,24 @@ public class BlogListWidget extends TagSupport {
             image1 = BlogFunctions.toImageW250(image1);
         }
 
-        String x = "<div class=\"blogs\">\n        <figure><img src=\"" + image1 + "\"></figure>\n" + "        <ul>\n" + "          <h3><a href='" + postUrl + "'>" + post
-                .getPostTitle() + "</a></h3>\n" + "          <p>" + post
-                .getSummary() + "</p>\n" + "          <p class=\"autor\">\n" + "               <span class=\"lm f_l\">\n" + "                   <a href=\"/\">" + module
-                .getModuleName() + "</a>\n" + "               </span>\n" + "               <span class=\"dtime f_l\">" + createTime + "</span>\n" + "               <span class=\"viewnum f_r\">浏览（<a>" + post
-                .getViewCount() + "</a>）</span>\n" + "               <span class=\"pingl f_r\">评论（<a>" + post
-                .getReplyCount() + "</a>）</span>\n" + "           </p>\n" + "        </ul>\n" + "      </div>\n";
+        String x = "" +
+                "<div class=\"blogs\">\n        " +
+                "       <figure><img src=\"" + image1 + "\"></figure>\n" +
+                "       <ul>\n" +
+                "          <h3><a href='" + postUrl + "'>" + post.getPostTitle() +
+                "             &nbsp;&nbsp;&nbsp;&nbsp;</a>" +
+                "         </h3>\n" +
+                "          <p>" + post.getSummary() + "</p>\n" +
+                "          <p class=\"autor\">\n" +
+                "               <span class=\"lm f_l\">\n" +
+                "                   <a href=\"/\">" + module.getModuleName() + "</a>\n" +
+                "               </span>\n" +
+                "               <span class=\"dtime f_l\">" + createTime + "</span>\n" +
+                "               <span class=\"viewnum f_r\">浏览（<a>" + post.getViewCount() + "</a>）</span>\n" +
+                "               <span class=\"pingl f_r\">评论（<a>" + post.getReplyCount() + "</a>）</span>\n" +
+                "           </p>\n" +
+                "        </ul>\n" +
+                "      </div>\n";
 
         sb.append(x);
     }

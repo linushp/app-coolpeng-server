@@ -41,6 +41,9 @@ public class ForumImageService {
             image.setForumPostId(reply.getForumPostId());
 
             image.copyBaseEntity(reply);
+
+
+            ForumPostImage.DAO.save(image);
         }
 
 
@@ -72,6 +75,8 @@ public class ForumImageService {
             image.setForumPostId(post.getId());
 
             image.copyBaseEntity(post);
+
+            ForumPostImage.DAO.save(image);
         }
 
     }
