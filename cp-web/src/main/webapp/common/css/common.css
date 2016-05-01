@@ -256,6 +256,20 @@ a:link, a:visited {
 }
 
 
+.cm-button{
+    padding: 0 20px;
+    height: 25px;
+    font-size: 12px;
+    line-height: 25px;
+    background-color: #379BE9;
+    text-align: center;
+    color: #FFFFFF;
+    cursor: pointer;
+    margin-right: 10px;
+    border: none;
+    display: inline-block;
+    border-radius: 5px;
+}
 
 #loginButton{
     cursor: pointer;

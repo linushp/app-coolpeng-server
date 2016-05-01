@@ -335,8 +335,23 @@
     }) : function () {
         a.layer = f;
         e.run();
-        f.use(window.APPLICATION_CONTEXT+"/common/lib/layer/skin/layer.css",null,null,function(){
+        loadCss(window.APPLICATION_CONTEXT+"/common/lib/layer/skin/layer.css",function(){
             window.layerCssLoaded = true;
         });
-    }()
+    }();
+
+
+    function loadCss(url,callback){
+        var link = document.createElement("link");
+        link.href = url;
+        link.rel = 'stylesheet';
+        link.type = "text/css";
+        link.media = 'screen';
+        link.onload = link.onreadystatechange = function(){
+            callback && callback();
+        };
+        document.getElementsByTagName("head")[0].appendChild(link);
+    }
+
+
 }(window);

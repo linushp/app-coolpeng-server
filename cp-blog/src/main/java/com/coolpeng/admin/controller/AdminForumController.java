@@ -2,6 +2,8 @@ package com.coolpeng.admin.controller;
 
 import com.coolpeng.blog.entity.ForumGroup;
 import com.coolpeng.blog.entity.ForumModule;
+import com.coolpeng.blog.entity.ForumPost;
+import com.coolpeng.blog.entity.ForumPostReply;
 import com.coolpeng.blog.service.ForumModuleService;
 import com.coolpeng.blog.service.ForumService;
 import com.coolpeng.framework.exception.FieldNotFoundException;
@@ -63,4 +65,50 @@ public class AdminForumController {
         this.forumModuleService.saveOrUpdateGroup(forumGroup.getId(), forumGroup.getGroupName(), forumGroup.getGroupDesc(), forumGroup.getStatus());
         return TMSResponse.success();
     }
+
+
+    /**
+     * 删除一篇帖子
+     * @return
+     * @throws FieldNotFoundException
+     * @throws UpdateErrorException
+     * @throws ParameterErrorException
+     * @throws InvocationTargetException
+     * @throws NoSuchMethodException
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     */
+    @ResponseBody
+    @RequestMapping({"/admin/forum/deletePostContent"})
+    public TMSResponse deletePostContent(String postId) throws FieldNotFoundException, UpdateErrorException, ParameterErrorException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+
+        ForumPost.DAO.delete(postId);
+
+
+        return TMSResponse.success();
+    }
+
+
+    /**
+     * 删除一篇帖子的回复
+     * @return
+     * @throws FieldNotFoundException
+     * @throws UpdateErrorException
+     * @throws ParameterErrorException
+     * @throws InvocationTargetException
+     * @throws NoSuchMethodException
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     */
+    @ResponseBody
+    @RequestMapping({"/admin/forum/deletePostReply"})
+    public TMSResponse deletePostReply(String replyId) throws FieldNotFoundException, UpdateErrorException, ParameterErrorException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+
+        ForumPostReply.DAO.delete(replyId);
+
+        return TMSResponse.success();
+    }
+
+
+
 }

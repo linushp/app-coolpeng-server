@@ -44,6 +44,7 @@ public class ForumService {
 
     /**
      * 创建一篇新的帖子
+     *
      * @param moduleId
      * @param postTitle
      * @param postContent
@@ -83,7 +84,7 @@ public class ForumService {
 
         this.forumHomeService.updateForumHome(forumPost, images);
 
-        this.forumImageService.saveForumPostImageByNewPost(forumPost,images);
+        this.forumImageService.saveForumPostImageByNewPost(forumPost, images);
 
         return forumPost;
     }
@@ -98,7 +99,7 @@ public class ForumService {
 
         String summary = HtmlUtil.getTextFromHtml2(postContent);
         summary = StringUtils.maxSize(summary, 200);
-        if (StringUtils.isNotBlank(summary)){
+        if (StringUtils.isNotBlank(summary)) {
             p.setLastReplyMsg(summary);
             p.setLastReplyTime(DateUtil.currentTimeFormat());
 
@@ -177,6 +178,7 @@ public class ForumService {
     public PageResult<ForumPost> getPostListByModuleType(int pageNumber, int pageSize, ModuleTypeEnum moduleType, String orderBy) throws FieldNotFoundException, ClassNotFoundException {
         return getPostList(pageNumber, pageSize, null, orderBy, moduleType);
     }
+
     public PageResult<ForumPost> getPostList(int pageNumber, int pageSize, String moduleId)
             throws FieldNotFoundException, ClassNotFoundException {
         return getPostList(pageNumber, pageSize, moduleId, null, null);
@@ -195,9 +197,9 @@ public class ForumService {
 
     public PageResult<ForumPost> getPostList(QueryCondition qc, int pageNumber, int pageSize)
             throws FieldNotFoundException, ClassNotFoundException {
-        PageResult p = ForumPost.DAO.queryForPage(qc, pageNumber, pageSize, new String[0]);
+        PageResult p = ForumPost.DAO.queryForPage(qc, pageNumber, pageSize, new String[]{"createUser"});
 
-        EntityUtils.addDefaultUser(p,TmsCurrentRequest.getContext());
+        EntityUtils.addDefaultUser(p, TmsCurrentRequest.getContext());
 
         EntityUtils.setAvatarUrl(p, TmsCurrentRequest.getContext());
 
@@ -224,26 +226,26 @@ public class ForumService {
         return qc;
     }
 
-    public List<ForumPostReply> getLastPostReplyByModuleId(int pageCount,String moduleId) {
+    public List<ForumPostReply> getLastPostReplyByModuleId(int pageCount, String moduleId) {
 
         Map<String, Object> params = new HashMap<>();
-        params.put("moduleId",moduleId);
+        params.put("moduleId", moduleId);
 
         List<ForumPost> posts = ForumPost.DAO.queryForList("SELECT * FROM t_forum_post where last_reply_msg !='' and forum_module_id=:moduleId order by last_reply_time desc limit 0,100;", params);
 
         List<ForumPostReply> replyList = new ArrayList<>();
-        for (ForumPost post:posts){
+        for (ForumPost post : posts) {
             //过滤掉空回复
-            if (StringUtils.isNotBlank(post.getLastReplyMsg())){
+            if (StringUtils.isNotBlank(post.getLastReplyMsg())) {
                 replyList.add(post.extractLastReply());
             }
         }
 
-        if (replyList.size()>pageCount){
-            replyList = replyList.subList(0,pageCount);
+        if (replyList.size() > pageCount) {
+            replyList = replyList.subList(0, pageCount);
         }
 
-        EntityUtils.addDefaultUser(replyList,TmsCurrentRequest.getContext());
+        EntityUtils.addDefaultUser(replyList, TmsCurrentRequest.getContext());
         EntityUtils.setReplyAvatarUrl(replyList, TmsCurrentRequest.getContext());
 
         return replyList;
@@ -255,18 +257,18 @@ public class ForumService {
         List<ForumPost> posts = ForumPost.DAO.queryForList("SELECT * FROM t_forum_post where last_reply_msg !='' order by last_reply_time desc limit 0,100", null);
 
         List<ForumPostReply> replyList = new ArrayList<>();
-        for (ForumPost post:posts){
+        for (ForumPost post : posts) {
             //过滤掉空回复
-            if (StringUtils.isNotBlank(post.getLastReplyMsg())){
+            if (StringUtils.isNotBlank(post.getLastReplyMsg())) {
                 replyList.add(post.extractLastReply());
             }
         }
 
-        if (replyList.size()>pageCount){
-            replyList = replyList.subList(0,pageCount);
+        if (replyList.size() > pageCount) {
+            replyList = replyList.subList(0, pageCount);
         }
 
-        EntityUtils.addDefaultUser(replyList,TmsCurrentRequest.getContext());
+        EntityUtils.addDefaultUser(replyList, TmsCurrentRequest.getContext());
         EntityUtils.setReplyAvatarUrl(replyList, TmsCurrentRequest.getContext());
 
         return replyList;
@@ -295,7 +297,7 @@ public class ForumService {
 
         PageResult<ForumPostReply> replyPageResult = ForumPostReply.DAO.queryForPage(qc, pageNumber, pageSize, new String[]{"createUser"});
 
-        EntityUtils.addDefaultUser(replyPageResult,TmsCurrentRequest.getContext());
+        EntityUtils.addDefaultUser(replyPageResult, TmsCurrentRequest.getContext());
         EntityUtils.setReplyAvatarUrl(replyPageResult, TmsCurrentRequest.getContext());
 
         p.setReplyPageResult(replyPageResult);

@@ -1,6 +1,6 @@
 <%@ page isELIgnored="false" language="java" pageEncoding="UTF-8" contentType="text/html;charset=utf-8"%>
 <%@ include file="/common/jsp/taglibs.jsp"%>
-<tms:view require="ueditor" title=" ${postContent.postTitle}">
+<tms:view require="ueditor" title="${postContent.postTitle}" name="blog-content">
 
   <link rel="stylesheet" href="<%=application.getAttribute("ctx")%>/forum/css/forum.css" />
 
@@ -9,6 +9,13 @@
   </div>
 
   <div class="mainContent forum-post">
+
+    <c:if test="${tms:isAdmin()}">
+      <div style="margin-left: 10px">
+        <span class="cm-button blog-content-edit" data-id="${postContent.id}">编辑</span><span class="cm-button blog-content-delete" data-id="${postContent.id}" data-module="${postContent.forumModuleId}">删除</span>
+      </div>
+    </c:if>
+
     <div class="forum-post-content">
       <div class="forum-post-title">
           ${postContent.postTitle}
@@ -30,6 +37,11 @@
           <div class="forum-post-user">
             <span class="forum-post-nickname">${d.createUser.nickname}</span>
             <span class="forum-post-time" title="${d.createTime}">发布于：${tms:prettyDate(d.createTime)}</span>
+
+            <c:if test="${tms:isAdmin()}">
+              <span class="blog-reply-delete" style="cursor: pointer" data-id="${d.id}">删除</span>
+            </c:if>
+
           </div>
         </div>
         <div class="forum-post-text">${d.replyContent}</div>
