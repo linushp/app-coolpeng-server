@@ -119,5 +119,11 @@
         <function-signature>java.lang.String getGlobalConstScript()</function-signature>
     </function>
 
+    <function>
+        <name>getCurrentUser</name>
+        <function-class>com.coolpeng.framework.mvc.jsptag.TmsFunctions</function-class>
+        <function-signature>com.coolpeng.framework.mvc.TmsUserEntity getCurrentUser()</function-signature>
+    </function>
+
 
 </taglib>

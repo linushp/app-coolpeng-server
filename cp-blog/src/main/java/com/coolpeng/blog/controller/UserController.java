@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping(value = {"/user/"}, produces = {"application/json; charset=UTF-8"})
+@RequestMapping(value = {"/blog/user/"}, produces = {"application/json; charset=UTF-8"})
 public class UserController {
     private static Logger logger = LoggerFactory.getLogger(UserController.class);
 
@@ -74,9 +74,19 @@ public class UserController {
     public TMSResponse doLogin(String username, String password, HttpServletRequest request) {
         TMSResponse result = this.userService.doValidate(username, password);
         if (result.getResponseCode() == 0) {
+
+            //用户的唯一标记
             TmsCurrentRequest.setCurrentUser((TmsUserEntity) result.getData());
         }
 
         return result;
+    }
+
+
+    @ResponseBody
+    @RequestMapping({"rest/logout"})
+    public TMSResponse doLogout(HttpServletRequest request) {
+        TmsCurrentRequest.setCurrentUser(null);
+        return new TMSResponse();
     }
 }

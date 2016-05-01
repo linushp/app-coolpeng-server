@@ -75,6 +75,56 @@ _.mixin({
         }
     },
 
+    jsLoader:function(url,callback){
+        var done = false;
+        var script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.language = 'javascript';
+        script.src = url;
+        script.onload = script.onreadystatechange = function(){
+            if (!done && (!script.readyState || script.readyState == 'loaded' || script.readyState == 'complete')){
+                done = true;
+                script.onload = script.onreadystatechange = null;
+                if (callback){
+                    callback.call(script);
+                }
+            }
+        };
+        document.getElementsByTagName("head")[0].appendChild(script);
+    },
+
+
+    whileTrue:function(isTrueFunction,callback,testCount){
+        if(_.isFunction(isTrueFunction)){
+            testCount = testCount||1;
+            var isTrue = isTrueFunction();
+            if(isTrue){
+                callback(testCount);
+            }else{
+                setTimeout(function(){
+                    _.whileTrue(isTrueFunction,callback,testCount+1);
+                },10);
+            }
+        }
+
+    },
+
+
+    layer:function(callback){
+        var cc = function () {
+            _.whileTrue(function () {
+                return window.layerCssLoaded === true;
+            }, function (mm) {
+                callback(window.layer);
+            });
+        };
+        if (!window.layer) {
+            var url = _.path("/common/lib/layer/layer.js");
+            _.jsLoader(url, cc);
+        } else {
+            cc();
+        }
+    }
 
 });
 
@@ -396,6 +446,4 @@ commonModule.factory('cmUtil', ["$http",function ($http) {
         }
     };
 }]);
-
-
 

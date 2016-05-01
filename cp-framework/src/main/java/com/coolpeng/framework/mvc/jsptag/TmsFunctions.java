@@ -2,6 +2,7 @@ package com.coolpeng.framework.mvc.jsptag;
 
 import com.alibaba.fastjson.JSON;
 import com.coolpeng.framework.mvc.TmsCurrentRequest;
+import com.coolpeng.framework.mvc.TmsUserEntity;
 import com.coolpeng.framework.utils.CollectionUtil;
 import com.coolpeng.framework.utils.DateUtil;
 import com.coolpeng.framework.utils.StringUtils;
@@ -35,6 +36,7 @@ public class TmsFunctions {
     public static Boolean isNotEmpty(Object object) {
         return Boolean.valueOf(!isEmpty(object).booleanValue());
     }
+
 
     public static Boolean isEmpty(Object object) {
         if (object == null) {
@@ -104,5 +106,14 @@ public class TmsFunctions {
 
     public static String getGlobalConstScript() {
         return TmsScriptUtil.getGlobalConstScript(null);
+    }
+
+
+    public static TmsUserEntity getCurrentUser(){
+        TmsUserEntity user = TmsCurrentRequest.getCurrentUser();
+        if (user==null){
+            return new TmsUserEntity();
+        }
+        return user;
     }
 }

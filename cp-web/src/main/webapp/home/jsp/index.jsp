@@ -10,6 +10,11 @@
 <!--[if lt IE 9]>
 <script src="${ctx}/home/js/modernizr.js"></script>
 <![endif]-->
+ <script type='text/javascript'>
+ var APPLICATION_CONTEXT='${ctx}';
+</script>
+  
+
 </head>
 <body>
 <link href="${ctx}/home/css/index.css" rel="stylesheet">
@@ -198,8 +203,9 @@
     </div>
   </ul>
 </div>
-<footer>
-  <p>朱凤珠的个人博客</p>
-</footer>
+<%--<footer>--%>
+  <%--<p>栾海鹏的个人博客 <span id="loginButton">登录</span></p>--%>
+<%--</footer>--%>
+<%@ include file="/common/jsp/footer.jsp" %>
 </body>
 </html>

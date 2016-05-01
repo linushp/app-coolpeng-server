@@ -70,4 +70,10 @@ public class DateUtil {
         }
         return "刚刚";
     }
+
+    public static String formatDateByUnixTime(Long aLong, String s) {
+        Date date =new Date(aLong);
+        SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(s);
+        return DATE_FORMAT.format(date);
+    }
 }
