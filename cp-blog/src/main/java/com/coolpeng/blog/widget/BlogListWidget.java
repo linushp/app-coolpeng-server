@@ -73,7 +73,7 @@ public class BlogListWidget extends TagSupport {
                 "          <h3><a href='" + postUrl + "'>" + post.getPostTitle() +
                 "             &nbsp;&nbsp;&nbsp;&nbsp;</a>" +
                 "         </h3>\n" +
-                "          <p>" + post.getSummary() + "</p>\n" +
+                "          <p>" + StringUtils.htmlEncode(post.getSummary()) + "</p>\n" +
                 "          <p class=\"autor\">\n" +
                 "               <span class=\"lm f_l\">\n" +
                 "                   <a href=\"/\">" + module.getModuleName() + "</a>\n" +

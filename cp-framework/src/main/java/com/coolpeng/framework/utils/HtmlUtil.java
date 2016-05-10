@@ -4,8 +4,6 @@ import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.parser.ParserDelegator;
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;  
   
 public class HtmlUtil {  
 
@@ -40,6 +38,9 @@ public class HtmlUtil {
         }
     }
 
+    public static String htmlEncode(String message){
+        return StringUtils.htmlEncode(message);
+    }
 
     private static class ParseCallback extends HTMLEditorKit.ParserCallback{
         private StringBuffer s = new StringBuffer();
