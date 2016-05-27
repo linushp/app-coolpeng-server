@@ -3,11 +3,11 @@
   response.setHeader("Cache-Control", "no-cache");
 
   int count =0;
-  while (count<3){
+  while (count<300){
     out.println(new java.util.Date().getTime() );
-    out.println();
-//    out.flush();
-    Thread.sleep(1000);
+    out.println("<script>console.log('11',new Date())</script>");
+    out.flush(); //不调用flush是不会输出的
+    Thread.sleep(100);
     count++;
   }
 
