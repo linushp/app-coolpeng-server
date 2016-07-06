@@ -15,6 +15,10 @@ public class TMSResponse<T> {
     // 返回对象
     private T data;
 
+    private int pageSize;
+    private int pageNo;
+    private int totalCount;
+
     //一些额外数据
     private Map<String, Object> extendData;
 
@@ -93,6 +97,32 @@ public class TMSResponse<T> {
         this.responseText = responseText;
     }
 
+
+    public int getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
+    }
+
+    public int getPageNo() {
+        return pageNo;
+    }
+
+    public void setPageNo(int pageNo) {
+        this.pageNo = pageNo;
+    }
+
+    public int getTotalCount() {
+        return totalCount;
+    }
+
+    public void setTotalCount(int totalCount) {
+        this.totalCount = totalCount;
+    }
+
+
     public TMSResponse<?> withoutDataInstance() {
 
         TMSResponse<?> body = new TMSResponse<>();
@@ -118,6 +148,5 @@ public class TMSResponse<T> {
         }
         this.extendData.put(key, value);
     }
-
 
 }

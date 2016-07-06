@@ -70,7 +70,8 @@ public class SimpleDAO<T> {
         return queryForObject(sql, params);
     }
 
-    public T queryForObject(String id)
+
+    public T queryById(String id)
             throws FieldNotFoundException, ParameterErrorException {
         if ((id == null) || (id.isEmpty())) {
             throw new ParameterErrorException("id 不能为空");
@@ -78,6 +79,10 @@ public class SimpleDAO<T> {
         Map params = new HashMap();
         params.put("id", id);
         return (T) queryForObject(params);
+    }
+
+    public T queryForObject(String id) throws ParameterErrorException, FieldNotFoundException {
+        return queryById(id);
     }
 
     public T queryForObject(String id, String[] leftJoinFieldNameArray)
