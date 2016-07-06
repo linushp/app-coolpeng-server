@@ -1,7 +1,7 @@
 package com.coolpeng.app.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.coolpeng.app.base.AppBaseController;
+import com.coolpeng.app.base.RestBaseController;
 import com.coolpeng.app.base.ReqParams;
 import com.coolpeng.blog.entity.UserEntity;
 import com.coolpeng.framework.db.EntityStatusEnum;
@@ -25,7 +25,7 @@ import java.util.UUID;
  */
 @Controller
 @RequestMapping(value = "/app/user/", produces = "application/json; charset=UTF-8")
-public class AppUserController extends AppBaseController {
+public class AppUserController extends RestBaseController {
 
     @Autowired
     private UserService userService;

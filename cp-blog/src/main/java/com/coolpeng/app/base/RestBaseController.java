@@ -13,8 +13,10 @@ import javax.servlet.http.HttpSession;
 
 /**
  * Created by 栾海鹏 on 2016/3/19.
+ * Rest请求的鉴权不仅仅是使用Session,主要是使用tokenId,
+ * Session过期了，只要tokenId还存在，则扔认为用户在线。
  */
-public class AppBaseController {
+public class RestBaseController {
 
     public UserEntity assertSessionLoginUser(JSONObject jsonObject) throws TMSMsgException {
         UserEntity user = (UserEntity) TmsCurrentRequest.getCurrentUser();
@@ -42,7 +44,11 @@ public class AppBaseController {
     }
 
 
-
+    /**
+     *
+     * @param jsonObject
+     * @return
+     */
     public UserEntity getCurrentUser(JSONObject jsonObject){
         try {
             return assertSessionLoginUser(jsonObject);

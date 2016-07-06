@@ -1,8 +1,7 @@
 package com.coolpeng.common.reply.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.coolpeng.app.base.AppBaseController;
-import com.coolpeng.blog.entity.UserEntity;
+import com.coolpeng.app.base.RestBaseController;
 import com.coolpeng.common.reply.entity.CommonReply;
 import com.coolpeng.common.reply.entity.CommonReplyPage;
 import com.coolpeng.common.reply.service.CommonReplyService;
@@ -12,18 +11,13 @@ import com.coolpeng.framework.exception.ParameterErrorException;
 import com.coolpeng.framework.exception.TMSMsgException;
 import com.coolpeng.framework.exception.UpdateErrorException;
 import com.coolpeng.framework.mvc.TMSResponse;
-import com.coolpeng.framework.mvc.TmsCurrentRequest;
-import com.coolpeng.framework.utils.CollectionUtil;
-import com.coolpeng.framework.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -32,7 +26,7 @@ import java.util.Map;
 
 @Controller
 @RequestMapping(value = "/common/reply", produces = "application/json; charset=UTF-8")
-public class CommonReplyController  extends AppBaseController {
+public class CommonReplyController  extends RestBaseController {
 
 
     @Autowired
