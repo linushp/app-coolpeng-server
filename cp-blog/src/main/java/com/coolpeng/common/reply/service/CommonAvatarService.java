@@ -2,6 +2,8 @@ package com.coolpeng.common.reply.service;
 
 import com.coolpeng.common.reply.service.model.AvatarAlbumModel;
 
+import java.util.*;
+
 /**
  * Created by luanhaipeng on 16/7/6.
  */
@@ -14,11 +16,9 @@ public class CommonAvatarService {
 
 
     private static void calculateIndex() {
-
         AvatarAlbumModel mm = avatarModels[0];
         mm.setIndexBegin(1);
         mm.setIndexEnd(mm.getCount());
-
         int length = avatarModels.length;
         for (int i = 1; i < length; i++) {
             AvatarAlbumModel m0 = avatarModels[i - 1];
@@ -33,15 +33,54 @@ public class CommonAvatarService {
     }
 
 
-    public static void main(String[] args) {
-        String url = getRandomAvatarURL();
-        System.out.println(url);
+//    public static void main(String[] args) {
+//
+//        main0(args);main0(args);main0(args);main0(args);main0(args);main0(args);
+//        main0(args);main0(args);main0(args);main0(args);main0(args);main0(args);
+//    }
+//
+//    public static void main0(String[] args) {
+//
+//        System.out.println(System.currentTimeMillis());
+//
+//        List<String> aa = getRandomAvatarUrlList(10);
+//
+//        System.out.println(System.currentTimeMillis());
+//
+//        System.out.println(aa.size());
+//    }
 
+
+    public static List<String> getRandomAvatarUrlList(int count) {
+        Set<String> avatarSet = new HashSet<>(count * 2);
+
+        boolean isFill = false;
         for (int i = 0; i < 100; i++) {
-            url = getRandomAvatarURL();
-            System.out.println(url);
+            if (!isFill) {
+                isFill = putRandomAvatarURL(avatarSet, count);
+            }
         }
+
+        List<String> avatarList = new ArrayList<>(avatarSet);
+        return avatarList.subList(0, count);
     }
+
+    private static boolean putRandomAvatarURL(Set<String> avatarSet, int count) {
+//        System.out.println("xxx");
+        if (avatarSet.size() < count) {
+//            System.out.println("mmm:"+avatarSet.size());
+            int loopCount = count * 2;
+            for (int i = 0; i < loopCount; i++) {
+                String url = getRandomAvatarURL();
+                avatarSet.add(url);
+            }
+
+//            System.out.println("zzz:"+avatarSet.size());
+            return false;
+        }
+        return true;
+    }
+
 
     public static String getRandomAvatarURL() {
         AvatarAlbumModel m = getRandomAvatarAlbum();
@@ -82,7 +121,7 @@ public class CommonAvatarService {
         int length = avatarModels.length;
         for (int i = 0; i < length; i++) {
             AvatarAlbumModel m = avatarModels[i];
-            if (m.getIndexBegin() <= randomNumber &&  randomNumber <= m.getIndexEnd()) {
+            if (m.getIndexBegin() <= randomNumber && randomNumber <= m.getIndexEnd()) {
                 return m;
             }
         }
