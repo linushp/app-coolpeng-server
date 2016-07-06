@@ -1,5 +1,6 @@
-package com.coolpeng.app.controller;
+package com.coolpeng.app.base;
 
+import com.alibaba.fastjson.JSONObject;
 import com.coolpeng.blog.entity.UserEntity;
 import com.coolpeng.blog.service.UserService;
 import com.coolpeng.framework.exception.FieldNotFoundException;
@@ -15,19 +16,14 @@ import javax.servlet.http.HttpSession;
  */
 public class AppBaseController {
 
-    public UserEntity assertSessionLoginUser() throws TMSMsgException, FieldNotFoundException {
+    public UserEntity assertSessionLoginUser(JSONObject jsonObject) throws TMSMsgException, FieldNotFoundException {
         UserEntity user = getSessionLoginUser();
 
         //Session没有登录,尝试使用tokenid登录
         if (user == null) {
-            HttpServletRequest request = getHttpServletRequest();
-
-            String tokenId = request.getHeader("tmsApp.tokenId");
-            String devicePlatform = request.getHeader("tmsApp.device.platform");
-            String deviceUuid = request.getHeader("tmsApp.device.uuid");
-
+            ReqParams reqUser = ReqParams.parse(jsonObject);
             UserService userService = (UserService) ServiceUtils.getBean("userService");
-            user = userService.getUserEntityByTokenId(tokenId, devicePlatform, deviceUuid);
+            user = userService.getUserEntityByTokenId(reqUser.getTokenId(), reqUser.getDevicePlatform(), reqUser.getUuid());
             if (user != null) {
                 setSessionLoginUser(user);
             }
