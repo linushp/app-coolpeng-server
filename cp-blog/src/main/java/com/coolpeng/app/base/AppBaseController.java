@@ -16,14 +16,19 @@ import javax.servlet.http.HttpSession;
  */
 public class AppBaseController {
 
-    public UserEntity assertSessionLoginUser(JSONObject jsonObject) throws TMSMsgException, FieldNotFoundException {
-        UserEntity user = getSessionLoginUser();
+    public UserEntity assertSessionLoginUser(JSONObject jsonObject) throws TMSMsgException {
+        UserEntity user = (UserEntity) TmsCurrentRequest.getCurrentUser();
 
         //Session没有登录,尝试使用tokenid登录
         if (user == null) {
             ReqParams reqUser = ReqParams.parse(jsonObject);
             UserService userService = (UserService) ServiceUtils.getBean("userService");
-            user = userService.getUserEntityByTokenId(reqUser.getTokenId(), reqUser.getDevicePlatform(), reqUser.getUuid());
+            try {
+                user = userService.getUserEntityByTokenId(reqUser.getTokenId(), reqUser.getDevicePlatform(), reqUser.getUuid());
+            } catch (FieldNotFoundException e) {
+                e.printStackTrace();
+                throw new TMSMsgException("用户查询失败");
+            }
             if (user != null) {
                 setSessionLoginUser(user);
             }
@@ -36,17 +41,32 @@ public class AppBaseController {
         return user;
     }
 
+
+
+    public UserEntity getCurrentUser(JSONObject jsonObject){
+        try {
+            return assertSessionLoginUser(jsonObject);
+        } catch (TMSMsgException e) {
+            return null;
+        }
+    }
+
+
+
+    public UserEntity assertIsAdmin(JSONObject jsonObject) throws TMSMsgException {
+        UserEntity user = assertSessionLoginUser(jsonObject);
+        if (!user.isAdmin()){
+            throw new TMSMsgException("您不是管理员");
+        }
+        return user;
+    }
+
     public HttpServletRequest getHttpServletRequest() {
         return TmsCurrentRequest.getHttpServletRequest();
     }
 
     public HttpSession getHttpSession() {
         return getHttpServletRequest().getSession();
-    }
-
-
-    public UserEntity getSessionLoginUser() {
-        return (UserEntity) TmsCurrentRequest.getCurrentUser();
     }
 
     public void setSessionLoginUser(UserEntity user) {

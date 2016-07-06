@@ -1,6 +1,8 @@
 package com.coolpeng.common.reply.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.coolpeng.app.base.AppBaseController;
+import com.coolpeng.blog.entity.UserEntity;
 import com.coolpeng.common.reply.entity.CommonReply;
 import com.coolpeng.common.reply.entity.CommonReplyPage;
 import com.coolpeng.common.reply.service.CommonReplyService;
@@ -30,7 +32,7 @@ import java.util.Map;
 
 @Controller
 @RequestMapping(value = "/common/reply", produces = "application/json; charset=UTF-8")
-public class CommonReplyController {
+public class CommonReplyController  extends AppBaseController {
 
 
     @Autowired
@@ -45,7 +47,6 @@ public class CommonReplyController {
 
         //最新1，最早2，最热3
         int orderType = jsonObject.getInteger("orderType");
-
 
 
         /******************************/
@@ -82,9 +83,10 @@ public class CommonReplyController {
 
     @ResponseBody
     @RequestMapping({"/deleteReply"})
-    public TMSResponse deleteReply(@RequestBody JSONObject jsonObject) throws FieldNotFoundException {
-        String replyId = jsonObject.getString("replyId");
+    public TMSResponse deleteReply(@RequestBody JSONObject jsonObject) throws FieldNotFoundException, TMSMsgException {
+        assertIsAdmin(jsonObject);
 
+        String replyId = jsonObject.getString("replyId");
         /******************************/
 
         Map<String,Object> params = new HashMap<>();
@@ -119,6 +121,7 @@ public class CommonReplyController {
     @ResponseBody
     @RequestMapping({"/deleteReplyReply"})
     public TMSResponse deleteReplyReply(@RequestBody JSONObject jsonObject) throws FieldNotFoundException, ParameterErrorException, UpdateErrorException, TMSMsgException {
+        assertIsAdmin(jsonObject);
 
         String replyId = jsonObject.getString("replyId");
         String floorNumber = jsonObject.getString("floorNumber");

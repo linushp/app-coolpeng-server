@@ -3,7 +3,6 @@ package com.coolpeng.framework.mvc;
 import com.coolpeng.framework.db.BaseEntity;
 
 public class TmsUserEntity extends BaseEntity {
-    public static String PERMISSION_ADMIN = "admin";
     private String username;
     private String password;
     private String nickname;

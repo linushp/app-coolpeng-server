@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSONObject;
  */
 public class ReqParams {
 
+    //都是必填字段
     private String uuid;  //phonegap自动获取，browser自动生成
     private String devicePlatform;  //phonegap自动获取，browser自动生成
     private String tokenId;
