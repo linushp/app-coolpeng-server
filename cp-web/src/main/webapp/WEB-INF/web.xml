@@ -14,6 +14,7 @@
         <param-name>contextConfigLocation</param-name>
         <param-value>
             classpath*:/applicationContext-controller.xml
+            classpath*:/applicationContext-blog.xml
         </param-value>
     </context-param>
 

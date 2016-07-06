@@ -10,13 +10,10 @@ import javax.servlet.http.HttpServlet;
 /**
  * Created by luanhaipeng on 16/7/6.
  */
-public class SysyemContextListener implements ServletContextListener {
+public class AppInit {
 
-    public void contextDestroyed(ServletContextEvent e) {
-
-    }
-
-    public void contextInitialized(ServletContextEvent e) {
+    public void init() throws Exception {
         TMSEventBus.addEventListener(new AppCacheRefreshListener());
     }
+
 }

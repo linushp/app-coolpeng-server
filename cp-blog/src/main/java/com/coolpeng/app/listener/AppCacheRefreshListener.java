@@ -25,7 +25,6 @@ public class AppCacheRefreshListener extends TMSEventListener {
         }
     }
 
-
     private void onEntityInsert(Class entityClass, Object entity) {
         //TODO 数据库中有新数据插入执行的函数
     }
