@@ -15,7 +15,7 @@ public class ReqParams {
     public ReqParams() {
     }
 
-    public ReqParams(String uuid, String devicePlatform, String tokenId) {
+    private ReqParams(String uuid, String devicePlatform, String tokenId) {
         this.uuid = uuid;
         this.devicePlatform = devicePlatform;
         this.tokenId = tokenId;
@@ -23,9 +23,9 @@ public class ReqParams {
 
 
     public static ReqParams parse(JSONObject jsonObject) {
-        String tokenId = jsonObject.getString("TMS_APP_TOKEN_ID");
-        String devicePlatform = jsonObject.getString("TMS_APP_DEVICE_PLATFORM");
-        String deviceUuid = jsonObject.getString("TMS_APP_DEVICE_UUID");
+        String tokenId = jsonObject.getString("TMS_APP_COMMON__TOKEN_ID");
+        String devicePlatform = jsonObject.getString("TMS_APP_COMMON__DEVICE_PLATFORM");
+        String deviceUuid = jsonObject.getString("TMS_APP_COMMON__DEVICE_UUID");
         return new ReqParams(deviceUuid, devicePlatform, tokenId);
     }
 
