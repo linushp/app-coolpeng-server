@@ -18,6 +18,26 @@ import javax.servlet.http.HttpSession;
  */
 public class RestBaseController {
 
+    public void assertTimeRestriction(Class clazz, String funcName) throws TMSMsgException {
+        assertTimeRestriction(clazz, funcName, "");
+    }
+
+    public void assertTimeRestriction(Class clazz, String funcName, String itemId) throws TMSMsgException {
+        assertTimeRestriction(clazz, funcName, itemId, 1000 * 30);
+    }
+
+    public void assertTimeRestriction(Class clazz, String funcName, String itemId, long timeLimit) throws TMSMsgException {
+        String key = "assertTimeRestriction_" + clazz.getSimpleName() + "_" + funcName + "_" + itemId;
+        Long lastTime = (Long) this.getSessionAttribute(key);
+        if (lastTime != null) {
+            if (System.currentTimeMillis() - lastTime < timeLimit) {
+                throw new TMSMsgException("操作太频繁，请休息一下吧");
+            }
+        }
+        this.setSessionAttribute(key, System.currentTimeMillis());
+    }
+
+
     public UserEntity assertSessionLoginUser(JSONObject jsonObject) throws TMSMsgException {
         UserEntity user = (UserEntity) TmsCurrentRequest.getCurrentUser();
 
@@ -45,11 +65,10 @@ public class RestBaseController {
 
 
     /**
-     *
      * @param jsonObject
      * @return
      */
-    public UserEntity getCurrentUser(JSONObject jsonObject){
+    public UserEntity getCurrentUser(JSONObject jsonObject) {
         try {
             return assertSessionLoginUser(jsonObject);
         } catch (TMSMsgException e) {
@@ -58,10 +77,9 @@ public class RestBaseController {
     }
 
 
-
     public UserEntity assertIsAdmin(JSONObject jsonObject) throws TMSMsgException {
         UserEntity user = assertSessionLoginUser(jsonObject);
-        if (!user.isAdmin()){
+        if (!user.isAdmin()) {
             throw new TMSMsgException("您不是管理员");
         }
         return user;

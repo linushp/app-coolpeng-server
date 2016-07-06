@@ -44,18 +44,26 @@ public class CommonReplyService {
 
 
     /**
-     *
      * @param pageId
      * @param pageSize
      * @param pageNumber
-     * @param orderType 最新1，最早2，最热3
+     * @param orderType  最新1，最早2，最热3
      * @return
      */
-    public PageResult<CommonReply> getReplyPageList(String pageId, int pageSize, int pageNumber,int orderType) {
+    public PageResult<CommonReply> getReplyPageList(String pageId, int pageSize, int pageNumber, int orderType) {
 
         QueryCondition qc = new QueryCondition();
         qc.addEqualCondition("pageId", pageId);
-        qc.setOrderDesc("createTime");
+        if (1 == orderType) {
+            qc.setOrderDesc("createTime");
+        }
+        if (2 == orderType) {
+            qc.setOrderAsc("createTime");
+        }
+        if (3 == orderType) {
+            qc.setOrderDesc("hot");
+        }
+
 
         try {
             PageResult<CommonReply> result = CommonReply.DAO.queryForPage(qc, pageNumber, pageSize, null);
@@ -113,7 +121,6 @@ public class CommonReplyService {
         replyReplyEntity.setFloorNumber("" + (replyEntity.getMaxFloorNumber()));
         replyList.add(replyReplyEntity);
         replyEntity.setReplyList(replyList);
-
         CommonReply.DAO.update(replyEntity);
     }
 
@@ -139,7 +146,6 @@ public class CommonReplyService {
                 replyResultList.add(replyReply);
             }
         }
-
 
         replyEntity.setReplyList(replyResultList);
         CommonReply.DAO.save(replyEntity);

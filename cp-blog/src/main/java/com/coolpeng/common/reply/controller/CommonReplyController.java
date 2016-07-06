@@ -26,7 +26,7 @@ import java.util.Map;
 
 @Controller
 @RequestMapping(value = "/common/reply", produces = "application/json; charset=UTF-8")
-public class CommonReplyController  extends RestBaseController {
+public class CommonReplyController extends RestBaseController {
 
 
     @Autowired
@@ -45,7 +45,7 @@ public class CommonReplyController  extends RestBaseController {
 
         /******************************/
         CommonReplyPage replyPage = commonReplyService.getReplyPageSummary(pageId);
-        PageResult<CommonReply> replyListPage = commonReplyService.getReplyPageList(pageId, pageSize, pageNumber,orderType);
+        PageResult<CommonReply> replyListPage = commonReplyService.getReplyPageList(pageId, pageSize, pageNumber, orderType);
         TMSResponse response = new TMSResponse();
         response.setData(replyListPage.getPageData());
         response.setTotalCount(replyListPage.getTotalCount());
@@ -60,7 +60,7 @@ public class CommonReplyController  extends RestBaseController {
 
     @ResponseBody
     @RequestMapping({"/createReply"})
-    public TMSResponse createReply(@RequestBody JSONObject jsonObject) throws UpdateErrorException {
+    public TMSResponse createReply(@RequestBody JSONObject jsonObject) throws UpdateErrorException, TMSMsgException {
         /**
          * this.pageId = jsonObject.getString("pageId");
          * this.replyContent = jsonObject.getString("replyContent");
@@ -69,10 +69,14 @@ public class CommonReplyController  extends RestBaseController {
          * this.createAvatar = jsonObject.getString("createAvatar");
          * this.createMail = jsonObject.getString("createMail");
          */
+
+        String pageId = jsonObject.getString("pageId");
+        //防止操作太频繁
+        assertTimeRestriction(CommonReplyController.class, "createReply", pageId);
+
         commonReplyService.createReply(jsonObject);
         return TMSResponse.success();
     }
-
 
 
     @ResponseBody
@@ -83,12 +87,31 @@ public class CommonReplyController  extends RestBaseController {
         String replyId = jsonObject.getString("replyId");
         /******************************/
 
-        Map<String,Object> params = new HashMap<>();
-        params.put("id",replyId);
+        Map<String, Object> params = new HashMap<>();
+        params.put("id", replyId);
         CommonReply.DAO.delete(params);
         return TMSResponse.success();
     }
 
+
+    @ResponseBody
+    @RequestMapping({"/likeReply"})
+    public TMSResponse likeReply(@RequestBody JSONObject jsonObject) throws FieldNotFoundException, ParameterErrorException, UpdateErrorException, TMSMsgException {
+        String replyId = jsonObject.getString("replyId");
+        Boolean isLike = jsonObject.getBoolean("isLike");
+
+        //防止操作太频繁
+        assertTimeRestriction(CommonReplyController.class, "likeReply", replyId);
+
+        /******************************/
+        CommonReply reply = CommonReply.DAO.queryById(replyId);
+        if (reply != null) {
+            int countChange = Boolean.TRUE.equals(isLike) ? 1 : -1;
+            reply.setLikeCount(reply.getLikeCount() + countChange);
+            CommonReply.DAO.update(reply);
+        }
+        return TMSResponse.success();
+    }
 
 
     @ResponseBody
@@ -121,12 +144,10 @@ public class CommonReplyController  extends RestBaseController {
         String floorNumber = jsonObject.getString("floorNumber");
 
         /******************************/
-        commonReplyService.deleteReplyReply(replyId,floorNumber);
+        commonReplyService.deleteReplyReply(replyId, floorNumber);
 
         return TMSResponse.success();
     }
-
-
 
 
 }

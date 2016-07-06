@@ -19,6 +19,11 @@ public class CommonReply extends BlogBaseEntity {
 
     private String createIpAddr;
     private String floorNumber;
+
+    //热度通过计算得到
+    private int hot = 0;
+    //被点赞的个数
+    private int likeCount = 0;
     private int maxFloorNumber = 0;
 
     @FieldDef(jsonColumn={List.class,CommonReply.class})
@@ -40,11 +45,14 @@ public class CommonReply extends BlogBaseEntity {
             this.createIpAddr = jsonObject.getString("createIpAddr");
             this.floorNumber = jsonObject.getString("floorNumber");
             this.maxFloorNumber = 0;
+            this.calculateHot();
         }
     }
 
 
-
+    private void calculateHot(){
+        this.hot = this.likeCount * 1 + this.maxFloorNumber * 5;
+    }
 
 
     public String getPageId() {
@@ -125,5 +133,23 @@ public class CommonReply extends BlogBaseEntity {
 
     public void setMaxFloorNumber(int maxFloorNumber) {
         this.maxFloorNumber = maxFloorNumber;
+        this.calculateHot();
+    }
+
+    public int getHot() {
+        return hot;
+    }
+
+    public void setHot(int hot) {
+        this.hot = hot;
+    }
+
+    public int getLikeCount() {
+        return likeCount;
+    }
+
+    public void setLikeCount(int likeCount) {
+        this.likeCount = likeCount;
+        this.calculateHot();
     }
 }
