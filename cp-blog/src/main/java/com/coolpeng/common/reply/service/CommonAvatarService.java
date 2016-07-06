@@ -33,22 +33,22 @@ public class CommonAvatarService {
     }
 
 
-//    public static void main(String[] args) {
-//
-//        main0(args);main0(args);main0(args);main0(args);main0(args);main0(args);
-//        main0(args);main0(args);main0(args);main0(args);main0(args);main0(args);
-//    }
-//
-//    public static void main0(String[] args) {
-//
-//        System.out.println(System.currentTimeMillis());
-//
-//        List<String> aa = getRandomAvatarUrlList(10);
-//
-//        System.out.println(System.currentTimeMillis());
-//
-//        System.out.println(aa.size());
-//    }
+    public static void main(String[] args) {
+
+        main0(args);main0(args);main0(args);main0(args);main0(args);main0(args);
+        main0(args);main0(args);main0(args);main0(args);main0(args);main0(args);
+    }
+
+    public static void main0(String[] args) {
+
+        System.out.println(System.currentTimeMillis());
+
+        List<String> aa = getRandomAvatarUrlList(10);
+
+        System.out.println(System.currentTimeMillis());
+
+        System.out.println(aa.size());
+    }
 
 
     public static List<String> getRandomAvatarUrlList(int count) {
@@ -87,7 +87,8 @@ public class CommonAvatarService {
         int randomNumber = getRandomNumber(m.getBegin(), m.getEnd());
         String fileName = m.getPrefix() + "-" + formatNumber(randomNumber) + ".jpg";
         //http://coolpeng.bj.bcebos.com/avatar/aa-0001-0504/aa-0001.jpg
-        return "http://coolpeng.bj.bcebos.com/avatar/" + m.getAlbumName() + "/" + fileName;
+//        return "http://coolpeng.bj.bcebos.com/avatar/" + m.getAlbumName() + "/" + fileName;
+        return m.getAlbumName() + "/" + fileName;
     }
 
     private static String formatNumber(int num) {

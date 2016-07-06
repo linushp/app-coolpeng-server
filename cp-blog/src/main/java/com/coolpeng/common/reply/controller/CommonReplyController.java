@@ -43,11 +43,14 @@ public class CommonReplyController {
         int pageSize = jsonObject.getInteger("pageSize");
         int pageNumber = jsonObject.getInteger("pageNumber");
 
+        //最新1，最早2，最热3
+        int orderType = jsonObject.getInteger("orderType");
+
 
 
         /******************************/
         CommonReplyPage replyPage = commonReplyService.getReplyPageSummary(pageId);
-        PageResult<CommonReply> replyListPage = commonReplyService.getReplyPageList(pageId, pageSize, pageNumber);
+        PageResult<CommonReply> replyListPage = commonReplyService.getReplyPageList(pageId, pageSize, pageNumber,orderType);
         TMSResponse response = new TMSResponse();
         response.setData(replyListPage.getPageData());
         response.setTotalCount(replyListPage.getTotalCount());

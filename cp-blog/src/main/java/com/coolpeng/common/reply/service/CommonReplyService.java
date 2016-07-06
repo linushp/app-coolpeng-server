@@ -42,7 +42,16 @@ public class CommonReplyService {
         }
     }
 
-    public PageResult<CommonReply> getReplyPageList(String pageId, int pageSize, int pageNumber) {
+
+    /**
+     *
+     * @param pageId
+     * @param pageSize
+     * @param pageNumber
+     * @param orderType 最新1，最早2，最热3
+     * @return
+     */
+    public PageResult<CommonReply> getReplyPageList(String pageId, int pageSize, int pageNumber,int orderType) {
 
         QueryCondition qc = new QueryCondition();
         qc.addEqualCondition("pageId", pageId);
