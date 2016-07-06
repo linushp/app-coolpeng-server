@@ -33,9 +33,6 @@ public class ForumService {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private ForumHomeService forumHomeService;
-
-    @Autowired
     private ForumModuleService forumModuleService;
 
     @Autowired
@@ -81,8 +78,6 @@ public class ForumService {
         ForumPost.DAO.save(forumPost);
 
         this.forumModuleService.updatePostCount(module);
-
-        this.forumHomeService.updateForumHome(forumPost, images);
 
         this.forumImageService.saveForumPostImageByNewPost(forumPost, images);
 
