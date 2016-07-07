@@ -2,3 +2,7 @@
 /cp-blog/target/
 /cp-framework/target/
 /cp-web/target/
+/cp-web/cp-web.iml
+/.idea/workspace.xml
+/cp-web/src/main/resources/db-connection.properties
+
