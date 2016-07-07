@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/com.coolpeng.iml" filepath="$PROJECT_DIR$/com.coolpeng.iml" />
       <module fileurl="file://$PROJECT_DIR$/cp-blog/cp-blog.iml" filepath="$PROJECT_DIR$/cp-blog/cp-blog.iml" />
+      <module fileurl="file://$PROJECT_DIR$/cp-cloud/cp-cloud.iml" filepath="$PROJECT_DIR$/cp-cloud/cp-cloud.iml" />
       <module fileurl="file://$PROJECT_DIR$/cp-framework/cp-framework.iml" filepath="$PROJECT_DIR$/cp-framework/cp-framework.iml" />
       <module fileurl="file://$PROJECT_DIR$/cp-web/cp-web.iml" filepath="$PROJECT_DIR$/cp-web/cp-web.iml" />
     </modules>

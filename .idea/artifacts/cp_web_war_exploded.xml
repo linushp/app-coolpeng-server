@@ -54,7 +54,7 @@
         </element>
       </element>
       <element id="directory" name="META-INF">
-        <element id="file-copy" path="F:\svn-coolpeng\source\WEB-INF\cw-ms\cp-web\target/MANIFEST.MF" />
+        <element id="file-copy" path="$PROJECT_DIR$/cp-web/target/cw-ms/META-INF/MANIFEST.MF" />
       </element>
       <element id="javaee-facet-resources" facet="cp-web/web/Web" />
     </root>
