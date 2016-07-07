@@ -1,4 +1,4 @@
-package com.coolpeng.common.reply.entity;
+package com.coolpeng.cloud.reply.entity;
 
 import com.alibaba.fastjson.JSONObject;
 import com.coolpeng.blog.entity.base.BlogBaseEntity;
