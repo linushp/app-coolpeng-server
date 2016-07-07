@@ -91,7 +91,7 @@ public class TmsCurrentRequest {
     public static boolean isAdmin() {
         TmsUserEntity user = getCurrentUser();
         if (user != null) {
-            return TmsUserEntity.PERMISSION_ADMIN.equalsIgnoreCase(user.getPermission());
+            return "admin".equalsIgnoreCase(user.getPermission());
         }
         return false;
     }

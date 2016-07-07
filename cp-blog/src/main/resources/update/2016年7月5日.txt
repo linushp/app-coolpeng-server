@@ -1,0 +1,42 @@
+DROP TABLE IF EXISTS `t_common_reply`;
+CREATE TABLE `t_common_reply` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `create_time` varchar(256) DEFAULT NULL,
+  `update_time` varchar(256) DEFAULT NULL,
+  `create_user_id` varchar(256) DEFAULT NULL,
+  `update_user_id` varchar(256) DEFAULT NULL,
+  `status` int(11) DEFAULT 0,
+
+  `page_id` varchar(256) DEFAULT NULL,
+  `reply_content` varchar(1024) DEFAULT NULL,
+  `reply_summary` varchar(512) DEFAULT NULL,
+  `create_nickname` varchar(256) DEFAULT NULL,
+  `create_avatar` varchar(256) DEFAULT NULL,
+  `create_mail` varchar(256) DEFAULT NULL,
+  `create_ip_addr` varchar(256) DEFAULT NULL,
+  `floor_number` varchar(10) DEFAULT NULL,
+
+  `hot` int(11) DEFAULT 0,
+  `like_count` int(11) DEFAULT 0,
+  `max_floor_number` int(11) DEFAULT 0,
+  `reply_list` longtext,
+
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+
+
+DROP TABLE IF EXISTS `t_common_reply_page`;
+CREATE TABLE `t_common_reply_page` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `create_time` varchar(256) DEFAULT NULL,
+  `update_time` varchar(256) DEFAULT NULL,
+  `create_user_id` varchar(256) DEFAULT NULL,
+  `update_user_id` varchar(256) DEFAULT NULL,
+  `status` int(11) DEFAULT 0,
+  `page_id` varchar(256) DEFAULT NULL,
+  `max_floor_number` int(11) DEFAULT 0,
+  `total_count` int(11) DEFAULT 0,
+
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;

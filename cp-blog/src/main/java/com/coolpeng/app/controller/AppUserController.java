@@ -1,5 +1,8 @@
 package com.coolpeng.app.controller;
 
+import com.alibaba.fastjson.JSONObject;
+import com.coolpeng.app.base.RestBaseController;
+import com.coolpeng.app.base.ReqParams;
 import com.coolpeng.blog.entity.UserEntity;
 import com.coolpeng.framework.db.EntityStatusEnum;
 import com.coolpeng.blog.service.UserService;
@@ -11,6 +14,7 @@ import com.coolpeng.framework.utils.DateUtil;
 import com.coolpeng.framework.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -21,7 +25,7 @@ import java.util.UUID;
  */
 @Controller
 @RequestMapping(value = "/app/user/", produces = "application/json; charset=UTF-8")
-public class AppUserController extends AppBaseController {
+public class AppUserController extends RestBaseController {
 
     @Autowired
     private UserService userService;
@@ -29,8 +33,6 @@ public class AppUserController extends AppBaseController {
 
     /**
      * 登录
-     * @param username
-     * @param password
      * @return
      * @throws TMSMsgException
      * @throws UpdateErrorException
@@ -38,7 +40,11 @@ public class AppUserController extends AppBaseController {
      */
     @ResponseBody
     @RequestMapping("/login")
-    public TMSResponse login(String username, String password) throws TMSMsgException, UpdateErrorException, FieldNotFoundException {
+    public TMSResponse login(@RequestBody JSONObject jsonObject) throws TMSMsgException, UpdateErrorException, FieldNotFoundException {
+        ReqParams reqParams = ReqParams.parse(jsonObject);
+        String username = jsonObject.getString("username");
+        String password = jsonObject.getString("password");
+        /****************************************************************/
 
         TMSMsgException e = new TMSMsgException("用户名或密码错误");
         UserEntity user = userService.getUserEntity(username);
@@ -63,8 +69,8 @@ public class AppUserController extends AppBaseController {
         String tokenId = uuid.toString();
         user.setLastLoginToken(tokenId);
         user.setLastLoginTime(DateUtil.currentTimeFormat());
-        user.setLastLoginDevPlatform(getHttpServletRequest().getHeader("tmsApp.device.platform"));
-        user.setLastLoginDevUid(getHttpServletRequest().getHeader("tmsApp.device.uuid"));
+        user.setLastLoginDevPlatform(reqParams.getDevicePlatform());
+        user.setLastLoginDevUid(reqParams.getUuid());
         userService.saveAndFlush(user);
 
 
@@ -78,7 +84,6 @@ public class AppUserController extends AppBaseController {
 
     /**
      * 退出
-     * @param tokenId
      * @return
      * @throws TMSMsgException
      * @throws UpdateErrorException
@@ -86,7 +91,10 @@ public class AppUserController extends AppBaseController {
      */
     @ResponseBody
     @RequestMapping("/logout")
-    public TMSResponse logout(String tokenId) throws TMSMsgException, UpdateErrorException, FieldNotFoundException {
+    public TMSResponse logout(@RequestBody JSONObject jsonObject) throws TMSMsgException, UpdateErrorException, FieldNotFoundException {
+        String tokenId = jsonObject.getString("tokenId");
+        /****************************************************************/
+
 
         UserEntity user = userService.getUserEntityByTokenId(tokenId);
         if (user != null) {
@@ -101,8 +109,6 @@ public class AppUserController extends AppBaseController {
 
     /**
      * 注册
-     * @param username
-     * @param password
      * @return
      * @throws TMSMsgException
      * @throws FieldNotFoundException
@@ -110,7 +116,10 @@ public class AppUserController extends AppBaseController {
      */
     @ResponseBody
     @RequestMapping("/register")
-    public TMSResponse register(String username, String password) throws TMSMsgException, FieldNotFoundException, UpdateErrorException {
+    public TMSResponse register(@RequestBody JSONObject jsonObject) throws TMSMsgException, FieldNotFoundException, UpdateErrorException {
+        String username = jsonObject.getString("username");
+        String password = jsonObject.getString("password");
+        /****************************************************************/
 
         if (StringUtils.isBlank(username)) {
             throw new TMSMsgException("用户名不能为空");
@@ -144,8 +153,8 @@ public class AppUserController extends AppBaseController {
      */
     @ResponseBody
     @RequestMapping("/getCurrentUserInfo")
-    public TMSResponse<UserEntity> getCurrentUserInfo() throws TMSMsgException, FieldNotFoundException {
-        UserEntity user = assertSessionLoginUser();
+    public TMSResponse<UserEntity> getCurrentUserInfo(@RequestBody JSONObject jsonObject) throws TMSMsgException, FieldNotFoundException {
+        UserEntity user = assertSessionLoginUser(jsonObject);
         user = new UserEntity(user);
         user.setPassword(null);//隐藏敏感信息
         return TMSResponse.success(user);

@@ -54,7 +54,7 @@ public class TMSEventBus {
                         listener.onEvent(event);
                     }
 
-                }catch (Exception e){
+                }catch (Throwable e){
                     //一个事件监听器报错了，让其不影响其他监听器
                     logger.error("",e);
                 }

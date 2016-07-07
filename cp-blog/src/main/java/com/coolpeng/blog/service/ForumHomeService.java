@@ -17,7 +17,6 @@ import java.util.List;
 /**
  * Created by Administrator on 2015/9/30.
  */
-@Service
 public class ForumHomeService {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());

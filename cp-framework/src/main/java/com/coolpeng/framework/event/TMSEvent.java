@@ -1,5 +1,6 @@
 package com.coolpeng.framework.event;
 
+
 /**
  * Created by 栾海鹏 on 2015/12/4.
  */
