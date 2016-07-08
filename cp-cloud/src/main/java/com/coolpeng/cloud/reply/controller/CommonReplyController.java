@@ -1,10 +1,10 @@
-package com.coolpeng.common.reply.controller;
+package com.coolpeng.cloud.reply.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.coolpeng.app.base.RestBaseController;
-import com.coolpeng.common.reply.entity.CommonReply;
-import com.coolpeng.common.reply.entity.CommonReplyPage;
-import com.coolpeng.common.reply.service.CommonReplyService;
+import com.coolpeng.cloud.reply.entity.CommonReply;
+import com.coolpeng.cloud.reply.entity.CommonReplyPage;
+import com.coolpeng.cloud.reply.service.CommonReplyService;
 import com.coolpeng.framework.db.PageResult;
 import com.coolpeng.framework.exception.FieldNotFoundException;
 import com.coolpeng.framework.exception.ParameterErrorException;
@@ -25,7 +25,7 @@ import java.util.Map;
  */
 
 @Controller
-@RequestMapping(value = "/common/reply", produces = "application/json; charset=UTF-8")
+@RequestMapping(value = "/cloud/reply", produces = "application/json; charset=UTF-8")
 public class CommonReplyController extends RestBaseController {
 
 

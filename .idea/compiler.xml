@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
-    <option name="DEFAULT_COMPILER" value="Javac" />
     <resourceExtensions />
     <wildcardResourcePatterns>
       <entry name="!?*.java" />
@@ -12,26 +11,47 @@
       <entry name="!?*.flex" />
       <entry name="!?*.kt" />
       <entry name="!?*.clj" />
+      <entry name="!?*.aj" />
     </wildcardResourcePatterns>
     <annotationProcessing>
       <profile default="true" name="Default" enabled="false">
         <processorPath useClasspath="true" />
       </profile>
-      <profile default="false" name="Maven default annotation processors profile" enabled="true">
+      <profile default="false" name="Annotation profile for cp-framework" enabled="true">
+        <sourceOutputDir name="target\generated-sources\annotations" />
+        <sourceTestOutputDir name="target\generated-test-sources\test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="cp-framework" />
+      </profile>
+      <profile default="false" name="Annotation profile for cp-blog" enabled="true">
+        <sourceOutputDir name="target\generated-sources\annotations" />
+        <sourceTestOutputDir name="target\generated-test-sources\test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="cp-blog" />
+      </profile>
+      <profile default="false" name="Annotation profile for cp-web" enabled="true">
+        <sourceOutputDir name="target\generated-sources\annotations" />
+        <sourceTestOutputDir name="target\generated-test-sources\test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="cp-web" />
+      </profile>
+      <profile default="false" name="Annotation profile for cp-cloud" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
-        <module name="cp-blog" />
-        <module name="cp-framework" />
-        <module name="cp-web" />
+        <module name="cp-cloud" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="com.coolpeng" target="1.7" />
-      <module name="cp-blog" target="1.7" />
-      <module name="cp-framework" target="1.7" />
-      <module name="cp-web" target="1.7" />
+      <module name="com.coolpeng" target="1.8" />
+      <module name="cp-blog" target="1.8" />
+      <module name="cp-cloud" target="1.8" />
+      <module name="cp-framework" target="1.8" />
+      <module name="cp-web" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

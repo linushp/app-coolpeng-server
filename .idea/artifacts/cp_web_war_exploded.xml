@@ -35,9 +35,9 @@
           <element id="library" level="project" name="Maven: commons-httpclient:commons-httpclient:3.1" />
           <element id="library" level="project" name="Maven: commons-codec:commons-codec:1.2" />
           <element id="library" level="project" name="Maven: org.apache.httpcomponents:httpcore-nio:4.3.2" />
-          <element id="library" level="project" name="Maven: org.apache.httpcomponents:httpcore:4.3.2" />
           <element id="library" level="project" name="Maven: commons-io:commons-io:2.4" />
           <element id="library" level="project" name="Maven: org.apache.httpcomponents:httpasyncclient:4.0.2" />
+          <element id="library" level="project" name="Maven: org.apache.httpcomponents:httpcore:4.3.2" />
           <element id="library" level="project" name="Maven: com.google.guava:guava:18.0" />
           <element id="library" level="project" name="Maven: joda-time:joda-time:2.3" />
           <element id="library" level="project" name="Maven: org.aspectj:aspectjweaver:1.7.4" />
@@ -51,10 +51,13 @@
           <element id="library" level="project" name="Maven: com.alibaba:fastjson:1.1.41" />
           <element id="library" level="project" name="Maven: org.apache.httpcomponents:httpclient:4.3.5" />
           <element id="library" level="project" name="Maven: BCEJavaSdk:BCEJavaSdk:0.9.0" />
+          <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.4.0" />
+          <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.4.0" />
+          <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-core:2.4.0" />
         </element>
       </element>
       <element id="directory" name="META-INF">
-        <element id="file-copy" path="F:\svn-coolpeng\source\WEB-INF\cw-ms\cp-web\target/MANIFEST.MF" />
+        <element id="file-copy" path="$PROJECT_DIR$/cp-web/target/cw-ms/META-INF/MANIFEST.MF" />
       </element>
       <element id="javaee-facet-resources" facet="cp-web/web/Web" />
     </root>

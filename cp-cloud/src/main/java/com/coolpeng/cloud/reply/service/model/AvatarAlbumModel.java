@@ -1,4 +1,4 @@
-package com.coolpeng.common.reply.service.model;
+package com.coolpeng.cloud.reply.service.model;
 
 /**
  * Created by luanhaipeng on 16/7/6.
@@ -30,15 +30,15 @@ public class AvatarAlbumModel {
         this.count = end-begin + 1;
     }
 
-    public AvatarAlbumModel(String albumName,String prefix, int begin, int end, int indexBegin, int indexEnd) {
-        this.albumName = albumName;
-        this.prefix = prefix;
-        this.begin = begin;
-        this.end = end;
-        this.indexBegin = indexBegin;
-        this.indexEnd = indexEnd;
-        this.count = end-begin + 1;
-    }
+//    public AvatarAlbumModel(String albumName,String prefix, int begin, int end, int indexBegin, int indexEnd) {
+//        this.albumName = albumName;
+//        this.prefix = prefix;
+//        this.begin = begin;
+//        this.end = end;
+//        this.indexBegin = indexBegin;
+//        this.indexEnd = indexEnd;
+//        this.count = end-begin + 1;
+//    }
 
     public String getPrefix() {
         return prefix;

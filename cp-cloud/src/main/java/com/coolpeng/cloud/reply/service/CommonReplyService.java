@@ -1,15 +1,14 @@
-package com.coolpeng.common.reply.service;
+package com.coolpeng.cloud.reply.service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.coolpeng.common.reply.entity.CommonReply;
-import com.coolpeng.common.reply.entity.CommonReplyPage;
+import com.coolpeng.cloud.reply.entity.CommonReply;
+import com.coolpeng.cloud.reply.entity.CommonReplyPage;
 import com.coolpeng.framework.db.PageResult;
 import com.coolpeng.framework.db.QueryCondition;
 import com.coolpeng.framework.exception.FieldNotFoundException;
 import com.coolpeng.framework.exception.ParameterErrorException;
 import com.coolpeng.framework.exception.TMSMsgException;
 import com.coolpeng.framework.exception.UpdateErrorException;
-import com.coolpeng.framework.mvc.TMSResponse;
 import com.coolpeng.framework.mvc.TmsCurrentRequest;
 import com.coolpeng.framework.utils.CollectionUtil;
 import com.coolpeng.framework.utils.StringUtils;

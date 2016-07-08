@@ -1,6 +1,6 @@
-package com.coolpeng.common.reply.service;
+package com.coolpeng.cloud.reply.service;
 
-import com.coolpeng.common.reply.service.model.AvatarAlbumModel;
+import com.coolpeng.cloud.reply.service.model.AvatarAlbumModel;
 
 import java.util.*;
 
@@ -86,8 +86,6 @@ public class CommonAvatarService {
         AvatarAlbumModel m = getRandomAvatarAlbum();
         int randomNumber = getRandomNumber(m.getBegin(), m.getEnd());
         String fileName = m.getPrefix() + "-" + formatNumber(randomNumber) + ".jpg";
-        //http://coolpeng.bj.bcebos.com/avatar/aa-0001-0504/aa-0001.jpg
-//        return "http://coolpeng.bj.bcebos.com/avatar/" + m.getAlbumName() + "/" + fileName;
         return m.getAlbumName() + "/" + fileName;
     }
 
