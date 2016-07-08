@@ -1,8 +1,8 @@
-package com.coolpeng.app.controller;
+package com.coolpeng.cloud.common.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.coolpeng.app.base.RestBaseController;
-import com.coolpeng.app.base.ReqParams;
+import com.coolpeng.cloud.common.base.RestBaseController;
+import com.coolpeng.cloud.common.base.ReqParams;
 import com.coolpeng.blog.entity.UserEntity;
 import com.coolpeng.framework.db.EntityStatusEnum;
 import com.coolpeng.blog.service.UserService;
@@ -24,7 +24,7 @@ import java.util.UUID;
  * Created by 栾海鹏 on 2016/3/18.
  */
 @Controller
-@RequestMapping(value = "/app/user/", produces = "application/json; charset=UTF-8")
+@RequestMapping(value = "/cloud/user/", produces = "application/json; charset=UTF-8")
 public class AppUserController extends RestBaseController {
 
     @Autowired
