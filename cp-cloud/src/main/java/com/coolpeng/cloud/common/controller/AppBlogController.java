@@ -1,4 +1,4 @@
-package com.coolpeng.app.controller;
+package com.coolpeng.cloud.common.controller;
 
 import com.coolpeng.blog.entity.ForumModule;
 import com.coolpeng.blog.entity.ForumPost;
@@ -23,7 +23,7 @@ import java.util.List;
  * Created by 栾海鹏 on 2016/3/18.
  */
 @Controller
-@RequestMapping(value = "/app/blog", produces = "application/json; charset=UTF-8")
+@RequestMapping(value = "/cloud/blog", produces = "application/json; charset=UTF-8")
 public class AppBlogController {
 
 

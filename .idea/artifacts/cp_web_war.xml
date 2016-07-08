@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="war" name="cp-web:war">
-    <output-path>$PROJECT_DIR$/cp-web/target</output-path>
-    <root id="archive" name="cw-ms.war">
-      <element id="artifact" artifact-name="cp-web:war exploded" />
-    </root>
-  </artifact>
-</component>

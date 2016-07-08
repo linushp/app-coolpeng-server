@@ -1,4 +1,4 @@
-package com.coolpeng.app.base;
+package com.coolpeng.cloud.common.base;
 
 import com.alibaba.fastjson.JSONObject;
 import com.coolpeng.blog.entity.UserEntity;
