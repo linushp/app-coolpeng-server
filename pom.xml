@@ -131,7 +131,7 @@
                     <useTestClasspath>true</useTestClasspath>
 
                     <!--<war>main/target/${project.artifactId}</war>-->
-                    <classesDirectory>cp-framework/target/classes/, cp-blog/target/classes/,cp-web/target/classes/
+                    <classesDirectory>cp-framework/target/classes/, cp-blog/target/classes/,cp-cloud/target/classes/,cp-web/target/classes/
                     </classesDirectory>
 
                     <webAppSourceDirectory>cp-web/src/main/webapp</webAppSourceDirectory>
