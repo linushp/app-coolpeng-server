@@ -1,5 +1,5 @@
-DROP TABLE IF EXISTS `t_common_reply`;
-CREATE TABLE `t_common_reply` (
+DROP TABLE IF EXISTS `t_cloud_reply`;
+CREATE TABLE `t_cloud_reply` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `create_time` varchar(256) DEFAULT NULL,
   `update_time` varchar(256) DEFAULT NULL,
@@ -26,8 +26,8 @@ CREATE TABLE `t_common_reply` (
 
 
 
-DROP TABLE IF EXISTS `t_common_reply_page`;
-CREATE TABLE `t_common_reply_page` (
+DROP TABLE IF EXISTS `t_cloud_reply_page`;
+CREATE TABLE `t_cloud_reply_page` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `create_time` varchar(256) DEFAULT NULL,
   `update_time` varchar(256) DEFAULT NULL,
