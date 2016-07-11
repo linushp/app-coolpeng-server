@@ -6,9 +6,9 @@ import com.coolpeng.framework.db.SimpleDAO;
 /**
  * Created by luanhaipeng on 16/7/5.
  */
-public class CommonReplyPage extends BlogBaseEntity {
+public class CloudReplyPage extends BlogBaseEntity {
 
-    public static SimpleDAO<CommonReplyPage> DAO = new SimpleDAO(CommonReplyPage.class);
+    public static SimpleDAO<CloudReplyPage> DAO = new SimpleDAO(CloudReplyPage.class);
 
 
     private String pageId;
@@ -24,18 +24,18 @@ public class CommonReplyPage extends BlogBaseEntity {
     private int totalCount;
 
 
-    public CommonReplyPage() {
+    public CloudReplyPage() {
     }
 
 
-    public CommonReplyPage(String pageId, int maxFloorNumber, int totalCount) {
+    public CloudReplyPage(String pageId, int maxFloorNumber, int totalCount) {
         this.pageId = pageId;
         this.maxFloorNumber = maxFloorNumber;
         this.totalCount = totalCount;
     }
 
 
-    public CommonReplyPage(BlogBaseEntity e, String pageId, int maxFloorNumber, int totalCount) {
+    public CloudReplyPage(BlogBaseEntity e, String pageId, int maxFloorNumber, int totalCount) {
         super(e);
         this.pageId = pageId;
         this.maxFloorNumber = maxFloorNumber;

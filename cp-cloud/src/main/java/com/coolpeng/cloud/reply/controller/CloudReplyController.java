@@ -2,9 +2,9 @@ package com.coolpeng.cloud.reply.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.coolpeng.cloud.common.base.RestBaseController;
-import com.coolpeng.cloud.reply.entity.CommonReply;
-import com.coolpeng.cloud.reply.entity.CommonReplyPage;
-import com.coolpeng.cloud.reply.service.CommonReplyService;
+import com.coolpeng.cloud.reply.entity.CloudReply;
+import com.coolpeng.cloud.reply.entity.CloudReplyPage;
+import com.coolpeng.cloud.reply.service.CloudReplyService;
 import com.coolpeng.framework.db.PageResult;
 import com.coolpeng.framework.exception.FieldNotFoundException;
 import com.coolpeng.framework.exception.ParameterErrorException;
@@ -26,11 +26,11 @@ import java.util.Map;
 
 @Controller
 @RequestMapping(value = "/cloud/reply", produces = "application/json; charset=UTF-8")
-public class CommonReplyController extends RestBaseController {
+public class CloudReplyController extends RestBaseController {
 
 
     @Autowired
-    private CommonReplyService commonReplyService;
+    private CloudReplyService cloudReplyService;
 
     @ResponseBody
     @RequestMapping({"/getReplyList"})
@@ -44,15 +44,15 @@ public class CommonReplyController extends RestBaseController {
 
 
         /******************************/
-        CommonReplyPage replyPage = commonReplyService.getReplyPageSummary(pageId);
-        PageResult<CommonReply> replyListPage = commonReplyService.getReplyPageList(pageId, pageSize, pageNumber, orderType);
+        CloudReplyPage replyPage = cloudReplyService.getReplyPageSummary(pageId);
+        PageResult<CloudReply> replyListPage = cloudReplyService.getReplyPageList(pageId, pageSize, pageNumber, orderType);
         TMSResponse response = new TMSResponse();
         response.setData(replyListPage.getPageData());
         response.setTotalCount(replyListPage.getTotalCount());
         response.setPageNo(pageNumber);
         response.setPageSize(pageSize);
 
-        response.addExtendData("CommonReplyPage", replyPage);
+        response.addExtendData("CloudReplyPage", replyPage);
         return response;
 
     }
@@ -72,9 +72,9 @@ public class CommonReplyController extends RestBaseController {
 
         String pageId = jsonObject.getString("pageId");
         //防止操作太频繁
-        assertTimeRestriction(CommonReplyController.class, "createReply", pageId);
+        assertTimeRestriction(CloudReplyController.class, "createReply", pageId);
 
-        commonReplyService.createReply(jsonObject);
+        cloudReplyService.createReply(jsonObject);
         return TMSResponse.success();
     }
 
@@ -89,7 +89,7 @@ public class CommonReplyController extends RestBaseController {
 
         Map<String, Object> params = new HashMap<>();
         params.put("id", replyId);
-        CommonReply.DAO.delete(params);
+        CloudReply.DAO.delete(params);
         return TMSResponse.success();
     }
 
@@ -101,14 +101,14 @@ public class CommonReplyController extends RestBaseController {
         Boolean isLike = jsonObject.getBoolean("isLike");
 
         //防止操作太频繁
-        assertTimeRestriction(CommonReplyController.class, "likeReply", replyId);
+        assertTimeRestriction(CloudReplyController.class, "likeReply", replyId);
 
         /******************************/
-        CommonReply reply = CommonReply.DAO.queryById(replyId);
+        CloudReply reply = CloudReply.DAO.queryById(replyId);
         if (reply != null) {
             int countChange = Boolean.TRUE.equals(isLike) ? 1 : -1;
             reply.setLikeCount(reply.getLikeCount() + countChange);
-            CommonReply.DAO.update(reply);
+            CloudReply.DAO.update(reply);
         }
         return TMSResponse.success();
     }
@@ -130,7 +130,7 @@ public class CommonReplyController extends RestBaseController {
          * this.createMail = jsonObject.getString("createMail");
          */
         String replyId = jsonObject.getString("replyId");
-        commonReplyService.createReplyReply(jsonObject, replyId);
+        cloudReplyService.createReplyReply(jsonObject, replyId);
         return TMSResponse.success();
     }
 
@@ -144,7 +144,7 @@ public class CommonReplyController extends RestBaseController {
         String floorNumber = jsonObject.getString("floorNumber");
 
         /******************************/
-        commonReplyService.deleteReplyReply(replyId, floorNumber);
+        cloudReplyService.deleteReplyReply(replyId, floorNumber);
 
         return TMSResponse.success();
     }

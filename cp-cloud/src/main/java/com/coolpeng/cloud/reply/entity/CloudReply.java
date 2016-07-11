@@ -7,18 +7,19 @@ import com.coolpeng.framework.db.annotation.FieldDef;
 
 import java.util.List;
 
-public class CommonReply extends BlogBaseEntity {
-    public static SimpleDAO<CommonReply> DAO = new SimpleDAO(CommonReply.class);
+public class CloudReply extends BlogBaseEntity {
+    public static SimpleDAO<CloudReply> DAO = new SimpleDAO(CloudReply.class);
+    public static final String EMPTY_STRING = "";
 
-    private String pageId;
-    private String replyContent;
-    private String replySummary;
-    private String createNickname;
-    private String createAvatar;
-    private String createMail;
+    private String pageId = EMPTY_STRING;
+    private String replyContent = EMPTY_STRING;
+    private String replySummary = EMPTY_STRING;
+    private String createNickname = EMPTY_STRING;
+    private String createAvatar = EMPTY_STRING;
+    private String createMail = EMPTY_STRING;
 
-    private String createIpAddr;
-    private String floorNumber;
+    private String createIpAddr = EMPTY_STRING;
+    private String floorNumber = EMPTY_STRING;
 
     //热度通过计算得到
     private int hot = 0;
@@ -26,16 +27,16 @@ public class CommonReply extends BlogBaseEntity {
     private int likeCount = 0;
     private int maxFloorNumber = 0;
 
-    @FieldDef(jsonColumn={List.class,CommonReply.class})
-    private List<CommonReply> replyList;
+    @FieldDef(jsonColumn = {List.class, CloudReply.class})
+    private List<CloudReply> replyList;
 
 
-    public CommonReply() {
+    public CloudReply() {
 
     }
 
-    public CommonReply(JSONObject jsonObject) {
-        if (jsonObject!=null){
+    public CloudReply(JSONObject jsonObject) {
+        if (jsonObject != null) {
             this.pageId = jsonObject.getString("pageId");
             this.replyContent = jsonObject.getString("replyContent");
             this.replySummary = jsonObject.getString("replySummary");
@@ -50,7 +51,7 @@ public class CommonReply extends BlogBaseEntity {
     }
 
 
-    private void calculateHot(){
+    private void calculateHot() {
         this.hot = this.likeCount * 1 + this.maxFloorNumber * 5;
     }
 
@@ -119,11 +120,11 @@ public class CommonReply extends BlogBaseEntity {
         this.createIpAddr = createIpAddr;
     }
 
-    public List<CommonReply> getReplyList() {
+    public List<CloudReply> getReplyList() {
         return replyList;
     }
 
-    public void setReplyList(List<CommonReply> replyList) {
+    public void setReplyList(List<CloudReply> replyList) {
         this.replyList = replyList;
     }
 

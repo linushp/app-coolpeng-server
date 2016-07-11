@@ -1,13 +1,13 @@
-package com.coolpeng.cloud.reply.service;
+package avatarservice;
 
-import com.coolpeng.cloud.reply.service.model.AvatarAlbumModel;
+import avatarservice.model.AvatarAlbumModel;
 
 import java.util.*;
 
 /**
  * Created by luanhaipeng on 16/7/6.
  */
-public class CommonAvatarService {
+public class CloudAvatarService {
 
     private static AvatarAlbumModel[] avatarModels = new AvatarAlbumModel[]{
             new AvatarAlbumModel("aa-0001-0504", "aa", 1, 504),       //1     504
@@ -106,8 +106,7 @@ public class CommonAvatarService {
     }
 
     private static int getRandomNumber(int min, int max) {
-        int randomNumber = (int) (Math.random() * max) + min;
-        return randomNumber;
+        return (int)(Math.random() * (max - min) + min);
     }
 
 

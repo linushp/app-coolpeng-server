@@ -1,8 +1,8 @@
 package com.coolpeng.cloud.reply.service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.coolpeng.cloud.reply.entity.CommonReply;
-import com.coolpeng.cloud.reply.entity.CommonReplyPage;
+import com.coolpeng.cloud.reply.entity.CloudReply;
+import com.coolpeng.cloud.reply.entity.CloudReplyPage;
 import com.coolpeng.framework.db.PageResult;
 import com.coolpeng.framework.db.QueryCondition;
 import com.coolpeng.framework.exception.FieldNotFoundException;
@@ -25,15 +25,15 @@ import java.util.Map;
  * Created by luanhaipeng on 16/7/5.
  */
 @Service
-public class CommonReplyService {
+public class CloudReplyService {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 
-    public CommonReplyPage getReplyPageSummary(String pageId) {
+    public CloudReplyPage getReplyPageSummary(String pageId) {
         Map<String, Object> params = new HashMap<>();
         params.put("pageId", pageId);
         try {
-            CommonReplyPage replyPage = CommonReplyPage.DAO.queryForObject(params);
+            CloudReplyPage replyPage = CloudReplyPage.DAO.queryForObject(params);
             return replyPage;
         } catch (FieldNotFoundException e) {
             logger.error("", e);
@@ -49,7 +49,7 @@ public class CommonReplyService {
      * @param orderType  最新1，最早2，最热3
      * @return
      */
-    public PageResult<CommonReply> getReplyPageList(String pageId, int pageSize, int pageNumber, int orderType) {
+    public PageResult<CloudReply> getReplyPageList(String pageId, int pageSize, int pageNumber, int orderType) {
 
         QueryCondition qc = new QueryCondition();
         qc.addEqualCondition("pageId", pageId);
@@ -65,7 +65,7 @@ public class CommonReplyService {
 
 
         try {
-            PageResult<CommonReply> result = CommonReply.DAO.queryForPage(qc, pageNumber, pageSize, null);
+            PageResult<CloudReply> result = CloudReply.DAO.queryForPage(qc, pageNumber, pageSize, null);
             return result;
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -84,48 +84,48 @@ public class CommonReplyService {
         String pageId = jsonObject.getString("pageId");
 
         //1、更新Summary
-        CommonReplyPage replyPage = getReplyPageSummary(pageId);
+        CloudReplyPage replyPage = getReplyPageSummary(pageId);
         if (replyPage == null) {
-            replyPage = new CommonReplyPage(pageId, 0, 0);
+            replyPage = new CloudReplyPage(pageId, 0, 0);
         }
         replyPage.setTotalCount(replyPage.getTotalCount() + 1);
         replyPage.setMaxFloorNumber(replyPage.getMaxFloorNumber() + 1);
-        CommonReplyPage.DAO.insertOrUpdate(replyPage);
+        CloudReplyPage.DAO.insertOrUpdate(replyPage);
 
 
         //2、插入新回复
-        CommonReply replyEntity = new CommonReply(jsonObject);
+        CloudReply replyEntity = new CloudReply(jsonObject);
         replyEntity.setCreateIpAddr(TmsCurrentRequest.getClientIpAddr());
         replyEntity.setFloorNumber("" + replyPage.getMaxFloorNumber());
-        CommonReply.DAO.save(replyEntity);
+        CloudReply.DAO.save(replyEntity);
     }
 
     public void createReplyReply(JSONObject jsonObject, String replyId) throws TMSMsgException, UpdateErrorException, ParameterErrorException, FieldNotFoundException {
 
-        CommonReply replyEntity = CommonReply.DAO.queryById(replyId);
+        CloudReply replyEntity = CloudReply.DAO.queryById(replyId);
         if (replyEntity == null) {
             throw new TMSMsgException("没有根据Id找到此条回复记录");
         }
 
         replyEntity.setMaxFloorNumber(replyEntity.getMaxFloorNumber() + 1);
 
-        List<CommonReply> replyList = replyEntity.getReplyList();
+        List<CloudReply> replyList = replyEntity.getReplyList();
         if (replyList == null) {
             replyList = new ArrayList<>();
         }
 
 
-        CommonReply replyReplyEntity = new CommonReply(jsonObject);
+        CloudReply replyReplyEntity = new CloudReply(jsonObject);
         replyReplyEntity.setCreateIpAddr(TmsCurrentRequest.getClientIpAddr());
         replyReplyEntity.setFloorNumber("" + (replyEntity.getMaxFloorNumber()));
         replyList.add(replyReplyEntity);
         replyEntity.setReplyList(replyList);
-        CommonReply.DAO.update(replyEntity);
+        CloudReply.DAO.update(replyEntity);
     }
 
     public void deleteReplyReply(String replyId, String floorNumber) throws TMSMsgException, ParameterErrorException, FieldNotFoundException {
 
-        CommonReply replyEntity = CommonReply.DAO.queryById(replyId);
+        CloudReply replyEntity = CloudReply.DAO.queryById(replyId);
         if (replyEntity == null) {
             throw new TMSMsgException("没有根据Id找到此条回复记录");
         }
@@ -138,15 +138,15 @@ public class CommonReplyService {
 
 
         //过滤掉要删除的那一个
-        List<CommonReply> replyList0 = replyEntity.getReplyList();
-        List<CommonReply> replyResultList = new ArrayList<>();
-        for (CommonReply replyReply : replyList0) {
+        List<CloudReply> replyList0 = replyEntity.getReplyList();
+        List<CloudReply> replyResultList = new ArrayList<>();
+        for (CloudReply replyReply : replyList0) {
             if (!floorNumber.equals(replyReply.getFloorNumber())) {
                 replyResultList.add(replyReply);
             }
         }
 
         replyEntity.setReplyList(replyResultList);
-        CommonReply.DAO.save(replyEntity);
+        CloudReply.DAO.save(replyEntity);
     }
 }

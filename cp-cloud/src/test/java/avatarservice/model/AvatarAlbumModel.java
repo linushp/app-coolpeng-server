@@ -1,4 +1,4 @@
-package com.coolpeng.cloud.reply.service.model;
+package avatarservice.model;
 
 /**
  * Created by luanhaipeng on 16/7/6.
