@@ -59,6 +59,18 @@ public class CloudReplyController extends RestBaseController {
 
 
     @ResponseBody
+    @RequestMapping({"/getReply"})
+    public TMSResponse getReply(@RequestBody JSONObject jsonObject) throws ParameterErrorException, FieldNotFoundException {
+        String replyId = jsonObject.getString("replyId");
+        /******************************/
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("id", replyId);
+        CloudReply obj = CloudReply.DAO.queryById(replyId);
+        return TMSResponse.success(obj);
+    }
+
+    @ResponseBody
     @RequestMapping({"/createReply"})
     public TMSResponse createReply(@RequestBody JSONObject jsonObject) throws UpdateErrorException, TMSMsgException {
         /**
