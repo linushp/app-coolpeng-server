@@ -27,6 +27,14 @@ public class RestBaseController {
     }
 
     public void assertTimeRestriction(Class clazz, String funcName, String itemId, long timeLimit) throws TMSMsgException {
+
+        //对admin用户法外开恩
+        UserEntity user = (UserEntity) TmsCurrentRequest.getCurrentUser();
+        if(user!=null && user.isAdmin()){
+            return;
+        }
+
+
         String key = "assertTimeRestriction_" + clazz.getSimpleName() + "_" + funcName + "_" + itemId;
         Long lastTime = (Long) this.getSessionAttribute(key);
         if (lastTime != null) {

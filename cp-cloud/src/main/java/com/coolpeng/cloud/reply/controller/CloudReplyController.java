@@ -87,7 +87,7 @@ public class CloudReplyController extends RestBaseController {
         assertTimeRestriction(CloudReplyController.class, "createReply", pageId);
 
         cloudReplyService.createReply(jsonObject);
-        return TMSResponse.success();
+        return TMSResponse.success(jsonObject);
     }
 
 
@@ -122,7 +122,7 @@ public class CloudReplyController extends RestBaseController {
             reply.setLikeCount(reply.getLikeCount() + countChange);
             CloudReply.DAO.update(reply);
         }
-        return TMSResponse.success();
+        return TMSResponse.success(reply);
     }
 
 
@@ -142,8 +142,12 @@ public class CloudReplyController extends RestBaseController {
          * this.createMail = jsonObject.getString("createMail");
          */
         String replyId = jsonObject.getString("replyId");
-        cloudReplyService.createReplyReply(jsonObject, replyId);
-        return TMSResponse.success();
+
+        //防止操作太频繁
+        assertTimeRestriction(CloudReplyController.class, "createReplyReply", replyId);
+
+        CloudReply replyObject = cloudReplyService.createReplyReply(jsonObject, replyId);
+        return TMSResponse.success(replyObject);
     }
 
 

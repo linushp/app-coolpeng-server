@@ -100,7 +100,7 @@ public class CloudReplyService {
         CloudReply.DAO.save(replyEntity);
     }
 
-    public void createReplyReply(JSONObject jsonObject, String replyId) throws TMSMsgException, UpdateErrorException, ParameterErrorException, FieldNotFoundException {
+    public CloudReply createReplyReply(JSONObject jsonObject, String replyId) throws TMSMsgException, UpdateErrorException, ParameterErrorException, FieldNotFoundException {
 
         CloudReply replyEntity = CloudReply.DAO.queryById(replyId);
         if (replyEntity == null) {
@@ -121,9 +121,11 @@ public class CloudReplyService {
         replyList.add(replyReplyEntity);
         replyEntity.setReplyList(replyList);
         CloudReply.DAO.update(replyEntity);
+
+        return replyEntity;
     }
 
-    public void deleteReplyReply(String replyId, String floorNumber) throws TMSMsgException, ParameterErrorException, FieldNotFoundException {
+    public CloudReply deleteReplyReply(String replyId, String floorNumber) throws TMSMsgException, ParameterErrorException, FieldNotFoundException, UpdateErrorException {
 
         CloudReply replyEntity = CloudReply.DAO.queryById(replyId);
         if (replyEntity == null) {
@@ -147,6 +149,8 @@ public class CloudReplyService {
         }
 
         replyEntity.setReplyList(replyResultList);
-        CloudReply.DAO.save(replyEntity);
+        CloudReply.DAO.update(replyEntity);
+
+        return replyEntity;
     }
 }
