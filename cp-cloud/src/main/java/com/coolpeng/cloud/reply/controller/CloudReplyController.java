@@ -160,9 +160,9 @@ public class CloudReplyController extends RestBaseController {
         String floorNumber = jsonObject.getString("floorNumber");
 
         /******************************/
-        cloudReplyService.deleteReplyReply(replyId, floorNumber);
+        CloudReply replyObject = cloudReplyService.deleteReplyReply(replyId, floorNumber);
 
-        return TMSResponse.success();
+        return TMSResponse.success(replyObject);
     }
 
 
