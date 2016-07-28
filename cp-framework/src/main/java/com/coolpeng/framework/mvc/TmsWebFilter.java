@@ -23,8 +23,9 @@ public class TmsWebFilter
         response.setCharacterEncoding("UTF-8");
 
 
-
         TmsCurrentRequest.setHttpServletRequest(request);
+
+        response.addHeader("Access-Control-Allow-Origin","*");
 
         if (!isRejectByAdmin(request, response) && !isRejectByApp(request, response)){
             chain.doFilter(request, res);
