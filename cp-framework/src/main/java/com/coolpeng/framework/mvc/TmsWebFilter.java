@@ -1,5 +1,7 @@
 package com.coolpeng.framework.mvc;
 
+import com.coolpeng.framework.utils.StringUtils;
+
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,10 +27,17 @@ public class TmsWebFilter
 
         TmsCurrentRequest.setHttpServletRequest(request);
 
-        response.addHeader("Access-Control-Allow-Origin","*");
-        response.addHeader("Access-Control-Allow-Headers", "Origin, No-Cache, X-Requested-With, If-Modified-Since, Pragma, Last-Modified, Cache-Control, Expires, Content-Type, X-E4M-With");
+        String Origin = request.getHeader("Origin");
+        if (StringUtils.isNotBlank(Origin)){
+            response.addHeader("Access-Control-Allow-Origin",Origin);
+        }else {
+            response.addHeader("Access-Control-Allow-Origin","*");
+        }
+        response.addHeader("Access-Control-Allow-Headers", "Origin, No-Cache, X-Requested-With, If-Modified-Since, Pragma, Last-Modified, Cache-Control, Expires, Content-Type, Cookie");
+//        response.addHeader("Access-Control-Allow-Headers", "*");
         response.addHeader("Access-Control-Allow-Methods","GET, POST, OPTIONS");
         response.addHeader("Access-Control-Allow-Credentials","true");
+        response.addHeader("Access-Control-Max-Age","18000");
 
         if (!isRejectByAdmin(request, response) && !isRejectByApp(request, response)){
             chain.doFilter(request, res);

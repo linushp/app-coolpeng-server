@@ -91,8 +91,8 @@ public class CloudReplyController extends RestBaseController {
         //防止操作太频繁
         assertTimeRestriction(CloudReplyController.class, "createReply", pageId);
 
-        cloudReplyService.createReply(jsonObject);
-        return TMSResponse.success(jsonObject);
+        CloudReply replyEntity = cloudReplyService.createReply(jsonObject);
+        return TMSResponse.success(replyEntity,"回复成功");
     }
 
 
@@ -107,7 +107,7 @@ public class CloudReplyController extends RestBaseController {
         Map<String, Object> params = new HashMap<>();
         params.put("id", replyId);
         CloudReply.DAO.delete(params);
-        return TMSResponse.success();
+        return TMSResponse.success(replyId,"删除成功");
     }
 
 
@@ -127,7 +127,7 @@ public class CloudReplyController extends RestBaseController {
             reply.setLikeCount(reply.getLikeCount() + countChange);
             CloudReply.DAO.update(reply);
         }
-        return TMSResponse.success(reply);
+        return TMSResponse.success(reply,"点赞成功");
     }
 
 
@@ -152,7 +152,7 @@ public class CloudReplyController extends RestBaseController {
         assertTimeRestriction(CloudReplyController.class, "createReplyReply", replyId);
 
         CloudReply replyObject = cloudReplyService.createReplyReply(jsonObject, replyId);
-        return TMSResponse.success(replyObject);
+        return TMSResponse.success(replyObject,"回复成功");
     }
 
 
@@ -167,7 +167,7 @@ public class CloudReplyController extends RestBaseController {
         /******************************/
         CloudReply replyObject = cloudReplyService.deleteReplyReply(replyId, floorNumber);
 
-        return TMSResponse.success(replyObject);
+        return TMSResponse.success(replyObject,"删除成功");
     }
 
 

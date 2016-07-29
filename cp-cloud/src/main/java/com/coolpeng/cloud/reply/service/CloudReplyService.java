@@ -80,7 +80,7 @@ public class CloudReplyService {
     }
 
 
-    public void createReply(JSONObject jsonObject) throws UpdateErrorException, TMSMsgException {
+    public CloudReply createReply(JSONObject jsonObject) throws UpdateErrorException, TMSMsgException {
 
         String pageId = jsonObject.getString("pageId");
 
@@ -104,6 +104,8 @@ public class CloudReplyService {
         replyEntity.setCreateIpAddr(TmsCurrentRequest.getClientIpAddr());
         replyEntity.setFloorNumber("" + replyPage.getMaxFloorNumber());
         CloudReply.DAO.save(replyEntity);
+
+        return replyEntity;
     }
 
     public CloudReply createReplyReply(JSONObject jsonObject, String replyId) throws TMSMsgException, UpdateErrorException, ParameterErrorException, FieldNotFoundException {
