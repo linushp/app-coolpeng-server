@@ -53,6 +53,11 @@ public class CloudReplyController extends RestBaseController {
         response.setPageSize(pageSize);
 
         response.addExtendData("CloudReplyPage", replyPage);
+        response.addExtendData("serverTime",System.currentTimeMillis());
+
+        response.addExtendData("MAX_REPLY_COUNT",CloudReplyService.MAX_REPLY_COUNT);
+        response.addExtendData("MAX_REPLY_REPLY_COUNT",CloudReplyService.MAX_REPLY_REPLY_COUNT);
+
         return response;
 
     }

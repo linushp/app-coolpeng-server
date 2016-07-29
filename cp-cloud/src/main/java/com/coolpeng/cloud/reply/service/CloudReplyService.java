@@ -27,7 +27,8 @@ import java.util.Map;
 @Service
 public class CloudReplyService {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
-
+    public static final int MAX_REPLY_COUNT = 1000;
+    public static final int MAX_REPLY_REPLY_COUNT = 20;
 
     public CloudReplyPage getReplyPageSummary(String pageId) {
         Map<String, Object> params = new HashMap<>();
@@ -79,7 +80,7 @@ public class CloudReplyService {
     }
 
 
-    public void createReply(JSONObject jsonObject) throws UpdateErrorException {
+    public void createReply(JSONObject jsonObject) throws UpdateErrorException, TMSMsgException {
 
         String pageId = jsonObject.getString("pageId");
 
@@ -88,6 +89,11 @@ public class CloudReplyService {
         if (replyPage == null) {
             replyPage = new CloudReplyPage(pageId, 0, 0);
         }
+
+        if (replyPage.getMaxFloorNumber() > MAX_REPLY_COUNT) {
+            throw new TMSMsgException("评论数量达到最大值，已经关闭评论");
+        }
+
         replyPage.setTotalCount(replyPage.getTotalCount() + 1);
         replyPage.setMaxFloorNumber(replyPage.getMaxFloorNumber() + 1);
         CloudReplyPage.DAO.insertOrUpdate(replyPage);
@@ -105,6 +111,10 @@ public class CloudReplyService {
         CloudReply replyEntity = CloudReply.DAO.queryById(replyId);
         if (replyEntity == null) {
             throw new TMSMsgException("没有根据Id找到此条回复记录");
+        }
+
+        if (replyEntity.getMaxFloorNumber() > MAX_REPLY_REPLY_COUNT) {
+            throw new TMSMsgException("评论数量达到最大值，已经关闭评论");
         }
 
         replyEntity.setMaxFloorNumber(replyEntity.getMaxFloorNumber() + 1);
