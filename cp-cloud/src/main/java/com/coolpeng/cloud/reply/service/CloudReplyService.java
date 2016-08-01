@@ -92,6 +92,16 @@ public class CloudReplyService {
         if (replyPage == null) {
             replyPage = new CloudReplyPage(pageId, 0, 0);
         }
+        else {
+            try {
+                Map<String, Object> params = new HashMap<>();
+                params.put("pageId", pageId);
+                int totalCount = CloudReply.DAO.count(params);
+                replyPage.setTotalCount(totalCount);
+            } catch (FieldNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
 
         if (replyPage.getMaxFloorNumber() > MAX_REPLY_COUNT) {
             throw new TMSMsgException("评论数量达到最大值，已经关闭评论");
