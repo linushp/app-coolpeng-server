@@ -12,6 +12,9 @@ import com.coolpeng.framework.exception.UpdateErrorException;
 import com.coolpeng.framework.mvc.TmsCurrentRequest;
 import com.coolpeng.framework.utils.CollectionUtil;
 import com.coolpeng.framework.utils.StringUtils;
+import com.coolpeng.framework.utils.ipaddr.IPAddrCallback;
+import com.coolpeng.framework.utils.ipaddr.IPAddrParse;
+import com.coolpeng.framework.utils.ipaddr.IPAddrResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -100,10 +103,27 @@ public class CloudReplyService {
 
 
         //2、插入新回复
-        CloudReply replyEntity = new CloudReply(jsonObject);
+        final CloudReply replyEntity = new CloudReply(jsonObject);
         replyEntity.setCreateIpAddr(TmsCurrentRequest.getClientIpAddr());
         replyEntity.setFloorNumber("" + replyPage.getMaxFloorNumber());
         CloudReply.DAO.save(replyEntity);
+
+
+
+        //3、IP地址解析
+        IPAddrParse.parseIpAddr(replyEntity.getCreateIpAddr(), new IPAddrCallback() {
+            @Override
+            public void onResult(IPAddrResult ipAddrResult, String resultStr) {
+                if (ipAddrResult.isOk()){
+                    replyEntity.setCreateIpStr(ipAddrResult.toDisplayString());
+                    try {
+                        CloudReply.DAO.insertOrUpdate(replyEntity);
+                    } catch (Exception e) {
+                        logger.error("",e);
+                    }
+                }
+            }
+        });
 
         return replyEntity;
     }
