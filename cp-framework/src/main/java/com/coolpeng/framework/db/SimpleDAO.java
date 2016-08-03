@@ -208,6 +208,10 @@ public class SimpleDAO<T> {
     }
 
     public int delete(String id) {
+        return deleteById(id);
+    }
+
+    public int deleteById(String id){
         String sql = this.sqlTemplate.getDeleteSQL();
         MapSqlParameterSource sps = new MapSqlParameterSource("id", id);
         return getJdbcTemplate().update(sql, sps);
