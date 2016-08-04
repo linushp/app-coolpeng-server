@@ -75,6 +75,7 @@ public class DaohangService {
             otherCategory.setItems(others);
             otherCategory.setOrder(0);
             otherCategory.setType(type);
+            otherCategory.setId(UN_CATEGORY_ID);
             categoryList.add(otherCategory);
         }
 
