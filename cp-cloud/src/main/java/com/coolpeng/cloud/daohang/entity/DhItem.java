@@ -16,6 +16,7 @@ public class DhItem extends BlogBaseEntity {
     private String link;
     private String icon;
     private int order;
+    private int type; //1 按钮， 2图文
 
 
     public String getCategoryId() {
@@ -64,5 +65,13 @@ public class DhItem extends BlogBaseEntity {
 
     public void setOrder(int order) {
         this.order = order;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 }

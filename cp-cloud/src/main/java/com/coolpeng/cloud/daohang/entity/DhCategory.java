@@ -15,6 +15,7 @@ public class DhCategory extends BlogBaseEntity {
     private String text;
     private String desc;
     private String icon;
+    private int type; //1 按钮， 2图文
     private int order;
 
     @VOTemp
@@ -59,5 +60,13 @@ public class DhCategory extends BlogBaseEntity {
 
     public void setItems(List<DhItem> items) {
         this.items = items;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 }

@@ -18,6 +18,12 @@ import java.util.*;
 @Service
 public class DaohangService {
 
+    private static final String UN_CATEGORY_ID = "-1";
+
+    private static final String FIELD_CATEGORY_ID = "categoryId";
+
+    private static final String FIELD_TYPE = "type";
+
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public DhCategory insertOrUpdateDhCategory(DhCategory category) throws UpdateErrorException {
@@ -35,25 +41,25 @@ public class DaohangService {
     public void deleteDhCategory(String categoryId) throws UpdateErrorException {
         DhCategory.DAO.deleteById(categoryId);
         Map<String, Object> fieldsAndValue = new HashMap<>();
-        fieldsAndValue.put("categoryId","-1");
-        DhItem.DAO.batchUpdateFields("categoryId", categoryId, fieldsAndValue);
+        fieldsAndValue.put(FIELD_CATEGORY_ID, UN_CATEGORY_ID);
+        DhItem.DAO.batchUpdateFields(FIELD_CATEGORY_ID, categoryId, fieldsAndValue);
     }
 
 
-    public void deleteDhItem(String id){
+    public void deleteDhItem(String id) {
         DhItem.DAO.deleteById(id);
     }
 
 
-    public List<DhCategory> getCategoryList() throws IllegalAccessException, FieldNotFoundException {
+    public List<DhCategory> getCategoryList(Integer type) throws IllegalAccessException, FieldNotFoundException {
 
-        List<DhCategory> categoryList = DhCategory.DAO.findAll();
+        List<DhCategory> categoryList = DhCategory.DAO.findBy(FIELD_TYPE, type);
+        List<DhItem> itemList = DhItem.DAO.findBy(FIELD_TYPE, type);
 
-        List<DhItem> itemList = DhItem.DAO.findAll();
 
-        Map<Object, List<DhItem>> itemMap = CollectionUtil.groupBy(itemList, "categoryId");
+        Map<Object, List<DhItem>> itemMap = CollectionUtil.groupBy(itemList, FIELD_CATEGORY_ID);
 
-        for (DhCategory dhCategory:categoryList){
+        for (DhCategory dhCategory : categoryList) {
             String id = dhCategory.getId();
             List<DhItem> items = itemMap.get(id);
             items = sortDnItemByOrder(items);
@@ -62,19 +68,19 @@ public class DaohangService {
 
 
         //未分类
-        List<DhItem> others = itemMap.get("-1");
-        if (!CollectionUtil.isEmpty(others)){
+        List<DhItem> others = itemMap.get(UN_CATEGORY_ID);
+        if (!CollectionUtil.isEmpty(others)) {
             DhCategory otherCategory = new DhCategory();
             otherCategory.setText("未分类");
             otherCategory.setItems(others);
             otherCategory.setOrder(0);
+            otherCategory.setType(type);
             categoryList.add(otherCategory);
         }
 
         return sortCategoryByOrder(categoryList);
 
     }
-
 
 
     private List<DhCategory> sortCategoryByOrder(List<DhCategory> items) {

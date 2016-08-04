@@ -77,7 +77,10 @@ public class DaohangController extends RestBaseController {
     @ResponseBody
     @RequestMapping({"/getCategoryList"})
     public TMSResponse getCategoryList(@RequestBody JSONObject jsonObject) throws IllegalAccessException, FieldNotFoundException {
-        List<DhCategory> list = daohangService.getCategoryList();
+
+        Integer type = jsonObject.getInteger("type");
+
+        List<DhCategory> list = daohangService.getCategoryList(type);
         return TMSResponse.success(list);
     }
 
