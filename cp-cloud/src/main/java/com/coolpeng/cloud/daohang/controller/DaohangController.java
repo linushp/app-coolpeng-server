@@ -55,6 +55,17 @@ public class DaohangController extends RestBaseController {
         return TMSResponse.success(item);
     }
 
+    @ResponseBody
+    @RequestMapping({"/insertOrUpdateDhItem1"})
+    public TMSResponse insertOrUpdateDhItem1() throws UpdateErrorException, TMSMsgException {
+
+        DhItem item = new DhItem();
+        item.setCategoryId("1");
+
+        daohangService.insertOrUpdateDhItem(item);
+        return TMSResponse.success(item);
+    }
+
 
     @ResponseBody
     @RequestMapping({"/deleteDhCategory"})

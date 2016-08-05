@@ -10,13 +10,13 @@ public class DhItem extends BlogBaseEntity {
 
     public static SimpleDAO<DhItem> DAO = new SimpleDAO(DhItem.class);
 
-    private String categoryId;
-    private String text;
-    private String desc;
-    private String link;
-    private String icon;
-    private int order;
-    private int type; //1 按钮， 2图文
+    private String categoryId = "";
+    private String text="";
+    private String desc="";
+    private String link="";
+    private String icon="";
+    private int order=0;
+    private int type=1; //1 按钮， 2图文
 
 
     public String getCategoryId() {

@@ -98,7 +98,7 @@ public class TemplateSQL
 		sql.append("" + this.tableName + "");
 		sql.append(" (");
 		for (int i = 0; i < this.dbBasicFieldNames.length; i++) {
-			sql.append("" + this.dbBasicFieldNames[i] + "");
+			sql.append("`" + this.dbBasicFieldNames[i] + "`");
 			if (i < this.dbBasicFieldNames.length - 1) {
 				sql.append(",");
 			}
@@ -126,7 +126,7 @@ public class TemplateSQL
 			String dbFieldName = this.dbBasicFieldNames[i];
 			String fieldName = this.basicFieldNames[i];
 			if (!"id".equals(fieldName)) {
-				sql.append(dbFieldName);
+				sql.append("`"+dbFieldName+"`");
 				sql.append("=:" + fieldName);
 
 				if (i < this.dbBasicFieldNames.length - 1) {
@@ -153,7 +153,7 @@ public class TemplateSQL
 			String fieldName = fieldNameArray[i];
 			String dbFieldName = StringUtils.camelToUnderline(fieldName);
 			if (!"id".equals(fieldName)) {
-				sql.append(dbFieldName);
+				sql.append("`"+dbFieldName+"`");
 				sql.append("=:" + fieldName);
 				if (i < length - 1) {
 					sql.append(",");
@@ -268,7 +268,7 @@ public class TemplateSQL
 		if ((qc != null) && (qc.getOrderField() != null)) {
 			String field = qc.getOrderField();
 			String dbField = StringUtils.camelToUnderline(field);
-			sql.append("order by  " + dbField + " " + qc.getOrderType() + "");
+			sql.append("order by  `" + dbField + "` " + qc.getOrderType() + "");
 		}
 
 		if ((pageNumber > 0) && (pageSize > 0)) {
@@ -324,7 +324,7 @@ public class TemplateSQL
 		sql.append("DELETE FROM ");
 		sql.append("" + this.tableName + "");
 		sql.append(" WHERE ");
-		sql.append(" id ");
+		sql.append(" `id` ");
 		sql.append("=:id");
 		return sql.toString();
 	}
@@ -339,7 +339,7 @@ public class TemplateSQL
 			sql.append(toWhereSQL(where));
 		} else {
 			sql.append(" WHERE ");
-			sql.append(" id ");
+			sql.append(" `id` ");
 			sql.append("=:id");
 		}
 
@@ -423,7 +423,7 @@ public class TemplateSQL
 					return null;
 				}
 
-				sql.append(" " + dbFieldName + " ");
+				sql.append(" `" + dbFieldName + "` ");
 				sql.append("=:" + w);
 
 				if (i < where.length - 1) {
@@ -452,7 +452,7 @@ public class TemplateSQL
 					return null;
 				}
 
-				sql.append(" " + dbFieldName + " ");
+				sql.append(" `" + dbFieldName + "` ");
 				sql.append("=:" + w);
 
 				if (i < where.length - 1) {
