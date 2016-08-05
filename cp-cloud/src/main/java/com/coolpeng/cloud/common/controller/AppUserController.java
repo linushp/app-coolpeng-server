@@ -92,7 +92,9 @@ public class AppUserController extends RestBaseController {
     @ResponseBody
     @RequestMapping("/logout")
     public TMSResponse logout(@RequestBody JSONObject jsonObject) throws TMSMsgException, UpdateErrorException, FieldNotFoundException {
-        String tokenId = jsonObject.getString("tokenId");
+
+        ReqParams reqParams = ReqParams.parse(jsonObject);
+        String tokenId = reqParams.getTokenId();
         /****************************************************************/
 
 

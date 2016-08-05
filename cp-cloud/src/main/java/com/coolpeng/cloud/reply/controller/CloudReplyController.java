@@ -89,7 +89,7 @@ public class CloudReplyController extends RestBaseController {
 
         String pageId = jsonObject.getString("pageId");
         //防止操作太频繁
-        assertTimeRestriction(CloudReplyController.class, "createReply", pageId);
+        assertTimeRestriction(jsonObject,CloudReplyController.class, "createReply", pageId);
 
         CloudReply replyEntity = cloudReplyService.createReply(jsonObject);
         return TMSResponse.success(replyEntity,"回复成功");
@@ -118,7 +118,7 @@ public class CloudReplyController extends RestBaseController {
         Boolean isLike = jsonObject.getBoolean("isLike");
 
         //防止操作太频繁
-        assertTimeRestriction(CloudReplyController.class, "likeReply", replyId);
+        assertTimeRestriction(jsonObject,CloudReplyController.class, "likeReply", replyId);
 
         /******************************/
         CloudReply reply = CloudReply.DAO.queryById(replyId);
@@ -149,7 +149,7 @@ public class CloudReplyController extends RestBaseController {
         String replyId = jsonObject.getString("replyId");
 
         //防止操作太频繁
-        assertTimeRestriction(CloudReplyController.class, "createReplyReply", replyId);
+        assertTimeRestriction(jsonObject,CloudReplyController.class, "createReplyReply", replyId);
 
         CloudReply replyObject = cloudReplyService.createReplyReply(jsonObject, replyId);
         return TMSResponse.success(replyObject,"回复成功");

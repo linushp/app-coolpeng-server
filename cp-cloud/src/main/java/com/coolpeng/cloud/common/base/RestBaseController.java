@@ -18,22 +18,21 @@ import javax.servlet.http.HttpSession;
  */
 public class RestBaseController {
 
-    public void assertTimeRestriction(Class clazz, String funcName) throws TMSMsgException {
-        assertTimeRestriction(clazz, funcName, "");
+    public void assertTimeRestriction(JSONObject jsonObject,Class clazz, String funcName) throws TMSMsgException {
+        assertTimeRestriction(jsonObject,clazz, funcName, "");
     }
 
-    public void assertTimeRestriction(Class clazz, String funcName, String itemId) throws TMSMsgException {
-        assertTimeRestriction(clazz, funcName, itemId, 1000 * 30);
+    public void assertTimeRestriction(JSONObject jsonObject,Class clazz, String funcName, String itemId) throws TMSMsgException {
+        assertTimeRestriction(jsonObject,clazz, funcName, itemId, 1000 * 30);
     }
 
-    public void assertTimeRestriction(Class clazz, String funcName, String itemId, long timeLimit) throws TMSMsgException {
+    public void assertTimeRestriction(JSONObject jsonObject,Class clazz, String funcName, String itemId, long timeLimit) throws TMSMsgException {
 
         //对admin用户法外开恩
-        UserEntity user = (UserEntity) TmsCurrentRequest.getCurrentUser();
+        UserEntity user = getCurrentUser(jsonObject);
         if(user!=null && user.isAdmin()){
             return;
         }
-
 
         String key = "assertTimeRestriction_" + clazz.getSimpleName() + "_" + funcName + "_" + itemId;
         Long lastTime = (Long) this.getSessionAttribute(key);
@@ -44,6 +43,7 @@ public class RestBaseController {
         }
         this.setSessionAttribute(key, System.currentTimeMillis());
     }
+
 
 
     public UserEntity assertSessionLoginUser(JSONObject jsonObject) throws TMSMsgException {
@@ -85,6 +85,7 @@ public class RestBaseController {
     }
 
 
+
     public UserEntity assertIsAdmin(JSONObject jsonObject) throws TMSMsgException {
         UserEntity user = assertSessionLoginUser(jsonObject);
         if (!user.isAdmin()) {
@@ -92,6 +93,7 @@ public class RestBaseController {
         }
         return user;
     }
+
 
     public HttpServletRequest getHttpServletRequest() {
         return TmsCurrentRequest.getHttpServletRequest();
