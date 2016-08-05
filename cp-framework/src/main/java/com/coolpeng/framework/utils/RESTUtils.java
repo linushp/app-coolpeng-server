@@ -94,7 +94,7 @@ public class RESTUtils {
 
         Scanner scanner = new Scanner(inputStream, "UTF-8");
         String text = scanner.useDelimiter("\\A").next();
-        System.out.println(text);
+//        System.out.println(text);
         scanner.close();
 
         return text;

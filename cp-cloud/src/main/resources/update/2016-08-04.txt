@@ -1,0 +1,41 @@
+DROP TABLE IF EXISTS `t_dh_category`;
+CREATE TABLE `t_dh_category` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `create_time` varchar(256) DEFAULT NULL,
+  `update_time` varchar(256) DEFAULT NULL,
+  `create_user_id` varchar(256) DEFAULT NULL,
+  `update_user_id` varchar(256) DEFAULT NULL,
+  `status` int(11) DEFAULT 0,
+
+
+  `text` varchar(256) DEFAULT NULL,
+  `desc` varchar(1000) DEFAULT NULL,
+  `icon`varchar(256) DEFAULT '',
+  `type` int(11) DEFAULT 1,
+  `order` int(11) DEFAULT 1,
+
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+
+
+
+DROP TABLE IF EXISTS `t_dh_item`;
+CREATE TABLE `t_dh_item` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `create_time` varchar(256) DEFAULT NULL,
+  `update_time` varchar(256) DEFAULT NULL,
+  `create_user_id` varchar(256) DEFAULT NULL,
+  `update_user_id` varchar(256) DEFAULT NULL,
+  `status` int(11) DEFAULT 0,
+
+  `category_id` varchar(10) DEFAULT NULL,
+  `text` varchar(256) DEFAULT NULL,
+  `desc` varchar(1000) DEFAULT NULL,
+  `link` varchar(256) DEFAULT NULL,
+  `icon`varchar(256) DEFAULT '',
+  `type` int(11) DEFAULT 1,
+  `order` int(11) DEFAULT 1,
+  PRIMARY KEY (`id`)
+
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;

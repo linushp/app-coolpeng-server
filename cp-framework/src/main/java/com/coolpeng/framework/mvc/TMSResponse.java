@@ -37,10 +37,17 @@ public class TMSResponse<T> {
     }
 
 
+
     public static TMSResponse success() {
         return new TMSResponse<>();
     }
 
+    public static <T> TMSResponse success(T body,String msg) {
+        TMSResponse<Object> obj = new TMSResponse<>(ResponseCode.SUCCESS);
+        obj.setData(body);
+        obj.setResponseText(msg);
+        return obj;
+    }
 
     public static <T> TMSResponse success(T body) {
         TMSResponse<Object> obj = new TMSResponse<>(ResponseCode.SUCCESS);

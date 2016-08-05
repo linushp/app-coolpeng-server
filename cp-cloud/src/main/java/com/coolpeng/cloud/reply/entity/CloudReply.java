@@ -19,6 +19,7 @@ public class CloudReply extends BlogBaseEntity {
     private String createMail = EMPTY_STRING;
 
     private String createIpAddr = EMPTY_STRING;
+    private String createIpStr = EMPTY_STRING;
     private String floorNumber = EMPTY_STRING;
 
     //热度通过计算得到
@@ -39,7 +40,7 @@ public class CloudReply extends BlogBaseEntity {
         if (jsonObject != null) {
             this.pageId = jsonObject.getString("pageId");
             this.replyContent = jsonObject.getString("replyContent");
-            this.replySummary = jsonObject.getString("replySummary");
+//            this.replySummary = jsonObject.getString("replySummary");
             this.createNickname = jsonObject.getString("createNickname");
             this.createAvatar = jsonObject.getString("createAvatar");
             this.createMail = jsonObject.getString("createMail");
@@ -152,5 +153,13 @@ public class CloudReply extends BlogBaseEntity {
     public void setLikeCount(int likeCount) {
         this.likeCount = likeCount;
         this.calculateHot();
+    }
+
+    public String getCreateIpStr() {
+        return createIpStr;
+    }
+
+    public void setCreateIpStr(String createIpStr) {
+        this.createIpStr = createIpStr;
     }
 }

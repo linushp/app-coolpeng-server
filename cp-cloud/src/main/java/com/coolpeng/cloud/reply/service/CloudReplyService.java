@@ -12,6 +12,9 @@ import com.coolpeng.framework.exception.UpdateErrorException;
 import com.coolpeng.framework.mvc.TmsCurrentRequest;
 import com.coolpeng.framework.utils.CollectionUtil;
 import com.coolpeng.framework.utils.StringUtils;
+import com.coolpeng.framework.utils.ipaddr.IPAddrCallback;
+import com.coolpeng.framework.utils.ipaddr.IPAddrParse;
+import com.coolpeng.framework.utils.ipaddr.IPAddrResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -27,7 +30,8 @@ import java.util.Map;
 @Service
 public class CloudReplyService {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
-
+    public static final int MAX_REPLY_COUNT = 1000;
+    public static final int MAX_REPLY_REPLY_COUNT = 20;
 
     public CloudReplyPage getReplyPageSummary(String pageId) {
         Map<String, Object> params = new HashMap<>();
@@ -79,7 +83,7 @@ public class CloudReplyService {
     }
 
 
-    public void createReply(JSONObject jsonObject) throws UpdateErrorException {
+    public CloudReply createReply(JSONObject jsonObject) throws UpdateErrorException, TMSMsgException {
 
         String pageId = jsonObject.getString("pageId");
 
@@ -88,16 +92,50 @@ public class CloudReplyService {
         if (replyPage == null) {
             replyPage = new CloudReplyPage(pageId, 0, 0);
         }
+        else {
+            try {
+                Map<String, Object> params = new HashMap<>();
+                params.put("pageId", pageId);
+                int totalCount = CloudReply.DAO.count(params);
+                replyPage.setTotalCount(totalCount);
+            } catch (FieldNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (replyPage.getMaxFloorNumber() > MAX_REPLY_COUNT) {
+            throw new TMSMsgException("评论数量达到最大值，已经关闭评论");
+        }
+
         replyPage.setTotalCount(replyPage.getTotalCount() + 1);
         replyPage.setMaxFloorNumber(replyPage.getMaxFloorNumber() + 1);
         CloudReplyPage.DAO.insertOrUpdate(replyPage);
 
 
         //2、插入新回复
-        CloudReply replyEntity = new CloudReply(jsonObject);
+        final CloudReply replyEntity = new CloudReply(jsonObject);
         replyEntity.setCreateIpAddr(TmsCurrentRequest.getClientIpAddr());
         replyEntity.setFloorNumber("" + replyPage.getMaxFloorNumber());
         CloudReply.DAO.save(replyEntity);
+
+
+
+        //3、IP地址解析
+        IPAddrParse.parseIpAddr(replyEntity.getCreateIpAddr(), new IPAddrCallback() {
+            @Override
+            public void onResult(IPAddrResult ipAddrResult, String resultStr) {
+                if (ipAddrResult.isOk()){
+                    replyEntity.setCreateIpStr(ipAddrResult.toDisplayString());
+                    try {
+                        CloudReply.DAO.insertOrUpdate(replyEntity);
+                    } catch (Exception e) {
+                        logger.error("",e);
+                    }
+                }
+            }
+        });
+
+        return replyEntity;
     }
 
     public CloudReply createReplyReply(JSONObject jsonObject, String replyId) throws TMSMsgException, UpdateErrorException, ParameterErrorException, FieldNotFoundException {
@@ -105,6 +143,10 @@ public class CloudReplyService {
         CloudReply replyEntity = CloudReply.DAO.queryById(replyId);
         if (replyEntity == null) {
             throw new TMSMsgException("没有根据Id找到此条回复记录");
+        }
+
+        if (replyEntity.getMaxFloorNumber() > MAX_REPLY_REPLY_COUNT) {
+            throw new TMSMsgException("评论数量达到最大值，已经关闭评论");
         }
 
         replyEntity.setMaxFloorNumber(replyEntity.getMaxFloorNumber() + 1);

@@ -57,7 +57,7 @@ public class ImageController {
         List<ForumPostImage> insertImages = new ArrayList<>();
 
         try {
-            Map<String, Object> oldImages = CollectionUtil.toMap(images, "imagePath");
+            Map<String, ForumPostImage> oldImages = CollectionUtil.toMap(images, "imagePath");
 
             for (ForumPost post:posts){
                 List<String> imageList = post.createTempImageEntity(10000);

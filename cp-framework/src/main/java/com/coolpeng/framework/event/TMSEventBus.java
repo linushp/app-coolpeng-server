@@ -66,7 +66,7 @@ public class TMSEventBus {
     private static Class getEventClazz(TMSEventListener listener){
         Class entityClass = null;
         Type t = listener.getClass().getGenericSuperclass();
-        t.getTypeName();
+//        t.getTypeName();
         if(t instanceof ParameterizedType){
             Type[] p = ((ParameterizedType)t).getActualTypeArguments();
             entityClass = (Class)p[0];

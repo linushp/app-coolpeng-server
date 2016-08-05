@@ -58,10 +58,10 @@ public class CollectionUtil {
 	 * @return map key --> propName对应属性的值
 	 *             value --> object
 	 */
-	public static Map<String, Object> toMap(Collection collection, String propName) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-		Map<String, Object> results = new HashMap<>();
+	public static <T> Map<String, T> toMap(Collection<T> collection, String propName) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+		Map<String, T> results = new HashMap<>();
 		if (null!=collection){
-			for(Object obj : collection){
+			for(T obj : collection){
 				try {
 					Object propObj = PropertyUtils.getProperty(obj, propName);
 					if (propObj!=null){
