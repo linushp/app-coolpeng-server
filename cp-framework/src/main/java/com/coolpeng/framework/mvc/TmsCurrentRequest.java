@@ -3,6 +3,7 @@ package com.coolpeng.framework.mvc;
 import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Enumeration;
 
 public class TmsCurrentRequest {
     private static final ThreadLocal threadLocal = new ThreadLocal();
@@ -44,8 +45,17 @@ public class TmsCurrentRequest {
         return (String) ctx;
     }
 
+    public static void clearSession(){
+        Enumeration em = getHttpServletRequest().getSession().getAttributeNames();
+        while(em.hasMoreElements()){
+            getHttpServletRequest().getSession().removeAttribute(em.nextElement().toString());
+        }
+    }
+
     public static void setCurrentUser(TmsUserEntity user) {
         getHttpServletRequest().getSession().setAttribute("TMS_CURRENT_USER", user);
+        TmsUserEntity u = getCurrentUser();
+        System.out.print(u);
     }
 
     public static TmsUserEntity getCurrentUser() {

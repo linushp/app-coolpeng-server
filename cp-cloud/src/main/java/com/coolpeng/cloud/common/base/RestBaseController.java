@@ -48,19 +48,41 @@ public class RestBaseController {
 
     public UserEntity assertSessionLoginUser(JSONObject jsonObject) throws TMSMsgException {
         UserEntity user = (UserEntity) TmsCurrentRequest.getCurrentUser();
+        ReqParams reqUser = ReqParams.parse(jsonObject);
 
         //Session没有登录,尝试使用tokenid登录
         if (user == null) {
-            ReqParams reqUser = ReqParams.parse(jsonObject);
+
             UserService userService = (UserService) ServiceUtils.getBean("userService");
             try {
                 user = userService.getUserEntityByTokenId(reqUser.getTokenId(), reqUser.getDevicePlatform(), reqUser.getUuid());
-            } catch (FieldNotFoundException e) {
+            } catch (Throwable e) {
                 e.printStackTrace();
                 throw new TMSMsgException("用户查询失败");
             }
             if (user != null) {
                 setSessionLoginUser(user);
+            }
+        }else {
+            //即便是session中存在，但是跟tokenid对不上，也使用tokenid重新查询以一次
+            if (!user.getLastLoginToken().equals(reqUser.getTokenId())){
+
+                TmsCurrentRequest.clearSession();
+
+                user = null;
+
+                UserService userService = (UserService) ServiceUtils.getBean("userService");
+                try {
+                    user = userService.getUserEntityByTokenId(reqUser.getTokenId(), reqUser.getDevicePlatform(), reqUser.getUuid());
+                } catch (Throwable e) {
+                    e.printStackTrace();
+                    throw new TMSMsgException("用户查询失败");
+                }
+                if (user != null) {
+                    setSessionLoginUser(user);
+                }else {
+                    setSessionLoginUser(null);
+                }
             }
         }
 
