@@ -153,7 +153,7 @@ public class TemplateSQL
 			String fieldName = fieldNameArray[i];
 			String dbFieldName = StringUtils.camelToUnderline(fieldName);
 			if (!"id".equals(fieldName)) {
-				sql.append("`"+dbFieldName+"`");
+				sql.append("`" + dbFieldName + "`");
 				sql.append("=:" + fieldName);
 				if (i < length - 1) {
 					sql.append(",");
@@ -164,7 +164,7 @@ public class TemplateSQL
 		sql.append(" WHERE ");
 		if ((whereKey != null) && (!whereKey.isEmpty())) {
 			sql.append(" " + StringUtils.camelToUnderline(whereKey) + " ");
-			sql.append("=:" + whereKey);
+			sql.append("=:" + whereKey + "Where");
 		} else {
 			sql.append(" id ");
 			sql.append("=:id");

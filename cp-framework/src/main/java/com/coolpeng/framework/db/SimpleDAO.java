@@ -358,7 +358,7 @@ public class SimpleDAO<T> {
 
         String sql = this.sqlTemplate.getUpdateSQL(fieldsAndValue.keySet(), whereKey);
 
-        fieldsAndValue.put(whereKey, whereValue);
+        fieldsAndValue.put(whereKey + "Where", whereValue);
 
         SqlParameterSource sps = new TMSMapSqlParameterSource(fieldsAndValue, this.clazz);
 
