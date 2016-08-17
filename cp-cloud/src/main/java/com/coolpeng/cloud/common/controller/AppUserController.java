@@ -10,6 +10,7 @@ import com.coolpeng.framework.exception.FieldNotFoundException;
 import com.coolpeng.framework.exception.TMSMsgException;
 import com.coolpeng.framework.exception.UpdateErrorException;
 import com.coolpeng.framework.mvc.TMSResponse;
+import com.coolpeng.framework.mvc.TmsCurrentRequest;
 import com.coolpeng.framework.utils.DateUtil;
 import com.coolpeng.framework.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,6 +106,7 @@ public class AppUserController extends RestBaseController {
         }
 
         setSessionLoginUser(null);
+        TmsCurrentRequest.clearSession();
         return TMSResponse.success();
     }
 
