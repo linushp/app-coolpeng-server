@@ -19,6 +19,8 @@ public class PageResult<T> {
 		this.pageCount = totalCount % pageSize == 0 ? (totalCount / pageSize) : ((totalCount / pageSize) + 1);
 	}
 
+
+
 	public int getTotalCount() {
 		return totalCount;
 	}

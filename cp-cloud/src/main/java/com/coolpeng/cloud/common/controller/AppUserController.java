@@ -158,7 +158,7 @@ public class AppUserController extends RestBaseController {
     @ResponseBody
     @RequestMapping("/getCurrentUserInfo")
     public TMSResponse<UserEntity> getCurrentUserInfo(@RequestBody JSONObject jsonObject) throws TMSMsgException, FieldNotFoundException {
-        UserEntity user = assertSessionLoginUser(jsonObject);
+        UserEntity user = assertIsUserLoginIfToken(jsonObject);
         user = new UserEntity(user);
         user.setPassword(null);//隐藏敏感信息
         return TMSResponse.success(user);

@@ -1,5 +1,7 @@
 package com.coolpeng.framework.mvc;
 
+import com.coolpeng.framework.db.PageResult;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -52,6 +54,15 @@ public class TMSResponse<T> {
     public static <T> TMSResponse success(T body) {
         TMSResponse<Object> obj = new TMSResponse<>(ResponseCode.SUCCESS);
         obj.setData(body);
+        return obj;
+    }
+
+    public static <T> TMSResponse successPage(PageResult<T> p){
+        TMSResponse<Object> obj = new TMSResponse<>(ResponseCode.SUCCESS);
+        obj.setData(p.getPageData());
+        obj.setPageSize(p.getPageSize());
+        obj.setPageNo(p.getPageNumber());
+        obj.setTotalCount(p.getTotalCount());
         return obj;
     }
 

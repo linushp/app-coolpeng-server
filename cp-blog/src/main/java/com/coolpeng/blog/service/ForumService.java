@@ -13,6 +13,7 @@ import com.coolpeng.framework.exception.ParameterErrorException;
 import com.coolpeng.framework.exception.UpdateErrorException;
 import com.coolpeng.framework.mvc.TmsCurrentRequest;
 import com.coolpeng.framework.mvc.TmsUserEntity;
+import com.coolpeng.framework.utils.CollectionUtil;
 import com.coolpeng.framework.utils.DateUtil;
 import com.coolpeng.framework.utils.HtmlUtil;
 import com.coolpeng.framework.utils.StringUtils;
@@ -39,20 +40,52 @@ public class ForumService {
     private ForumImageService forumImageService;
 
 
+
+    public ForumPost createPost(String moduleId, String postTitle, String postContent)
+            throws FieldNotFoundException, UpdateErrorException, ParameterErrorException {
+        return createPost(moduleId,postTitle,postContent,null,null);
+    }
+
+
+    public ForumPost updatePost(String postId,String moduleId, String postTitle, String postContent, String summary, List<String> imageList) throws FieldNotFoundException, UpdateErrorException, ParameterErrorException {
+        ForumPost post = getPostById(postId,false);
+
+        post.setForumModuleId(moduleId);
+        post.setPostTitle(postTitle);
+        post.setPostContent(postContent);
+        post.setSummary(summary);
+        post.clearImageList();
+        post.addImageList(imageList);
+
+        if (TmsCurrentRequest.isLogin()) {
+            TmsUserEntity user = TmsCurrentRequest.getCurrentUser();
+            post.setUpdateUserId(user.getId());
+        }
+
+
+        ForumPost.DAO.update(post);
+
+        return post;
+    }
+
+
+
+
     /**
-     * 创建一篇新的帖子
      *
      * @param moduleId
      * @param postTitle
      * @param postContent
+     * @param summary  可以为null
+     * @param images   可以为null
      * @return
      * @throws FieldNotFoundException
      * @throws UpdateErrorException
      * @throws ParameterErrorException
      */
-    public ForumPost createPost(String moduleId, String postTitle, String postContent)
+    public ForumPost createPost(String moduleId, String postTitle, String postContent,String summary,List<String> images)
             throws FieldNotFoundException, UpdateErrorException, ParameterErrorException {
-        ForumPost forumPost = toForumPost(moduleId, postTitle, postContent);
+        ForumPost forumPost = toForumPost(moduleId, postTitle, postContent,summary);
 
         if (forumPost == null) {
             this.logger.error("创建帖子失败");
@@ -62,7 +95,11 @@ public class ForumService {
         ForumModule module = forumPost.getForumModule();
 
         String content = forumPost.getPostContent();
-        List<String> images = getImageUrlListFromContent(content);
+
+        if (CollectionUtil.isEmpty(images)){
+            images = getImageUrlListFromContent(content);
+        }
+
         forumPost.addImageList(images);
 
         if (TmsCurrentRequest.isLogin()) {
@@ -195,11 +232,82 @@ public class ForumService {
         PageResult p = ForumPost.DAO.queryForPage(qc, pageNumber, pageSize, new String[]{"createUser"});
 
         EntityUtils.addDefaultUser(p, TmsCurrentRequest.getContext());
-
         EntityUtils.setAvatarUrl(p, TmsCurrentRequest.getContext());
 
         return p;
     }
+
+
+    public PageResult<ForumPost> getPostListByGroupId(String groupId, int pageNumber, int pageSize,String titleLike)
+            throws FieldNotFoundException, ClassNotFoundException {
+
+        Map<String, String> params = new HashMap<>();
+        params.put("forum_group_id", groupId);
+
+
+        String sql = "" +
+                " FROM  `t_forum_post` p  " +
+                " LEFT JOIN  `t_forum_module` m ON p.`forum_module_id` = m.id  " +
+                " where m.forum_group_id =:forum_group_id  ";
+
+        if (StringUtils.isNotBlank(titleLike)){
+            sql +=" and post_title like '%:titleLike%'  ";
+            params.put("titleLike",titleLike);
+        }
+
+
+        int pageBegin = (pageNumber - 1) * pageSize;
+        String listSQL = "SELECT p.* " + sql + "  limit " + pageBegin + "," + pageSize + "  ";
+        String countSQL = "Select count(0)  " + sql;
+        PageResult<ForumPost> p = ForumPost.DAO.queryForPageBySQL(listSQL, countSQL, params);
+        p.setPageSize(pageSize);
+        p.setPageNumber(pageNumber);
+
+
+        EntityUtils.addDefaultUser(p, TmsCurrentRequest.getContext());
+        EntityUtils.setAvatarUrl(p, TmsCurrentRequest.getContext());
+
+        return p;
+    }
+
+
+
+    public PageResult<ForumPost> getPostListByModuleId(String forum_module_id, int pageNumber, int pageSize,String titleLike)
+            throws FieldNotFoundException, ClassNotFoundException {
+
+        Map<String, String> params = new HashMap<>();
+        params.put("forum_module_id", forum_module_id);
+
+
+        String sql = "" +
+                " FROM  `t_forum_post` p  " +
+                " where p.forum_module_id =:forum_module_id  ";
+
+        if (StringUtils.isNotBlank(titleLike)){
+            sql +=" and post_title like '%:titleLike%'  ";
+            params.put("titleLike",titleLike);
+        }
+
+
+        int pageBegin = (pageNumber - 1) * pageSize;
+        String listSQL = "SELECT p.* " + sql + "  limit " + pageBegin + "," + pageSize + "  ";
+        String countSQL = "Select count(0)  " + sql;
+        PageResult<ForumPost> p = ForumPost.DAO.queryForPageBySQL(listSQL, countSQL, params);
+        p.setPageSize(pageSize);
+        p.setPageNumber(pageNumber);
+
+
+        EntityUtils.addDefaultUser(p, TmsCurrentRequest.getContext());
+        EntityUtils.setAvatarUrl(p, TmsCurrentRequest.getContext());
+
+        return p;
+    }
+
+
+
+
+
+
 
     private QueryCondition toQueryCondition(String moduleId, String orderBy, ModuleTypeEnum moduleType) {
         QueryCondition qc = new QueryCondition();
@@ -270,12 +378,31 @@ public class ForumService {
 
     }
 
+
+
+    public ForumPost getPostById(String postId,boolean updateViewCount) throws UpdateErrorException, ParameterErrorException, FieldNotFoundException {
+        ForumPost p = ForumPost.DAO.queryForObject(postId);
+        if (p == null) {
+            return null;
+        }
+
+        if (updateViewCount) {
+            int viewCount = p.getViewCount();
+            p.setViewCount(viewCount + 1);
+            ForumPost.DAO.update(p);
+        }
+        return p;
+    }
+
+
     public ForumPost getPostWithReply(String postId, int pageNumber, int pageSize)
             throws ParameterErrorException, FieldNotFoundException, UpdateErrorException, ClassNotFoundException {
-        ForumPost p = (ForumPost) ForumPost.DAO.queryForObject(postId);
-        int viewCount = p.getViewCount();
-        p.setViewCount(viewCount + 1);
-        ForumPost.DAO.update(p);
+
+        ForumPost p = getPostById(postId, true);
+
+        if (p == null) {
+            return null;
+        }
 
         String createUserId = p.getCreateUserId();
         UserEntity createUser = null;
@@ -320,7 +447,7 @@ public class ForumService {
         return urlList;
     }
 
-    private ForumPost toForumPost(String moduleId, String postTitle, String postContent)
+    private ForumPost toForumPost(String moduleId, String postTitle, String postContent,String summary)
             throws FieldNotFoundException, UpdateErrorException, ParameterErrorException {
         ForumModule module = this.forumModuleService.getForumModule(moduleId);
 
@@ -339,18 +466,18 @@ public class ForumService {
 
             forumPost.setPostTitle(postTitle);
 
-            String summary = StringUtils.maxSize(postContent, 500);
-            summary = HtmlUtil.getTextFromHtml2(summary);
-            if ((!summary.isEmpty()) && (summary.length() > 151)) {
-                summary = summary.substring(0, 150);
-                summary = summary + "......";
+            if (StringUtils.isBlank(summary)){
+                summary = StringUtils.maxSize(postContent, 500);
+                summary = HtmlUtil.getTextFromHtml2(summary);
+                if ((!summary.isEmpty()) && (summary.length() > 151)) {
+                    summary = summary.substring(0, 150);
+                    summary = summary + "......";
+                }
             }
 
             forumPost.setSummary(summary);
-
             String ip = TmsCurrentRequest.getClientIpAddr();
             forumPost.setCreateIpAddr(ip);
-
             return forumPost;
         }
         this.logger.error("找不到ForumModule，moduleId={}", moduleId);
@@ -371,4 +498,5 @@ public class ForumService {
 
         ForumPost.DAO.batchUpdateFields("forumModuleId", moduleId, updateFields);
     }
+
 }

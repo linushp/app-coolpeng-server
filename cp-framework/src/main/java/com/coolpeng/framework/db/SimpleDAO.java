@@ -37,16 +37,16 @@ public class SimpleDAO<T> {
         return queryForList(sql, null);
     }
 
-    public List<T> findBy(String key,Object value) throws FieldNotFoundException {
+    public List<T> findBy(String key, Object value) throws FieldNotFoundException {
         Map<String, Object> params = new HashMap<>();
-        params.put(key,value);
+        params.put(key, value);
         return queryForList(params);
     }
 
-    public List<T> findBy(String key1,Object value1,String key2,Object value2) throws FieldNotFoundException {
+    public List<T> findBy(String key1, Object value1, String key2, Object value2) throws FieldNotFoundException {
         Map<String, Object> params = new HashMap<>();
-        params.put(key1,value1);
-        params.put(key2,value2);
+        params.put(key1, value1);
+        params.put(key2, value2);
         return queryForList(params);
     }
 
@@ -181,6 +181,15 @@ public class SimpleDAO<T> {
         return queryForList(sql, params);
     }
 
+    public PageResult<T> queryForPageBySQL(String listSQL, String countSQL, Map<String, String> params) {
+
+        MapSqlParameterSource sps = new MapSqlParameterSource(params);
+        Integer totalCount = getJdbcTemplate().queryForObject(countSQL, sps, Integer.class);
+        List pageData = getJdbcTemplate().query(listSQL, sps, new TMSBeanRowMapper(this.clazz));
+
+        return new PageResult(totalCount.intValue(), 0, 0, pageData);
+    }
+
 
     public PageResult<T> queryForPage(int pageNumber, int pageSize)
             throws ClassNotFoundException, FieldNotFoundException {
@@ -224,7 +233,7 @@ public class SimpleDAO<T> {
         return deleteById(id);
     }
 
-    public int deleteById(String id){
+    public int deleteById(String id) {
         String sql = this.sqlTemplate.getDeleteSQL();
         MapSqlParameterSource sps = new MapSqlParameterSource("id", id);
         return getJdbcTemplate().update(sql, sps);

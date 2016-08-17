@@ -8,7 +8,7 @@
     <artifactId>com.coolpeng</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
-    <name>cw-ms</name>
+    <name>coolpeng</name>
 
     <modules>
         <module>cp-framework</module>
@@ -29,7 +29,7 @@
      3）增量编译：参见 maven-compiler-plugin
      -->
     <build>
-        <finalName>cw-ms</finalName>
+        <finalName>coolpeng</finalName>
         <!-- resource and testResource -->
         <resources>
             <resource>

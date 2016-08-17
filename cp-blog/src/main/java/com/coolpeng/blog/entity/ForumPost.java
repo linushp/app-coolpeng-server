@@ -44,8 +44,12 @@ public class ForumPost extends BlogBaseEntity {
     @VOTemp
     private PageResult<ForumPostReply> replyPageResult;
 
+    /**
+     * 在数据库中不保存
+     */
     @VOTemp
     private List<String> imageList;
+
     private String image1;
     private String image2;
     private String image3;
@@ -70,6 +74,46 @@ public class ForumPost extends BlogBaseEntity {
 //    private ForumGroup moreImages4;
 
     public ForumPost() {
+    }
+
+
+
+    public ForumPost(ForumPost p) {
+        super(p);
+
+        this.forumModuleId = p.forumModuleId;
+        this.moduleType = p.moduleType;
+        this.postTitle = p.postTitle;
+        this.postContent = p.postContent;
+        this.summary = p.summary;
+        this.viewCount = p.viewCount;
+        this.replyCount = p.replyCount;
+        this.likeCount = p.likeCount;
+        this.recommend = p.recommend;
+        this.createNickname = p.createNickname;
+        this.createAvatar = p.createAvatar;
+        this.createMail = p.createMail;
+        this.createIpAddr = p.createIpAddr;
+        this.lastReplyUserId = p.lastReplyUserId;
+        this.lastReplyMsg = p.lastReplyMsg;
+        this.lastReplyNickname = p.lastReplyNickname;
+        this.lastReplyAvatar = p.lastReplyAvatar;
+        this.lastReplyMail = p.lastReplyMail;
+        this.lastReplyTime = p.lastReplyTime;
+        this.forumModule = p.forumModule;
+        this.replyPageResult = p.replyPageResult;
+        this.imageList = p.imageList;
+        this.image1 = p.image1;
+        this.image2 = p.image2;
+        this.image3 = p.image3;
+        this.image4 = p.image4;
+        this.image5 = p.image5;
+        this.image6 = p.image6;
+        this.image7 = p.image7;
+        this.image8 = p.image8;
+        this.image9 = p.image9;
+        this.moreImages = p.moreImages;
+
     }
 
     public int getRecommend() {
@@ -392,25 +436,35 @@ public class ForumPost extends BlogBaseEntity {
         }
     }
 
+
     public void addImage(String imageUrl) {
         if (StringUtils.isBlank(this.image1)) {
             this.image1 = imageUrl;
+            return;
         } else if (StringUtils.isBlank(this.image2)) {
             this.image2 = imageUrl;
+            return;
         } else if (StringUtils.isBlank(this.image3)) {
             this.image3 = imageUrl;
+            return;
         } else if (StringUtils.isBlank(this.image4)) {
             this.image4 = imageUrl;
+            return;
         } else if (StringUtils.isBlank(this.image5)) {
             this.image5 = imageUrl;
+            return;
         } else if (StringUtils.isBlank(this.image6)) {
             this.image6 = imageUrl;
+            return;
         } else if (StringUtils.isBlank(this.image7)) {
             this.image7 = imageUrl;
+            return;
         } else if (StringUtils.isBlank(this.image8)) {
             this.image8 = imageUrl;
+            return;
         } else if (StringUtils.isBlank(this.image9)) {
             this.image9 = imageUrl;
+            return;
         } else {
             String moreImages = this.moreImages;
             List images = new ArrayList();
@@ -419,9 +473,23 @@ public class ForumPost extends BlogBaseEntity {
             }
             images.add(imageUrl);
             this.moreImages = JSON.toJSONString(images, true);
+            return;
         }
     }
 
+
+    public void clearImageList(){
+        this.image1 = null;
+        this.image2 = null;
+        this.image3 = null;
+        this.image4 = null;
+        this.image5 = null;
+        this.image6 = null;
+        this.image7 = null;
+        this.image8 = null;
+        this.image9 = null;
+        this.moreImages = null;
+    }
 
     public ForumPostReply extractLastReply(){
         ForumPost post = this;
