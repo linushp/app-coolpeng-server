@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -163,6 +165,37 @@ public class AppUserController extends RestBaseController {
         user.setPassword(null);//隐藏敏感信息
         return TMSResponse.success(user);
     }
+
+
+
+
+
+    /**
+     * 修改用户信息
+     * @return
+     * @throws TMSMsgException
+     * @throws FieldNotFoundException
+     */
+    @ResponseBody
+    @RequestMapping("/updateUserInfo")
+    public TMSResponse<UserEntity> updateUserInfo(@RequestBody JSONObject jsonObject) throws TMSMsgException, FieldNotFoundException, UpdateErrorException {
+
+        String id = jsonObject.getString("id");
+        Map<String,Object> map = jsonObject.getObject("UserEntity", Map.class);
+
+        /***************************/
+        UserEntity user = assertIsUserLoginIfToken(jsonObject);
+        if (!user.isAdmin() && !user.getId().equals(id)){
+            //只有Admin和用户本人可以修改
+            throw new TMSMsgException("您无权修改");
+        }
+
+        UserEntity.DAO.updateFields(id,map);
+
+        return TMSResponse.success(user);
+    }
+
+
 
 
 }

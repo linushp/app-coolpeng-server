@@ -21,7 +21,7 @@
                   ${postContent.postTitle}
             </div>
             <div class="forum-post-create">
-                <img class="forum-post-avatar" src="<%=application.getAttribute("ctx")%>${postContent.createUser.avatar}">
+                <img class="forum-post-avatar" src="${tms:url(postContent.createUser.avatar)}">
                 <div class="forum-post-user">
                         <span class="forum-post-nickname"><span>楼主：</span>${postContent.createUser.nickname}</span>
                         <span class="forum-post-time" title="${postContent.createTime}">发布于：${tms:prettyDate(postContent.createTime)}</span>
@@ -33,7 +33,7 @@
         <c:forEach var="d" items="${postContent.replyPageResult.pageData}" >
             <div class="forum-post-content">
                 <div class="forum-post-create">
-                    <img class="forum-post-avatar" src="<%=application.getAttribute("ctx")%>${d.createUser.avatar}">
+                    <img class="forum-post-avatar" src="${tms:url(d.createUser.avatar)}">
                     <div class="forum-post-user">
                         <span class="forum-post-nickname">${d.createUser.nickname}</span>
                         <span class="forum-post-time" title="${d.createTime}">发布于：${tms:prettyDate(d.createTime)}</span>
