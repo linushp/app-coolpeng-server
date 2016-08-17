@@ -26,11 +26,21 @@ public class RestBaseController {
         assertTimeRestriction(jsonObject,clazz, funcName, itemId, 1000 * 30);
     }
 
+
+    /**
+     * 判断用户有没有过快操作
+     * @param jsonObject
+     * @param clazz
+     * @param funcName
+     * @param itemId
+     * @param timeLimit
+     * @throws TMSMsgException
+     */
     public void assertTimeRestriction(JSONObject jsonObject,Class clazz, String funcName, String itemId, long timeLimit) throws TMSMsgException {
 
         //对admin用户法外开恩
-        UserEntity user = getCurrentUser(jsonObject);
-        if(user!=null && user.isAdmin()){
+        UserEntity user = getCurrentUserIfToken(jsonObject);
+        if (user != null && user.isAdmin()) {
             return;
         }
 
@@ -45,8 +55,13 @@ public class RestBaseController {
     }
 
 
-
-    public UserEntity assertSessionLoginUser(JSONObject jsonObject) throws TMSMsgException {
+    /**
+     * 判断用户有没有登录
+     * @param jsonObject
+     * @return
+     * @throws TMSMsgException
+     */
+    public UserEntity assertIsUserLoginIfToken(JSONObject jsonObject) throws TMSMsgException {
         UserEntity user = (UserEntity) TmsCurrentRequest.getCurrentUser();
 
         //Session没有登录,尝试使用tokenid登录
@@ -73,12 +88,15 @@ public class RestBaseController {
 
 
     /**
+     *
+     * 获取当前用户
+     *
      * @param jsonObject
      * @return
      */
-    public UserEntity getCurrentUser(JSONObject jsonObject) {
+    public UserEntity getCurrentUserIfToken(JSONObject jsonObject) {
         try {
-            return assertSessionLoginUser(jsonObject);
+            return assertIsUserLoginIfToken(jsonObject);
         } catch (TMSMsgException e) {
             return null;
         }
@@ -87,7 +105,7 @@ public class RestBaseController {
 
 
     public UserEntity assertIsAdmin(JSONObject jsonObject) throws TMSMsgException {
-        UserEntity user = assertSessionLoginUser(jsonObject);
+        UserEntity user = assertIsUserLoginIfToken(jsonObject);
         if (!user.isAdmin()) {
             throw new TMSMsgException("您不是管理员");
         }
