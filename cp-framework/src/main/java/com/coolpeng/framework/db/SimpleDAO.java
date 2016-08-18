@@ -187,7 +187,8 @@ public class SimpleDAO<T> {
         Integer totalCount = getJdbcTemplate().queryForObject(countSQL, sps, Integer.class);
         List pageData = getJdbcTemplate().query(listSQL, sps, new TMSBeanRowMapper(this.clazz));
 
-        return new PageResult(totalCount.intValue(), 0, 0, pageData);
+        //这里的1，1是假数据
+        return new PageResult(totalCount.intValue(), 1, 1, pageData);
     }
 
 

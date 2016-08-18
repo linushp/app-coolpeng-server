@@ -17,6 +17,7 @@ import com.coolpeng.framework.exception.ParameterErrorException;
 import com.coolpeng.framework.exception.TMSMsgException;
 import com.coolpeng.framework.exception.UpdateErrorException;
 import com.coolpeng.framework.mvc.TMSResponse;
+import com.coolpeng.framework.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -52,11 +53,35 @@ public class CloudNoteController extends RestBaseController {
     @RequestMapping({"/getNoteListByCategory"})
     public TMSResponse getNoteListByCategory(@RequestBody JSONObject jsonObject) throws FieldNotFoundException, ClassNotFoundException {
         CategoryVO categoryVO = jsonObject.getObject("CategoryVO", CategoryVO.class);
+        JSONObject pathParams = jsonObject.getJSONObject("pathParams");
         int pageSize = jsonObject.getInteger("pageSize");
         int pageNumber = jsonObject.getInteger("pageNumber");
-
         /******************************/
-        PageResult<NoteVO> pageResult = cloudNoteService.getNoteListByCategory(categoryVO, pageSize, pageNumber);
+
+        String level = null;
+        String categoryId = null;
+
+        if (categoryVO != null) {
+            level = categoryVO.getLevel();
+            categoryId = categoryVO.getId();
+        } else if (pathParams != null) {
+
+            String g = pathParams.getString("g");
+            if (StringUtils.isNotBlank(g)) {
+                level = "group";
+                categoryId = g;
+            }
+
+            String m = pathParams.getString("m");
+            if (StringUtils.isNotBlank(m)) {
+                level = "module";
+                categoryId = m;
+            }
+
+        }
+
+
+        PageResult<NoteVO> pageResult = cloudNoteService.getNoteListByCategory(level, categoryId, pageSize, pageNumber);
         return TMSResponse.successPage(pageResult);
     }
 
@@ -67,8 +92,13 @@ public class CloudNoteController extends RestBaseController {
         String id = jsonObject.getString("id");
 
         /******************************/
-        NoteVO note = cloudNoteService.getNoteById(id);
-        return TMSResponse.success(note);
+        if(StringUtils.isNotBlank(id)){
+            NoteVO note = cloudNoteService.getNoteById(id);
+            return TMSResponse.success(note);
+        }else {
+            return TMSResponse.success(null);
+        }
+
     }
 
 
