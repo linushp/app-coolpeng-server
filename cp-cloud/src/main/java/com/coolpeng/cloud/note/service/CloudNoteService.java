@@ -79,10 +79,14 @@ public class CloudNoteService {
     public PageResult<NoteVO>  getNoteListByCategory(String level,String categoryId, int pageSize, int pageNumber) throws ClassNotFoundException, FieldNotFoundException {
 
         PageResult<ForumPost> postPage = null;
+
         if (LEVEL_MODULE.equals(level)){
             postPage = forumService.getPostListByModuleId(categoryId, pageNumber, pageSize, null);
-        }else {
+        }else if (LEVEL_GROUP.equals(level)){
             postPage = forumService.getPostListByGroupId(categoryId, pageNumber, pageSize, null);
+        }else {
+            QueryCondition qc = new QueryCondition();
+            postPage = forumService.getPostList(qc,pageNumber,pageSize);
         }
 
         List<ForumPost> postList = postPage.getPageData();

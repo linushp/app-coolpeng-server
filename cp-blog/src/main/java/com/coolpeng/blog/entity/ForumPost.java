@@ -6,6 +6,7 @@ import com.coolpeng.framework.db.PageResult;
 import com.coolpeng.framework.db.SimpleDAO;
 import com.coolpeng.framework.db.annotation.FieldDef;
 import com.coolpeng.framework.db.annotation.VOTemp;
+import com.coolpeng.framework.utils.CollectionUtil;
 import com.coolpeng.framework.utils.DateUtil;
 import com.coolpeng.framework.utils.StringUtils;
 
@@ -421,6 +422,10 @@ public class ForumPost extends BlogBaseEntity {
     }
 
     public void addImageList(List<String> images) {
+        if (CollectionUtil.isEmpty(images)){
+            return;
+        }
+
         String moreImages = this.moreImages;
         List beforeImages;
         if (StringUtils.isNotBlank(moreImages)) {
