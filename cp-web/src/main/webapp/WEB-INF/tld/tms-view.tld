@@ -126,4 +126,11 @@
     </function>
 
 
+    <function>
+        <name>toImageThumb</name>
+        <function-class>com.coolpeng.framework.mvc.jsptag.TmsFunctions</function-class>
+        <function-signature>java.lang.String toImageThumb(java.lang.String,java.lang.Integer,java.lang.Integer)</function-signature>
+    </function>
+
+
 </taglib>

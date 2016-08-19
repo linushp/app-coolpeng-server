@@ -51,7 +51,7 @@
                     <div class="forum-list-img-small">
                         <c:forEach var="img" items="${d.imageList}" >
                             <div class="forum-list-img2">
-                                <img class="forum-list-img" imgxx="${img}" src="http://image.coolpeng.cn/${img}@s_0,w_80,q_90,f_png" >
+                                <img class="forum-list-img" imgxx="${img}" src="${tms:toImageThumb(img,80,90)}" >
                             </div>
                         </c:forEach>
                         <div class="clear"></div>

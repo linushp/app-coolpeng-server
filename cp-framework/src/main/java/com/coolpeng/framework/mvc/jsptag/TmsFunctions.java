@@ -116,4 +116,53 @@ public class TmsFunctions {
         }
         return user;
     }
+
+
+
+    private static final String [] supporyImageHostName = {
+            "http://coolpeng.bj.bcebos.com",//http://image.coolpeng.cn
+            "http://ubibi.coolpeng.cn",
+            "http://image.coolpeng.cn"
+    };
+
+
+    private static boolean isImageUploadSupport(String url) {
+        if (url == null) {
+            return false;
+        }
+        for (int i = 0; i < supporyImageHostName.length; i++) {
+            String hostName = supporyImageHostName[i];
+            if (url.startsWith(hostName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static String toImageThumb(String url, Integer width, Integer height) {
+        try {
+            //http://image.coolpeng.cn/${img}@s_0,w_80,q_90,f_png
+            if (url == null) {
+                return "";
+            }
+
+            String suffix = "@s_0,w_" + width + ",q_" + height + ",f_png";
+            if (url.startsWith("http://")) {
+                if (isImageUploadSupport(url)) {
+                    if (url.startsWith(supporyImageHostName[0])) {
+                        url = url.replace(supporyImageHostName[0], "http://image.coolpeng.cn");
+                    }
+                    return url + suffix;
+
+                }
+                return url;
+            }
+
+            return "http://image.coolpeng.cn/" + url + "@s_0,w_" + width + ",q_" + height + ",f_png";
+        }catch (Throwable e){
+            e.printStackTrace();
+        }
+
+        return url;
+    }
 }
