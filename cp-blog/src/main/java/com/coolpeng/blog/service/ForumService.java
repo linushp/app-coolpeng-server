@@ -251,7 +251,7 @@ public class ForumService {
                 " where m.forum_group_id =:forum_group_id  ";
 
         if (StringUtils.isNotBlank(titleLike)){
-            sql +=" and post_title like '%:titleLike%'  ";
+            sql +=" and p.post_title like CONCAT('%',:titleLike,'%')   ";
             params.put("titleLike",titleLike);
         }
 
@@ -292,7 +292,7 @@ public class ForumService {
         }
 
         if (StringUtils.isNotBlank(titleLike)){
-            sql +=" and post_title like '%:titleLike%'  ";
+            sql +=" and p.post_title like CONCAT('%',:titleLike,'%')  ";
             params.put("titleLike",titleLike);
         }
 
