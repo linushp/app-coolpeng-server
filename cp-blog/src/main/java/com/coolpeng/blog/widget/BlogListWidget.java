@@ -6,6 +6,7 @@ import com.coolpeng.blog.service.ForumModuleService;
 import com.coolpeng.blog.utils.ForumUrlUtils;
 import com.coolpeng.framework.db.PageResult;
 import com.coolpeng.framework.mvc.TmsCurrentRequest;
+import com.coolpeng.framework.mvc.jsptag.TmsFunctions;
 import com.coolpeng.framework.utils.CollectionUtil;
 import com.coolpeng.framework.utils.DateUtil;
 import com.coolpeng.framework.utils.ServiceUtils;
@@ -63,7 +64,8 @@ public class BlogListWidget extends TagSupport {
 
             image1 = ctx + "/common/images/default-blog-thumb/" + sIndex + ".jpg";
         } else {
-            image1 = BlogFunctions.toImageW250(image1);
+//            image1 = BlogFunctions.toImageW250(image1);
+            image1 = TmsFunctions.toImageThumb(image1,250,90);
         }
 
         String x = "" +
