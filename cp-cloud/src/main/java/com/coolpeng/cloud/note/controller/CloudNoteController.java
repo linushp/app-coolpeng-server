@@ -52,10 +52,14 @@ public class CloudNoteController extends RestBaseController {
     @ResponseBody
     @RequestMapping({"/getNoteListByCategory"})
     public TMSResponse getNoteListByCategory(@RequestBody JSONObject jsonObject) throws FieldNotFoundException, ClassNotFoundException {
-        CategoryVO categoryVO = jsonObject.getObject("CategoryVO", CategoryVO.class);
-        JSONObject pathParams = jsonObject.getJSONObject("pathParams");
+        CategoryVO categoryVO = null;//jsonObject.getObject("CategoryVO", CategoryVO.class);
+        JSONObject pathParams = jsonObject.getJSONObject("pathParams");//
+
         int pageSize = jsonObject.getInteger("pageSize");
         int pageNumber = jsonObject.getInteger("pageNumber");
+
+        String titleLike = jsonObject.getString("titleLike");
+
         /******************************/
 
         String level = null;
@@ -81,7 +85,7 @@ public class CloudNoteController extends RestBaseController {
         }
 
 
-        PageResult<NoteVO> pageResult = cloudNoteService.getNoteListByCategory(level, categoryId, pageSize, pageNumber);
+        PageResult<NoteVO> pageResult = cloudNoteService.getNoteListByCategory(level, categoryId, pageSize, pageNumber,titleLike);
         return TMSResponse.successPage(pageResult);
     }
 

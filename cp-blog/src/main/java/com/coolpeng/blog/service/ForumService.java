@@ -271,23 +271,30 @@ public class ForumService {
     }
 
 
-
+    /**
+     *
+     * @param forum_module_id   可以为null
+     * @param pageNumber
+     * @param pageSize
+     * @param titleLike 可以为null
+     * @return
+     * @throws FieldNotFoundException
+     * @throws ClassNotFoundException
+     */
     public PageResult<ForumPost> getPostListByModuleId(String forum_module_id, int pageNumber, int pageSize,String titleLike)
             throws FieldNotFoundException, ClassNotFoundException {
 
         Map<String, String> params = new HashMap<>();
-        params.put("forum_module_id", forum_module_id);
-
-
-        String sql = "" +
-                " FROM  `t_forum_post` p  " +
-                " where p.forum_module_id =:forum_module_id  ";
+        String sql = " FROM  `t_forum_post` p  where 1=1 ";
+        if (StringUtils.isNotBlank(forum_module_id)){
+            params.put("forum_module_id", forum_module_id);
+            sql +=" and p.forum_module_id =:forum_module_id  ";
+        }
 
         if (StringUtils.isNotBlank(titleLike)){
             sql +=" and post_title like '%:titleLike%'  ";
             params.put("titleLike",titleLike);
         }
-
 
         int pageBegin = (pageNumber - 1) * pageSize;
         String listSQL = "SELECT p.* " + sql + "  limit " + pageBegin + "," + pageSize + "  ";
@@ -302,9 +309,6 @@ public class ForumService {
 
         return p;
     }
-
-
-
 
 
 
