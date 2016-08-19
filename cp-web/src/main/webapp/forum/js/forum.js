@@ -44,7 +44,8 @@ jQuery(document).ready(function () {
 
         var imgxx = $target.attr("imgxx");
 
-        var src="http://image.coolpeng.cn/"+imgxx+"@s_0,w_600,q_90";
+        //var src="http://image.coolpeng.cn/"+imgxx+"@s_0,w_600,q_90";
+        var src = imgxx;
 
         img.attr("src", src);
         imgDiv.show();
