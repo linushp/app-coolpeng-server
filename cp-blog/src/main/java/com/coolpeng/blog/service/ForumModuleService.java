@@ -20,6 +20,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
+/**
+ *rename to  PublicModuleService
+ */
 @Service
 public class ForumModuleService {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
