@@ -13,36 +13,77 @@ public class TmsWebFilter
             throws ServletException {
     }
 
+    private static String [] supportSuffixDynamic = {".shtml",".json"};
+
+    private static String [] supportSuffixStatic = {".js",".css",".png",".jpg",".gif",".ico",".txt",".jsp"};
+
+    private static boolean isSupporySuffixDynamic(String uri){
+        for (String s:supportSuffixDynamic){
+            if (uri.endsWith(s)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean isSupporySuffixStatic(String uri){
+        for (String s:supportSuffixStatic){
+            if (uri.endsWith(s)){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
             throws IOException, ServletException {
-
-        res.setContentType("text/html;charset=UTF-8");
-
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response  = (HttpServletResponse)res;
 
-        request.setCharacterEncoding("UTF-8");
-        response.setCharacterEncoding("UTF-8");
-
-
-        TmsCurrentRequest.setHttpServletRequest(request);
-
-        String Origin = request.getHeader("Origin");
-        if (StringUtils.isNotBlank(Origin)){
-            response.addHeader("Access-Control-Allow-Origin",Origin);
-        }else {
-            response.addHeader("Access-Control-Allow-Origin","*");
+        String uri = request.getRequestURI();
+        if (!isSupporySuffixDynamic(uri) && !isSupporySuffixStatic(uri)){
+//            response.getWriter().println("hello");
+//            response.getWriter().flush();
+//            response.getWriter().close();
+            request.getRequestDispatcher("/index.html").forward(request, response);
+//            request.getRequestDispatcher("/index.html").forward(request, response);
+            return;
         }
-        response.addHeader("Access-Control-Allow-Headers", "Origin, No-Cache, X-Requested-With, If-Modified-Since, Pragma, Last-Modified, Cache-Control, Expires, Content-Type, Cookie");
-//        response.addHeader("Access-Control-Allow-Headers", "*");
-        response.addHeader("Access-Control-Allow-Methods","GET, POST, OPTIONS");
-        response.addHeader("Access-Control-Allow-Credentials","true");
-        response.addHeader("Access-Control-Max-Age","18000");
 
-        if (!isRejectByAdmin(request, response) && !isRejectByApp(request, response)){
+
+        //js css png jpeg 等文件
+        if (isSupporySuffixStatic(uri)){
             chain.doFilter(request, res);
+            return;
         }
 
+
+        //json shtml 等路径
+        if(isSupporySuffixDynamic(uri)){
+
+            res.setContentType("text/html;charset=UTF-8");
+            request.setCharacterEncoding("UTF-8");
+            response.setCharacterEncoding("UTF-8");
+
+            TmsCurrentRequest.setHttpServletRequest(request);
+
+            String Origin = request.getHeader("Origin");
+            if (StringUtils.isNotBlank(Origin)){
+                response.addHeader("Access-Control-Allow-Origin",Origin);
+            }else {
+                response.addHeader("Access-Control-Allow-Origin","*");
+            }
+            response.addHeader("Access-Control-Allow-Headers", "Origin, No-Cache, X-Requested-With, If-Modified-Since, Pragma, Last-Modified, Cache-Control, Expires, Content-Type, Cookie");
+//        response.addHeader("Access-Control-Allow-Headers", "*");
+            response.addHeader("Access-Control-Allow-Methods","GET, POST, OPTIONS");
+            response.addHeader("Access-Control-Allow-Credentials","true");
+            response.addHeader("Access-Control-Max-Age","18000");
+
+            if (!isRejectByAdmin(request, response) && !isRejectByApp(request, response)){
+                chain.doFilter(request, res);
+            }
+            return;
+        }
 
     }
 
