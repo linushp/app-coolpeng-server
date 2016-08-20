@@ -3,6 +3,7 @@ package com.coolpeng.blog.controller;
 import com.coolpeng.blog.entity.ForumModule;
 import com.coolpeng.blog.entity.ForumPost;
 import com.coolpeng.blog.entity.ForumPostReply;
+import com.coolpeng.blog.entity.enums.AccessControl;
 import com.coolpeng.blog.entity.enums.ModuleTypeEnum;
 import com.coolpeng.blog.service.ForumModuleService;
 import com.coolpeng.blog.service.ForumService;
@@ -36,7 +37,7 @@ public class HomeController {
     @RequestMapping(value = {"/home"}, method = {org.springframework.web.bind.annotation.RequestMethod.GET})
     public ModelAndView showHome()
             throws FieldNotFoundException, ParameterErrorException, ClassNotFoundException {
-        PageResult postList = this.forumService.getPostList(1, 30, null, null, ModuleTypeEnum.BLOG);
+        PageResult postList = this.forumService.getPostList(1, 30, null, null, ModuleTypeEnum.BLOG, AccessControl.PUBLIC);
 
         List<ForumPost> list = postList.getPageData();
         for (ForumPost p : list) {

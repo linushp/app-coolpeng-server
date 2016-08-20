@@ -4,6 +4,7 @@ import com.coolpeng.blog.entity.ForumModule;
 import com.coolpeng.blog.entity.ForumPost;
 import com.coolpeng.blog.entity.ForumPostReply;
 import com.coolpeng.blog.entity.UserEntity;
+import com.coolpeng.blog.entity.enums.AccessControl;
 import com.coolpeng.blog.entity.enums.ModuleTypeEnum;
 import com.coolpeng.blog.utils.EntityUtils;
 import com.coolpeng.framework.db.PageResult;
@@ -17,6 +18,9 @@ import com.coolpeng.framework.utils.CollectionUtil;
 import com.coolpeng.framework.utils.DateUtil;
 import com.coolpeng.framework.utils.HtmlUtil;
 import com.coolpeng.framework.utils.StringUtils;
+import com.coolpeng.framework.utils.ipaddr.IPAddrCallback;
+import com.coolpeng.framework.utils.ipaddr.IPAddrParse;
+import com.coolpeng.framework.utils.ipaddr.IPAddrResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,19 +45,21 @@ public class ForumService {
 
 
 
-    public ForumPost createPost(String moduleId, String postTitle, String postContent)
+    public ForumPost createPost(String moduleId, String postTitle, String postContent,AccessControl accessControl)
             throws FieldNotFoundException, UpdateErrorException, ParameterErrorException {
-        return createPost(moduleId,postTitle,postContent,null,null);
+        return createPost(moduleId,postTitle,postContent,null,null,accessControl);
     }
 
 
-    public ForumPost updatePost(String postId,String moduleId, String postTitle, String postContent, String summary, List<String> imageList) throws FieldNotFoundException, UpdateErrorException, ParameterErrorException {
-        ForumPost post = getPostById(postId,false);
+    public ForumPost updatePost(String postId,String moduleId,String myModuleId, String postTitle, String postContent, String summary, List<String> imageList,String accessControl) throws FieldNotFoundException, UpdateErrorException, ParameterErrorException {
+        ForumPost post = getPostById(postId, false);
 
         post.setForumModuleId(moduleId);
         post.setPostTitle(postTitle);
         post.setPostContent(postContent);
         post.setSummary(summary);
+        post.setAccessControl(accessControl);
+        post.setMyModuleId(myModuleId);
         post.clearImageList();
         post.addImageList(imageList);
 
@@ -83,9 +89,9 @@ public class ForumService {
      * @throws UpdateErrorException
      * @throws ParameterErrorException
      */
-    public ForumPost createPost(String moduleId, String postTitle, String postContent,String summary,List<String> images)
+    public ForumPost createPost(String moduleId, String postTitle, String postContent,String summary,List<String> images,AccessControl accessControl)
             throws FieldNotFoundException, UpdateErrorException, ParameterErrorException {
-        ForumPost forumPost = toForumPost(moduleId, postTitle, postContent,summary);
+        final ForumPost forumPost = toForumPost(moduleId, postTitle, postContent, summary, accessControl);
 
         if (forumPost == null) {
             this.logger.error("创建帖子失败");
@@ -117,6 +123,21 @@ public class ForumService {
         this.forumModuleService.updatePostCount(module);
 
         this.forumImageService.saveForumPostImageByNewPost(forumPost, images);
+
+        //3、IP地址解析
+        IPAddrParse.parseIpAddr(forumPost.getCreateIpAddr(), new IPAddrCallback() {
+            @Override
+            public void onResult(IPAddrResult ipAddrResult, String resultStr) {
+                if (ipAddrResult.isOk()) {
+                    forumPost.setCreateIpStr(ipAddrResult.toDisplayString());
+                    try {
+                        ForumPost.DAO.update(forumPost);
+                    } catch (Exception e) {
+                        logger.error("", e);
+                    }
+                }
+            }
+        });
 
         return forumPost;
     }
@@ -193,9 +214,9 @@ public class ForumService {
         ForumPost.DAO.updateFields(postId, updateFields);
     }
 
-    public PageResult<ForumPost> getPostListRecommended(int pageNumber, int pageSize, ModuleTypeEnum moduleType, String moduleId)
+    public PageResult<ForumPost> getPostListRecommended(int pageNumber, int pageSize, ModuleTypeEnum moduleType, String moduleId,AccessControl accessControl)
             throws ClassNotFoundException, FieldNotFoundException {
-        QueryCondition qc = toQueryCondition(moduleId, null, moduleType);
+        QueryCondition qc = toQueryCondition(moduleId, null, moduleType,accessControl);
 
         qc.setOrderDesc("updateTime");
         qc.addEqualCondition("recommend", Integer.valueOf(1));
@@ -203,12 +224,12 @@ public class ForumService {
         return getPostList(qc, pageNumber, pageSize);
     }
 
-    public PageResult<ForumPost> getPostListByModuleType(int pageNumber, int pageSize, ModuleTypeEnum moduleType) throws ClassNotFoundException, FieldNotFoundException {
-        return getPostListByModuleType(pageNumber, pageSize, moduleType, null);
+    public PageResult<ForumPost> getPostListByModuleType(int pageNumber, int pageSize, ModuleTypeEnum moduleType,AccessControl accessControl) throws ClassNotFoundException, FieldNotFoundException {
+        return getPostListByModuleType(pageNumber, pageSize, moduleType, null,accessControl);
     }
 
-    public PageResult<ForumPost> getPostListByModuleType(int pageNumber, int pageSize, ModuleTypeEnum moduleType, String orderBy) throws FieldNotFoundException, ClassNotFoundException {
-        return getPostList(pageNumber, pageSize, null, orderBy, moduleType);
+    public PageResult<ForumPost> getPostListByModuleType(int pageNumber, int pageSize, ModuleTypeEnum moduleType, String orderBy,AccessControl accessControl) throws FieldNotFoundException, ClassNotFoundException {
+        return getPostList(pageNumber, pageSize, null, orderBy, moduleType,accessControl);
     }
 
     public PageResult<ForumPost> getPostList(int pageNumber, int pageSize, String moduleId)
@@ -216,14 +237,14 @@ public class ForumService {
         return getPostList(pageNumber, pageSize, moduleId, null, null);
     }
 
-    public PageResult<ForumPost> getPostList(int pageNumber, int pageSize, String moduleId, String orderBy)
+    public PageResult<ForumPost> getPostList(int pageNumber, int pageSize, String moduleId, String orderBy,AccessControl accessControl)
             throws FieldNotFoundException, ClassNotFoundException {
-        return getPostList(pageNumber, pageSize, moduleId, orderBy, null);
+        return getPostList(pageNumber, pageSize, moduleId, orderBy, null,accessControl);
     }
 
-    public PageResult<ForumPost> getPostList(int pageNumber, int pageSize, String moduleId, String orderBy, ModuleTypeEnum moduleType)
+    public PageResult<ForumPost> getPostList(int pageNumber, int pageSize, String moduleId, String orderBy, ModuleTypeEnum moduleType,AccessControl accessControl)
             throws ClassNotFoundException, FieldNotFoundException {
-        QueryCondition qc = toQueryCondition(moduleId, orderBy, moduleType);
+        QueryCondition qc = toQueryCondition(moduleId, orderBy, moduleType,accessControl);
         return getPostList(qc, pageNumber, pageSize);
     }
 
@@ -313,7 +334,7 @@ public class ForumService {
 
 
 
-    private QueryCondition toQueryCondition(String moduleId, String orderBy, ModuleTypeEnum moduleType) {
+    private QueryCondition toQueryCondition(String moduleId, String orderBy, ModuleTypeEnum moduleType,AccessControl accessControl) {
         QueryCondition qc = new QueryCondition();
 
         if ("hot".equals(orderBy)) {
@@ -329,6 +350,8 @@ public class ForumService {
         if (moduleType != null) {
             qc.addEqualCondition("moduleType", Integer.valueOf(moduleType.getValue()));
         }
+
+        accessControl.appendQueryCondition(qc);
 
         return qc;
     }
@@ -399,7 +422,7 @@ public class ForumService {
     }
 
 
-    public ForumPost getPostWithReply(String postId, int pageNumber, int pageSize)
+    public ForumPost getPostWithReply(String postId, int pageNumber, int pageSize,AccessControl accessControl)
             throws ParameterErrorException, FieldNotFoundException, UpdateErrorException, ClassNotFoundException {
 
         ForumPost p = getPostById(postId, true);
@@ -420,6 +443,7 @@ public class ForumService {
 
         QueryCondition qc = new QueryCondition();
         qc.addEqualCondition("forumPostId", postId);
+        accessControl.appendQueryCondition(qc);
 
         PageResult<ForumPostReply> replyPageResult = ForumPostReply.DAO.queryForPage(qc, pageNumber, pageSize, new String[]{"createUser"});
 
@@ -451,16 +475,23 @@ public class ForumService {
         return urlList;
     }
 
-    private ForumPost toForumPost(String moduleId, String postTitle, String postContent,String summary)
+    private ForumPost toForumPost(String moduleId, String postTitle, String postContent,String summary,AccessControl accessControl)
             throws FieldNotFoundException, UpdateErrorException, ParameterErrorException {
         ForumModule module = this.forumModuleService.getForumModule(moduleId);
 
         if (module != null) {
             ForumPost forumPost = new ForumPost();
+
+            if(accessControl.isPublic()){
+                forumPost.setForumModuleId(moduleId);
+                forumPost.setForumModule(module);
+                forumPost.setModuleType(module.getModuleType());
+            }
+
+            forumPost.setMyModuleId(moduleId);
+            forumPost.setAccessControl(accessControl.toString());
+
             forumPost.setPostContent(postContent);
-            forumPost.setForumModuleId(moduleId);
-            forumPost.setForumModule(module);
-            forumPost.setModuleType(module.getModuleType());
             forumPost.setLastReplyTime(DateUtil.currentTimeFormat());
             forumPost.setUpdateTime(DateUtil.currentTimeFormat());
             forumPost.setCreateTime(DateUtil.currentTimeFormat());

@@ -39,14 +39,28 @@ public class CloudNoteController extends RestBaseController {
 
     @ResponseBody
     @RequestMapping({"/getNoteCategory"})
-    public TMSResponse getNoteCategory(@RequestBody JSONObject jsonObject) {
-        String ownerId = jsonObject.getString("ownerUserId");  //用户ID,
-
+    public TMSResponse getNoteCategory(@RequestBody JSONObject jsonObject) throws FieldNotFoundException {
+//        String ownerId = jsonObject.getString("ownerUserId");  //用户ID,
 
         /******************************/
-        List<CategoryVO> categoryList = cloudNoteService.getNoteCategory(ownerId);
+        UserEntity user = getCurrentUserIfToken(jsonObject);
+        List<CategoryVO> categoryList = cloudNoteService.getNoteCategory(user.getId());
         return TMSResponse.success(categoryList);
     }
+
+
+    @ResponseBody
+    @RequestMapping({"/saveOrUpdateNoteCategory"})
+    public TMSResponse saveOrUpdateNoteCategory(@RequestBody JSONObject jsonObject) throws FieldNotFoundException, ParameterErrorException, UpdateErrorException {
+        CategoryVO categoryVO = jsonObject.getObject("CategoryVO", CategoryVO.class);  //用户ID,
+
+        /******************************/
+        UserEntity user = getCurrentUserIfToken(jsonObject);
+        categoryVO = cloudNoteService.saveOrUpdateNoteCategory(categoryVO,user);
+        return TMSResponse.success(categoryVO);
+    }
+
+
 
 
     @ResponseBody
@@ -117,6 +131,15 @@ public class CloudNoteController extends RestBaseController {
         //判断用户有没有登录，只有登录用户才能发布
         assertIsUserLoginIfToken(jsonObject);
 
+
+        if (StringUtils.isNotBlank(noteVO.getId())){
+            //只有admin,或者 帖子作者 可以修改
+            UserEntity user = getCurrentUserIfToken(jsonObject);
+            if (!user.isAdmin() && !user.getId().equals(noteVO.getCreateUserId())){
+                throw new TMSMsgException("只有管理员和原作者可以修改");
+            }
+        }
+
         noteVO = cloudNoteService.saveOrUpdateNote(noteVO);
 
         return TMSResponse.success(noteVO);
@@ -143,7 +166,7 @@ public class CloudNoteController extends RestBaseController {
 
         //只有admin,或者 帖子作者 可以删除
         if (!user.isAdmin() && !user.getId().equals(noteVO.getCreateUserId())){
-            throw new TMSMsgException("只有Admin用户和帖子作者可以删除");
+            throw new TMSMsgException("只有管理员和原作者可以删除");
         }
 
         String noteId = noteVO.getId();

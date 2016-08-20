@@ -3,6 +3,7 @@ package com.coolpeng.blog.controller;
 import com.coolpeng.blog.entity.ForumModule;
 import com.coolpeng.blog.entity.ForumPost;
 import com.coolpeng.blog.entity.ForumPostReply;
+import com.coolpeng.blog.entity.enums.AccessControl;
 import com.coolpeng.blog.entity.enums.ModuleTypeEnum;
 import com.coolpeng.blog.service.ForumModuleService;
 import com.coolpeng.blog.service.ForumService;
@@ -43,7 +44,7 @@ public class ForumController {
         ModelMap modelMap = new ModelMap();
         ForumModule module = this.modelMapService.addBelongModuleAndGroup(modelMap, moduleId);
 
-        PageResult postList = this.forumService.getPostList(pageNumber, 30, moduleId, orderBy);
+        PageResult postList = this.forumService.getPostList(pageNumber, 30, moduleId, orderBy,AccessControl.PUBLIC);
         modelMap.put("postList", postList);
         modelMap.put("orderBy", orderBy);
 
@@ -67,7 +68,7 @@ public class ForumController {
             throws FieldNotFoundException, ParameterErrorException, UpdateErrorException, ClassNotFoundException {
         ModelMap modelMap = new ModelMap();
 
-        ForumPost postContent = this.forumService.getPostWithReply(postId, pageNumber, 10);
+        ForumPost postContent = this.forumService.getPostWithReply(postId, pageNumber, 10,AccessControl.PUBLIC);
         String moduleId = postContent.getForumModuleId();
 
         ForumModule module = this.modelMapService.addBelongModuleAndGroup(modelMap, moduleId);
@@ -84,7 +85,7 @@ public class ForumController {
             throws FieldNotFoundException, UpdateErrorException, ParameterErrorException {
         if ("post".equals(method)) {
             String moduleId = parentId;
-            this.forumService.createPost(moduleId, postTitle, postContent);
+            this.forumService.createPost(moduleId, postTitle, postContent, AccessControl.PUBLIC);
             return "redirect:/" + ForumUrlUtils.toPostListURLNoCtx(moduleId, orderBy);
         }
 

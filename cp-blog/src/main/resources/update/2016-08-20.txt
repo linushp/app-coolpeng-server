@@ -1,0 +1,14 @@
+ALTER TABLE `t_forum_group`
+ADD COLUMN `access_control` VARCHAR(45) NULL DEFAULT 'public' AFTER `status`;
+
+ALTER TABLE `t_forum_module`
+ADD COLUMN `access_control` VARCHAR(45) NULL DEFAULT 'public' AFTER `status`;
+
+ALTER TABLE `t_forum_post`
+ADD COLUMN `access_control` VARCHAR(45) NULL DEFAULT 'public' AFTER `recommend`;
+
+ALTER TABLE `t_forum_post`
+ADD COLUMN `my_module_id` INT NULL DEFAULT -1 AFTER `id`;
+
+ALTER TABLE `t_forum_post`
+ADD COLUMN `create_ip_str` VARCHAR(100) NULL AFTER `create_ip_addr`;

@@ -11,6 +11,11 @@ public class ForumGroup extends BlogBaseEntity {
     private String groupName;
     private String groupDesc;
 
+    //ALTER TABLE `coolpeng`.`t_forum_group`
+    //ADD COLUMN `access_control` VARCHAR(45) NULL DEFAULT 'public' AFTER `status`;
+    private String accessControl; //public private
+
+
     @VOTemp
     private List<ForumModule> moduleList;
 
@@ -46,5 +51,13 @@ public class ForumGroup extends BlogBaseEntity {
 
     public void setModuleList(List<ForumModule> moduleList) {
         this.moduleList = moduleList;
+    }
+
+    public String getAccessControl() {
+        return accessControl;
+    }
+
+    public void setAccessControl(String accessControl) {
+        this.accessControl = accessControl;
     }
 }

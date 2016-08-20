@@ -32,12 +32,15 @@ public class ForumPost extends BlogBaseEntity {
     private String createAvatar;
     private String createMail;
     private String createIpAddr;
+    private String createIpStr;
     private String lastReplyUserId;
     private String lastReplyMsg;
     private String lastReplyNickname;
     private String lastReplyAvatar;
     private String lastReplyMail;
     private String lastReplyTime = DateUtil.currentTimeFormat();
+    private String accessControl; //public private
+    private String myModuleId;
 
     @VOTemp
     private ForumModule forumModule;
@@ -45,9 +48,6 @@ public class ForumPost extends BlogBaseEntity {
     @VOTemp
     private PageResult<ForumPostReply> replyPageResult;
 
-    /**
-     * 在数据库中不保存
-     */
     @VOTemp
     private List<String> imageList;
 
@@ -514,4 +514,28 @@ public class ForumPost extends BlogBaseEntity {
         return reply;
     }
 
+
+    public String getAccessControl() {
+        return accessControl;
+    }
+
+    public void setAccessControl(String accessControl) {
+        this.accessControl = accessControl;
+    }
+
+    public String getCreateIpStr() {
+        return createIpStr;
+    }
+
+    public void setCreateIpStr(String createIpStr) {
+        this.createIpStr = createIpStr;
+    }
+
+    public String getMyModuleId() {
+        return myModuleId;
+    }
+
+    public void setMyModuleId(String myModuleId) {
+        this.myModuleId = myModuleId;
+    }
 }

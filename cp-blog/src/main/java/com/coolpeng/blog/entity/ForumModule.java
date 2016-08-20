@@ -11,9 +11,15 @@ public class ForumModule extends BlogBaseEntity {
     private String moduleIcon;
 
     //板块类型：论坛（1），问答（2），博客类型（3），留言板（4）
-    private int moduleType;
+    private int moduleType = 3;
+
+    //无限层级
     private String forumGroupId;
-    private int postCount;
+    private int postCount = 0;
+
+//    ALTER TABLE `coolpeng`.`t_forum_module`
+//    ADD COLUMN `accessControl` VARCHAR(45) NULL DEFAULT 'public' AFTER `status`;
+    private String accessControl; //public private
 
     @VOTemp
     private ForumGroup forumGroup;
@@ -86,5 +92,13 @@ public class ForumModule extends BlogBaseEntity {
 
     public void setForumGroup(ForumGroup forumGroup) {
         this.forumGroup = forumGroup;
+    }
+
+    public String getAccessControl() {
+        return accessControl;
+    }
+
+    public void setAccessControl(String accessControl) {
+        this.accessControl = accessControl;
     }
 }

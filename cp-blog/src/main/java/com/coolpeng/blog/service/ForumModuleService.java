@@ -3,6 +3,7 @@ package com.coolpeng.blog.service;
 import com.coolpeng.blog.entity.ForumGroup;
 import com.coolpeng.blog.entity.ForumModule;
 import com.coolpeng.blog.entity.ForumPost;
+import com.coolpeng.blog.entity.enums.AccessControl;
 import com.coolpeng.blog.utils.EntityUtils;
 import com.coolpeng.framework.exception.FieldNotFoundException;
 import com.coolpeng.framework.exception.ParameterErrorException;
@@ -10,6 +11,8 @@ import com.coolpeng.framework.exception.UpdateErrorException;
 import com.coolpeng.framework.mvc.TmsCurrentRequest;
 import com.coolpeng.framework.utils.CollectionUtil;
 import com.coolpeng.framework.utils.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -19,14 +22,23 @@ import java.util.Map;
 
 @Service
 public class ForumModuleService {
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+
     private static List<ForumGroup> GROUP_LIST = null;
     private static List<ForumModule> MODULE_LIST = null;
     private static Map<String, ForumGroup> GROUP_MAP = new HashMap();
     private static Map<String, ForumModule> MODULE_MAP = new HashMap();
 
     public void updateCache() {
-        GROUP_LIST = ForumGroup.DAO.findAll();
-        MODULE_LIST = ForumModule.DAO.findAll();
+        Map<String,Object> params = new HashMap<>();
+        //只查询被公开的
+        AccessControl.PUBLIC.appendQueryCondition(params);
+        try {
+            GROUP_LIST = ForumGroup.DAO.queryForList(params);
+            MODULE_LIST = ForumModule.DAO.queryForList(params);
+        } catch (FieldNotFoundException e) {
+            logger.error("",e);
+        }
 
         MODULE_MAP.clear();
         GROUP_MAP.clear();

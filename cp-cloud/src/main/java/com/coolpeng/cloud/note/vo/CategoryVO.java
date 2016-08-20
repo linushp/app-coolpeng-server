@@ -14,6 +14,9 @@ public class CategoryVO {
     private String desc;
     private String level;
 
+    private String parentId = null;
+    private String parentLevel = null;
+
     private List<CategoryVO> children = new ArrayList<>();
 
     public CategoryVO(String id, String type, String name, String desc) {
@@ -72,5 +75,21 @@ public class CategoryVO {
 
     public void setLevel(String level) {
         this.level = level;
+    }
+
+    public String getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
+    }
+
+    public String getParentLevel() {
+        return parentLevel;
+    }
+
+    public void setParentLevel(String parentLevel) {
+        this.parentLevel = parentLevel;
     }
 }

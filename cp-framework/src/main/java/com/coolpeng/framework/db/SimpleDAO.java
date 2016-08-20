@@ -1,13 +1,12 @@
 package com.coolpeng.framework.db;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.coolpeng.framework.event.TMSEventBus;
 import com.coolpeng.framework.exception.FieldNotFoundException;
 import com.coolpeng.framework.exception.ParameterErrorException;
 import com.coolpeng.framework.exception.UpdateErrorException;
-import com.coolpeng.framework.utils.CollectionUtil;
-import com.coolpeng.framework.utils.DateUtil;
-import com.coolpeng.framework.utils.ServiceUtils;
-import com.coolpeng.framework.utils.Tuple;
+import com.coolpeng.framework.utils.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -333,6 +332,29 @@ public class SimpleDAO<T> {
         int result = getJdbcTemplate().update(sql, sps);
         TMSEventBus.sendEvent(new SimpleDAOEvent(SimpleDAOEventEnum.afterUpdate, this.clazz, entity));
         return result;
+    }
+
+
+    /**
+     * 指定更新entity的某些字段。只能更新简单字段
+     * @param entity 实体对象
+     * @param fields 字段名
+     * @return
+     * @throws UpdateErrorException 也有可能抛出其他异常，抛就抛吧
+     */
+    public int updateEntityFields(T entity, String[] fields) throws UpdateErrorException {
+        if ((entity instanceof BaseEntity)) {
+            Map<String, Object> fieldsAndValue = new HashMap<>();
+            String json = JSON.toJSONString(entity);
+            JSONObject jsonObject = JSON.parseObject(json);
+            for (String field : fields) {
+                Object value = jsonObject.get(field);
+                fieldsAndValue.put(field, value);
+            }
+            BaseEntity entity1 = (BaseEntity) entity;
+            return updateFields(entity1.getId(), fieldsAndValue);
+        }
+        return -1;
     }
 
     public int updateFields(String entityId, Map<String, Object> fieldsAndValue)

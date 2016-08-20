@@ -2,6 +2,7 @@ package com.coolpeng.blog.controller;
 
 import com.coolpeng.blog.entity.ForumPost;
 import com.coolpeng.blog.entity.ForumPostReply;
+import com.coolpeng.blog.entity.enums.AccessControl;
 import com.coolpeng.blog.service.ForumModuleService;
 import com.coolpeng.blog.service.ForumService;
 import com.coolpeng.blog.service.ModelMapService;
@@ -37,7 +38,7 @@ public class ForumAjaxController {
             throws FieldNotFoundException, UpdateErrorException, ParameterErrorException {
         if ("post".equals(method)) {
             String moduleId = parentId;
-            ForumPost post = this.forumService.createPost(moduleId, postTitle, postContent);
+            ForumPost post = this.forumService.createPost(moduleId, postTitle, postContent, AccessControl.PUBLIC);
             return TMSResponse.success(post);
         }
 
