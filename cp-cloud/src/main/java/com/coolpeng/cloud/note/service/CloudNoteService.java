@@ -132,7 +132,7 @@ public class CloudNoteService {
 
     /******************getNoteListByCategory********************/
     public NoteVO getNoteById(String id) throws FieldNotFoundException, UpdateErrorException, ParameterErrorException {
-        ForumPost post = forumService.getPostById(id, true);
+        ForumPost post = forumService.getPostById(id,null, true);
         return new NoteVO(post);
     }
 

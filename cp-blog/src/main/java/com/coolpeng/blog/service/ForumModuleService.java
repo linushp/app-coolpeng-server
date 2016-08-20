@@ -32,7 +32,7 @@ public class ForumModuleService {
     public void updateCache() {
         Map<String,Object> params = new HashMap<>();
         //只查询被公开的
-        AccessControl.PUBLIC.appendQueryCondition(params);
+        AccessControl.appendQueryCondition(AccessControl.PUBLIC,params);
         try {
             GROUP_LIST = ForumGroup.DAO.queryForList(params);
             MODULE_LIST = ForumModule.DAO.queryForList(params);

@@ -45,15 +45,24 @@ public enum AccessControl {
     }
 
 
-    public void appendQueryCondition(QueryCondition qc){
-        if(isPublic()){
+    public static void appendQueryCondition(AccessControl accessControl,QueryCondition qc){
+        if (accessControl==null || qc==null){
+            return;
+        }
+
+        if(accessControl.isPublic()){
             qc.addEqualCondition("accessControl",PUBLIC.getValue());
         }
     }
 
-    public void appendQueryCondition(Map qc){
-        if(isPublic()){
-            qc.put("accessControl",PUBLIC.getValue());
+    public static void appendQueryCondition(AccessControl accessControl,Map qc){
+
+        if (accessControl==null || qc==null){
+            return;
+        }
+
+        if(accessControl.isPublic()){
+            qc.put("accessControl", PUBLIC.getValue());
         }
     }
 

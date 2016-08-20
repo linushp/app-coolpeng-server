@@ -52,7 +52,7 @@ public class ForumService {
 
 
     public ForumPost updatePost(String postId,String moduleId,String myModuleId, String postTitle, String postContent, String summary, List<String> imageList,String accessControl) throws FieldNotFoundException, UpdateErrorException, ParameterErrorException {
-        ForumPost post = getPostById(postId, false);
+        ForumPost post = getPostById(postId,null, false);
 
         post.setForumModuleId(moduleId);
         post.setPostTitle(postTitle);
@@ -351,7 +351,7 @@ public class ForumService {
             qc.addEqualCondition("moduleType", Integer.valueOf(moduleType.getValue()));
         }
 
-        accessControl.appendQueryCondition(qc);
+        AccessControl.appendQueryCondition(accessControl,qc);
 
         return qc;
     }
@@ -406,17 +406,28 @@ public class ForumService {
     }
 
 
-
+    /**
+     * 可以为null
+     * @param postId
+     * @param accessControl
+     * @param updateViewCount
+     * @return
+     * @throws UpdateErrorException
+     * @throws ParameterErrorException
+     * @throws FieldNotFoundException
+     */
     public ForumPost getPostById(String postId,AccessControl accessControl,boolean updateViewCount) throws UpdateErrorException, ParameterErrorException, FieldNotFoundException {
         ForumPost p = ForumPost.DAO.queryForObject(postId);
 
-        //我想查公共的，你有不是公共的。
-        if (accessControl.isPublic() && !AccessControl.parse(p.getAccessControl()).isPublic()){
+        if (p == null) {
             return null;
         }
 
-        if (p == null) {
-            return null;
+        if (accessControl!=null){
+            //我想查公共的，你有不是公共的。
+            if (accessControl.isPublic() && !AccessControl.parse(p.getAccessControl()).isPublic()){
+                return null;
+            }
         }
 
         if (updateViewCount) {
