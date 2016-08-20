@@ -407,8 +407,14 @@ public class ForumService {
 
 
 
-    public ForumPost getPostById(String postId,boolean updateViewCount) throws UpdateErrorException, ParameterErrorException, FieldNotFoundException {
+    public ForumPost getPostById(String postId,AccessControl accessControl,boolean updateViewCount) throws UpdateErrorException, ParameterErrorException, FieldNotFoundException {
         ForumPost p = ForumPost.DAO.queryForObject(postId);
+
+        //我想查公共的，你有不是公共的。
+        if (accessControl.isPublic() && !AccessControl.parse(p.getAccessControl()).isPublic()){
+            return null;
+        }
+
         if (p == null) {
             return null;
         }
@@ -425,7 +431,7 @@ public class ForumService {
     public ForumPost getPostWithReply(String postId, int pageNumber, int pageSize,AccessControl accessControl)
             throws ParameterErrorException, FieldNotFoundException, UpdateErrorException, ClassNotFoundException {
 
-        ForumPost p = getPostById(postId, true);
+        ForumPost p = getPostById(postId,accessControl, true);
 
         if (p == null) {
             return null;
@@ -443,7 +449,6 @@ public class ForumService {
 
         QueryCondition qc = new QueryCondition();
         qc.addEqualCondition("forumPostId", postId);
-        accessControl.appendQueryCondition(qc);
 
         PageResult<ForumPostReply> replyPageResult = ForumPostReply.DAO.queryForPage(qc, pageNumber, pageSize, new String[]{"createUser"});
 
