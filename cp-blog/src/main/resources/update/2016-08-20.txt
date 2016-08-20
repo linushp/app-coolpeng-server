@@ -12,3 +12,8 @@ ADD COLUMN `my_module_id` INT NULL DEFAULT -1 AFTER `id`;
 
 ALTER TABLE `t_forum_post`
 ADD COLUMN `create_ip_str` VARCHAR(100) NULL AFTER `create_ip_addr`;
+
+
+update `t_forum_post` set `access_control` = 'public';
+update `t_forum_module` set `access_control` = 'public';
+update `t_forum_group` set `access_control` = 'public';
