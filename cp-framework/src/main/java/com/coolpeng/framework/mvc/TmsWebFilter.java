@@ -45,8 +45,9 @@ public class TmsWebFilter
 //            response.getWriter().println("hello");
 //            response.getWriter().flush();
 //            response.getWriter().close();
-            request.getRequestDispatcher("/index.html").forward(request, response);
 //            request.getRequestDispatcher("/index.html").forward(request, response);
+
+            response.sendRedirect("/home.shtml");
             return;
         }
 
