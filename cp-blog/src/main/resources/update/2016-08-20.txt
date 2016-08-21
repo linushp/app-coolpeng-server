@@ -17,3 +17,16 @@ ADD COLUMN `create_ip_str` VARCHAR(100) NULL AFTER `create_ip_addr`;
 update `t_forum_post` set `access_control` = 'public';
 update `t_forum_module` set `access_control` = 'public';
 update `t_forum_group` set `access_control` = 'public';
+
+
+
+ALTER TABLE `t_forum_post_reply`
+DROP COLUMN `image9`,
+DROP COLUMN `image8`,
+DROP COLUMN `image7`,
+DROP COLUMN `image6`,
+DROP COLUMN `image5`,
+DROP COLUMN `image4`,
+DROP COLUMN `image3`,
+DROP COLUMN `image2`,
+DROP COLUMN `image1`;

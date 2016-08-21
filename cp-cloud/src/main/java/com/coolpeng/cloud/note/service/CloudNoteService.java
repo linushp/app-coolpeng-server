@@ -1,9 +1,6 @@
 package com.coolpeng.cloud.note.service;
 
-import com.coolpeng.blog.entity.ForumGroup;
-import com.coolpeng.blog.entity.ForumModule;
-import com.coolpeng.blog.entity.ForumPost;
-import com.coolpeng.blog.entity.UserEntity;
+import com.coolpeng.blog.entity.*;
 import com.coolpeng.blog.entity.enums.AccessControl;
 import com.coolpeng.blog.service.ForumModuleService;
 import com.coolpeng.blog.service.ForumService;
@@ -14,6 +11,7 @@ import com.coolpeng.framework.db.QueryCondition;
 import com.coolpeng.framework.exception.FieldNotFoundException;
 import com.coolpeng.framework.exception.ParameterErrorException;
 import com.coolpeng.framework.exception.UpdateErrorException;
+import com.coolpeng.framework.utils.DateUtil;
 import com.coolpeng.framework.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -131,8 +129,11 @@ public class CloudNoteService {
 
 
     /******************getNoteListByCategory********************/
-    public NoteVO getNoteById(String id) throws FieldNotFoundException, UpdateErrorException, ParameterErrorException {
-        ForumPost post = forumService.getPostById(id,null, true);
+    public NoteVO getNoteByIdWithReply(String postId, int pageNumber, int pageSize) throws FieldNotFoundException, UpdateErrorException, ParameterErrorException, ClassNotFoundException {
+//        ForumPost post = forumService.getPostById(id,null, true);
+
+        ForumPost post = forumService.getPostWithReply(postId, pageNumber, pageSize, null);
+
         return new NoteVO(post);
     }
 
@@ -169,4 +170,30 @@ public class CloudNoteService {
     }
 
 
+    /**
+     * 新建或保存
+     * @param forumPostReply
+     * @return
+     */
+    public ForumPostReply saveOrUpdateNoteReply(ForumPostReply forumPostReply,UserEntity user) throws FieldNotFoundException, UpdateErrorException, ParameterErrorException {
+        String postId = forumPostReply.getForumPostId();
+        String replyId = forumPostReply.getId();
+        if (StringUtils.isBlank(replyId)){
+            return forumService.createPostReply(postId,forumPostReply.getReplyContent());
+        }
+        else {
+            forumPostReply.setUpdateTime(DateUtil.currentTimeFormat());
+            forumPostReply.setUpdateUserId(user.getId());
+            ForumPostReply.DAO.updateEntityFields(forumPostReply,new String[]{"replyContent","updateTime","updateUserId"});
+            return forumPostReply;
+        }
+    }
+
+    /**
+     * 删除
+     * @param replyId
+     */
+    public void deleteNoteReply(String replyId) {
+        ForumPostReply.DAO.deleteById(replyId);
+    }
 }

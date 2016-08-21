@@ -1,11 +1,16 @@
 package com.coolpeng.framework.mvc;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Enumeration;
 
 public class TmsCurrentRequest {
+    private static Logger LOGGER = LoggerFactory.getLogger(TmsCurrentRequest.class);
+
     private static final ThreadLocal threadLocal = new ThreadLocal();
     private static final String TMS_CURRENT_USER = "TMS_CURRENT_USER";
     private static final String TMS_REQUEST_CONTEXT = "TMS_REQUEST_CONTEXT";
@@ -67,35 +72,40 @@ public class TmsCurrentRequest {
     }
 
     public static String getClientIpAddr() {
-        HttpServletRequest request = getHttpServletRequest();
+        try{
+            HttpServletRequest request = getHttpServletRequest();
 
-        String ipAddress = request.getHeader("x-forwarded-for");
-        if ((ipAddress == null) || (ipAddress.length() == 0) || ("unknown".equalsIgnoreCase(ipAddress))) {
-            ipAddress = request.getHeader("Proxy-Client-IP");
-        }
-        if ((ipAddress == null) || (ipAddress.length() == 0) || ("unknown".equalsIgnoreCase(ipAddress))) {
-            ipAddress = request.getHeader("WL-Proxy-Client-IP");
-        }
-        if ((ipAddress == null) || (ipAddress.length() == 0) || ("unknown".equalsIgnoreCase(ipAddress))) {
-            ipAddress = request.getRemoteAddr();
-            if ((ipAddress.equals("127.0.0.1")) || (ipAddress.equals("0:0:0:0:0:0:0:1"))) {
-                InetAddress inet = null;
-                try {
-                    inet = InetAddress.getLocalHost();
-                } catch (UnknownHostException e) {
-                    e.printStackTrace();
+            String ipAddress = request.getHeader("x-forwarded-for");
+            if ((ipAddress == null) || (ipAddress.length() == 0) || ("unknown".equalsIgnoreCase(ipAddress))) {
+                ipAddress = request.getHeader("Proxy-Client-IP");
+            }
+            if ((ipAddress == null) || (ipAddress.length() == 0) || ("unknown".equalsIgnoreCase(ipAddress))) {
+                ipAddress = request.getHeader("WL-Proxy-Client-IP");
+            }
+            if ((ipAddress == null) || (ipAddress.length() == 0) || ("unknown".equalsIgnoreCase(ipAddress))) {
+                ipAddress = request.getRemoteAddr();
+                if ((ipAddress.equals("127.0.0.1")) || (ipAddress.equals("0:0:0:0:0:0:0:1"))) {
+                    InetAddress inet = null;
+                    try {
+                        inet = InetAddress.getLocalHost();
+                    } catch (UnknownHostException e) {
+                        e.printStackTrace();
+                    }
+                    ipAddress = inet.getHostAddress();
                 }
-                ipAddress = inet.getHostAddress();
+
             }
 
-        }
+            if ((ipAddress != null) && (ipAddress.length() > 15) &&
+                    (ipAddress.indexOf(",") > 0)) {
+                ipAddress = ipAddress.substring(0, ipAddress.indexOf(","));
+            }
 
-        if ((ipAddress != null) && (ipAddress.length() > 15) &&
-                (ipAddress.indexOf(",") > 0)) {
-            ipAddress = ipAddress.substring(0, ipAddress.indexOf(","));
+            return ipAddress;
+        }catch (Throwable t){
+            LOGGER.error("",t);
         }
-
-        return ipAddress;
+        return "";
     }
 
     public static boolean isAdmin() {

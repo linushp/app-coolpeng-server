@@ -56,11 +56,9 @@ public class CloudNoteController extends RestBaseController {
 
         /******************************/
         UserEntity user = getCurrentUserIfToken(jsonObject);
-        categoryVO = cloudNoteService.saveOrUpdateNoteCategory(categoryVO,user);
+        categoryVO = cloudNoteService.saveOrUpdateNoteCategory(categoryVO, user);
         return TMSResponse.success(categoryVO);
     }
-
-
 
 
     @ResponseBody
@@ -99,24 +97,27 @@ public class CloudNoteController extends RestBaseController {
         }
 
 
-        PageResult<NoteVO> pageResult = cloudNoteService.getNoteListByCategory(level, categoryId, pageSize, pageNumber,titleLike);
+        PageResult<NoteVO> pageResult = cloudNoteService.getNoteListByCategory(level, categoryId, pageSize, pageNumber, titleLike);
         return TMSResponse.successPage(pageResult);
     }
 
 
     @ResponseBody
-    @RequestMapping({"/getNoteById"})
-    public TMSResponse getNoteById(@RequestBody JSONObject jsonObject) throws FieldNotFoundException, ClassNotFoundException, UpdateErrorException, ParameterErrorException {
+    @RequestMapping({"/getNoteByIdWithReply"})
+    public TMSResponse getNoteByIdWithReply(@RequestBody JSONObject jsonObject) throws FieldNotFoundException, ClassNotFoundException, UpdateErrorException, ParameterErrorException {
         String id = jsonObject.getString("id");
+        Integer pageNumber = jsonObject.getInteger("pageNumber");
+        Integer pageSize = jsonObject.getInteger("pageSize");
 
         /******************************/
-        if(StringUtils.isNotBlank(id)){
-            NoteVO note = cloudNoteService.getNoteById(id);
+        if (StringUtils.isNotBlank(id)) {
+            pageNumber = pageNumber == null ? 1 : pageNumber;
+            pageSize = pageSize == null ? 10 : pageSize;
+            NoteVO note = cloudNoteService.getNoteByIdWithReply(id, pageNumber, pageSize);
             return TMSResponse.success(note);
-        }else {
+        } else {
             return TMSResponse.success(null);
         }
-
     }
 
 
@@ -132,10 +133,10 @@ public class CloudNoteController extends RestBaseController {
         assertIsUserLoginIfToken(jsonObject);
 
 
-        if (StringUtils.isNotBlank(noteVO.getId())){
+        if (StringUtils.isNotBlank(noteVO.getId())) {
             //只有admin,或者 帖子作者 可以修改
             UserEntity user = getCurrentUserIfToken(jsonObject);
-            if (!user.isAdmin() && !user.getId().equals(noteVO.getCreateUserId())){
+            if (!user.isAdmin() && !user.getId().equals(noteVO.getCreateUserId())) {
                 throw new TMSMsgException("只有管理员和原作者可以修改");
             }
         }
@@ -148,6 +149,7 @@ public class CloudNoteController extends RestBaseController {
 
     /**
      * 只有登录用户（admin,或者 帖子作者 可以删除）
+     *
      * @param jsonObject
      * @return
      * @throws TMSMsgException
@@ -165,7 +167,7 @@ public class CloudNoteController extends RestBaseController {
         UserEntity user = getCurrentUserIfToken(jsonObject);
 
         //只有admin,或者 帖子作者 可以删除
-        if (!user.isAdmin() && !user.getId().equals(noteVO.getCreateUserId())){
+        if (!user.isAdmin() && !user.getId().equals(noteVO.getCreateUserId())) {
             throw new TMSMsgException("只有管理员和原作者可以删除");
         }
 
@@ -174,6 +176,80 @@ public class CloudNoteController extends RestBaseController {
 
         return TMSResponse.success(noteId);
     }
+
+
+
+
+
+
+
+    @ResponseBody
+    @RequestMapping({"/saveOrUpdateNoteReply"})
+    public TMSResponse saveOrUpdateNoteReply(@RequestBody JSONObject jsonObject)
+            throws FieldNotFoundException, UpdateErrorException, ParameterErrorException, TMSMsgException {
+
+        ForumPostReply noteVO = jsonObject.getObject("ForumPostReply", ForumPostReply.class);
+
+        /******************************/
+        //判断用户有没有登录，只有登录用户才能发布
+        assertIsUserLoginIfToken(jsonObject);
+
+        UserEntity user = getCurrentUserIfToken(jsonObject);
+
+        if (StringUtils.isNotBlank(noteVO.getId())) {
+            //只有admin,或者 帖子作者 可以修改
+            if (!user.isAdmin() && !user.getId().equals(noteVO.getCreateUserId())) {
+                throw new TMSMsgException("只有管理员和原作者可以修改");
+            }
+        }
+
+        noteVO = cloudNoteService.saveOrUpdateNoteReply(noteVO,user);
+
+        return TMSResponse.success(noteVO);
+    }
+
+
+    /**
+     * 只有登录用户（admin,或者 帖子作者 可以删除）
+     *
+     * @param jsonObject
+     * @return
+     * @throws TMSMsgException
+     */
+    @ResponseBody
+    @RequestMapping({"/deleteNoteReply"})
+    public TMSResponse deleteNoteReply(@RequestBody JSONObject jsonObject)
+            throws TMSMsgException {
+
+        ForumPostReply noteVO = jsonObject.getObject("ForumPostReply", ForumPostReply.class);
+
+        /******************************/
+        //判断用户有没有登录，只有登录用户才删除
+        assertIsUserLoginIfToken(jsonObject);
+        UserEntity user = getCurrentUserIfToken(jsonObject);
+
+        //只有admin,或者 帖子作者 可以删除
+        if (!user.isAdmin() && !user.getId().equals(noteVO.getCreateUserId())) {
+            throw new TMSMsgException("只有管理员和原作者可以删除");
+        }
+
+        String noteId = noteVO.getId();
+        cloudNoteService.deleteNoteReply(noteId);
+
+        return TMSResponse.success(noteId);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -179,10 +179,11 @@ public class ForumService {
             TmsUserEntity user = TmsCurrentRequest.getCurrentUser();
             reply.setCreateAvatar(user.getAvatar());
             reply.setCreateNickname(user.getNickname());
-            reply.setCreateIpAddr(TmsCurrentRequest.getClientIpAddr());
             reply.setCreateMail(user.getMail());
             reply.setCreateUserId(user.getId());
         }
+
+        reply.setCreateIpAddr(TmsCurrentRequest.getClientIpAddr());
 
         ForumPostReply.DAO.insert(reply);
 
