@@ -62,6 +62,21 @@ public class CloudNoteController extends RestBaseController {
 
 
     @ResponseBody
+    @RequestMapping({"/deleteNoteCategory"})
+    public TMSResponse deleteNoteCategory(@RequestBody JSONObject jsonObject) throws FieldNotFoundException, ParameterErrorException, UpdateErrorException {
+        CategoryVO categoryVO = jsonObject.getObject("CategoryVO", CategoryVO.class);  //用户ID,
+
+        /******************************/
+        UserEntity user = getCurrentUserIfToken(jsonObject);
+        categoryVO = cloudNoteService.deleteNoteCategory(categoryVO, user);
+        return TMSResponse.success(categoryVO);
+    }
+
+
+
+
+
+    @ResponseBody
     @RequestMapping({"/getNoteListByCategory"})
     public TMSResponse getNoteListByCategory(@RequestBody JSONObject jsonObject) throws FieldNotFoundException, ClassNotFoundException {
         CategoryVO categoryVO = null;//jsonObject.getObject("CategoryVO", CategoryVO.class);

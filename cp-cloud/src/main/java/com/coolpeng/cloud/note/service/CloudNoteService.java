@@ -61,6 +61,21 @@ public class CloudNoteService {
     }
 
 
+    /**
+     * 删除分类
+     * @param categoryVO
+     * @param user
+     * @return
+     */
+    public CategoryVO deleteNoteCategory(CategoryVO categoryVO, UserEntity user) {
+        if (CloudConst.LEVEL_GROUP.equalsIgnoreCase(categoryVO.getLevel())){
+            ForumGroup.DAO.deleteById(categoryVO.getId());
+        }
+        if (CloudConst.LEVEL_MODULE.equalsIgnoreCase(categoryVO.getLevel())){
+            ForumModule.DAO.deleteById(categoryVO.getId());
+        }
+        return categoryVO;
+    }
 
 
     /******************getNoteCategory********************/
@@ -196,4 +211,5 @@ public class CloudNoteService {
     public void deleteNoteReply(String replyId) {
         ForumPostReply.DAO.deleteById(replyId);
     }
+
 }
