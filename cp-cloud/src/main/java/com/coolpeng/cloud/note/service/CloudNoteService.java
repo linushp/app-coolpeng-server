@@ -37,7 +37,7 @@ public class CloudNoteService {
 
     /**
      * 创建一个分类目录
-     * @param categoryVO
+     * @param categoryVO {[id],name,desc,level,parentId}
      * @param currentUser
      * @return
      */

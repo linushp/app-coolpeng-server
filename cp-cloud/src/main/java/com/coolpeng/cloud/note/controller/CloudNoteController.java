@@ -39,10 +39,13 @@ public class CloudNoteController extends RestBaseController {
 
     @ResponseBody
     @RequestMapping({"/getNoteCategory"})
-    public TMSResponse getNoteCategory(@RequestBody JSONObject jsonObject) throws FieldNotFoundException {
+    public TMSResponse getNoteCategory(@RequestBody JSONObject jsonObject) throws FieldNotFoundException, TMSMsgException {
 //        String ownerId = jsonObject.getString("ownerUserId");  //用户ID,
 
         /******************************/
+        //判断用户有没有登录，只有登录用户才删除
+        assertIsUserLoginIfToken(jsonObject);
+
         UserEntity user = getCurrentUserIfToken(jsonObject);
         List<CategoryVO> categoryList = cloudNoteService.getNoteCategory(user.getId());
         return TMSResponse.success(categoryList);
