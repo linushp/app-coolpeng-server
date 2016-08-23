@@ -43,16 +43,18 @@ public class ForumController {
     private ForumCategoryService forumCategoryService;
 
     @RequestMapping(value = {"/forum/post-list"}, method = {org.springframework.web.bind.annotation.RequestMethod.GET})
-    public ModelAndView getPostList(@RequestParam(value = "pageNumber", required = false, defaultValue = "1") int pageNumber, @RequestParam(value = "moduleId", required = false, defaultValue = "1") String moduleId, @RequestParam(value = "orderBy", required = false, defaultValue = "time") String orderBy)
+    public ModelAndView getPostList(@RequestParam(value = "pageNumber", required = false, defaultValue = "1") int pageNumber,
+                                    @RequestParam(value = "moduleId", required = false, defaultValue = "1") String categoryId,
+                                    @RequestParam(value = "orderBy", required = false, defaultValue = "time") String orderBy)
             throws FieldNotFoundException, ParameterErrorException, ClassNotFoundException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         ModelMap modelMap = new ModelMap();
 //        ForumModule module = this.modelMapService.addBelongModuleAndGroup(modelMap, moduleId);
         ForumCategoryTree categories = forumCategoryService.getPublicForumCategory();
-        ForumCategory module = categories.getById(moduleId);
-        List<ForumCategory> categoryPath = categories.getByIdWidthParents(moduleId);
+        ForumCategory module = categories.getById(categoryId);
+        List<ForumCategory> categoryPath = categories.getByIdWidthParents(categoryId);
         Collections.reverse(categoryPath);
 
-        PageResult postList = this.forumService.getPostList(pageNumber, 30, moduleId, orderBy,AccessControl.PUBLIC);
+        PageResult postList = this.forumService.getPostListByCategoryIdPath(pageNumber, 30, categoryId, orderBy,AccessControl.PUBLIC);
         modelMap.put("postList", postList);
         modelMap.put("orderBy", orderBy);
         modelMap.put("belongCategory",module);
@@ -61,7 +63,7 @@ public class ForumController {
         if (module.getType() == ModuleTypeEnum.GOSSIP.getValue())
             return new ModelAndView("forum/jsp/leave-msg", modelMap);
         if (module.getType() == ModuleTypeEnum.BLOG.getValue()) {
-            List<ForumPostReply> lastReplyList = this.forumService.getLastPostReplyByModuleId(5,moduleId);
+            List<ForumPostReply> lastReplyList = this.forumService.getLastPostReplyByModuleId(5,categoryId);
             modelMap.put("lastReplyList",lastReplyList);
             return new ModelAndView("forum/jsp/blog-list", modelMap);
         }
@@ -101,7 +103,7 @@ public class ForumController {
                              @RequestParam(value = "orderBy", required = false, defaultValue = "time") String orderBy,
                              @RequestParam(value = "postContent", required = false, defaultValue = "") String postContent,
                              @RequestParam(value = "imageList", required = false, defaultValue = "") String imageList )
-            throws FieldNotFoundException, UpdateErrorException, ParameterErrorException {
+            throws FieldNotFoundException, UpdateErrorException, ParameterErrorException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
 
 
         List<String> images = new ArrayList<>();
@@ -168,4 +170,9 @@ public class ForumController {
 
         return "redirect:/forum/post-list.shtml";
     }
+
+
+
+
+
 }

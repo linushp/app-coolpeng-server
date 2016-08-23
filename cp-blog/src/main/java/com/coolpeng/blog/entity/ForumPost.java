@@ -15,6 +15,7 @@ import java.util.*;
 public class ForumPost extends BlogBaseEntity {
     public static SimpleDAO<ForumPost> DAO = new SimpleDAO(ForumPost.class);
     private String categoryId;///----
+    private String categoryIdPath;
     private int categoryType; //----
     private String postTitle;
 
@@ -41,6 +42,7 @@ public class ForumPost extends BlogBaseEntity {
     private String lastReplyTime = DateUtil.currentTimeFormat();
     private String accessControl; //public private
     private String myCategoryId; //-----
+    private String myCategoryIdPath;
 
     @FieldDef(jsonColumn = {List.class, String.class})
     private List<String> imageList; //--
@@ -334,6 +336,22 @@ public class ForumPost extends BlogBaseEntity {
 
     public void setImageList(List<String> imageList) {
         this.imageList = imageList;
+    }
+
+    public String getCategoryIdPath() {
+        return categoryIdPath;
+    }
+
+    public void setCategoryIdPath(String categoryIdPath) {
+        this.categoryIdPath = categoryIdPath;
+    }
+
+    public String getMyCategoryIdPath() {
+        return myCategoryIdPath;
+    }
+
+    public void setMyCategoryIdPath(String myCategoryIdPath) {
+        this.myCategoryIdPath = myCategoryIdPath;
     }
 
     public List<String> getAllImageList() {

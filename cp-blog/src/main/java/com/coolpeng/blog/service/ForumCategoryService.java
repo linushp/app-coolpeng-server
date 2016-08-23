@@ -7,15 +7,13 @@ import com.coolpeng.framework.db.QueryCondition;
 import com.coolpeng.framework.exception.FieldNotFoundException;
 import com.coolpeng.framework.exception.UpdateErrorException;
 import com.coolpeng.framework.utils.CollectionUtil;
+import com.coolpeng.framework.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by luanhaipeng on 16/8/23.
@@ -50,6 +48,34 @@ public class ForumCategoryService {
     }
 
 
+
+    public ForumCategoryTree getPublicAndUserCategory(String userId) throws FieldNotFoundException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+
+
+        Map<String, Object> params2 = new HashMap<>();
+        params2.put("accessControl", AccessControl.PUBLIC.getValue());
+        List<ForumCategory> list2 = ForumCategory.DAO.queryForList(params2);
+
+        List<ForumCategory> list1 = new ArrayList<>();
+        if(StringUtils.isNotBlank(userId)){
+            Map<String,Object> params1 = new HashMap<>();
+            params1.put("createUserId", userId);
+            list1 = ForumCategory.DAO.queryForList(params1);
+        }
+
+
+        Map<String,ForumCategory> map = new LinkedHashMap<>();
+        map.putAll(CollectionUtil.toMap(list1,"id"));
+        map.putAll(CollectionUtil.toMap(list2,"id"));
+
+        Collection<ForumCategory> list = map.values();
+
+        return buildTree(list);
+    }
+
+
+
+
     public ForumCategory saveOrUpdate(ForumCategory entity) throws UpdateErrorException {
         ForumCategory.DAO.insertOrUpdate(entity);
         return entity;
@@ -71,7 +97,7 @@ public class ForumCategoryService {
 
 
 
-    private ForumCategoryTree buildTree(List<ForumCategory> list) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+    private ForumCategoryTree buildTree(Collection<ForumCategory> list) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         Map<String,ForumCategory> map = CollectionUtil.toMap(list,"id");
 
         List<ForumCategory> rootNodeList = new ArrayList<>();
@@ -94,7 +120,7 @@ public class ForumCategoryService {
             }
         }
 
-        return new ForumCategoryTree(rootNodeList,list,map);
+        return new ForumCategoryTree(rootNodeList,new ArrayList<>(list),map);
     }
 
 

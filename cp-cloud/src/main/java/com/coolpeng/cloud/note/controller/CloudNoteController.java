@@ -116,7 +116,7 @@ public class CloudNoteController extends RestBaseController {
     @ResponseBody
     @RequestMapping({"/saveOrUpdateNote"})
     public TMSResponse saveOrUpdateNote(@RequestBody JSONObject jsonObject)
-            throws FieldNotFoundException, UpdateErrorException, ParameterErrorException, TMSMsgException {
+            throws FieldNotFoundException, UpdateErrorException, ParameterErrorException, TMSMsgException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
 
         NoteVO noteVO = jsonObject.getObject("NoteVO", NoteVO.class);
 

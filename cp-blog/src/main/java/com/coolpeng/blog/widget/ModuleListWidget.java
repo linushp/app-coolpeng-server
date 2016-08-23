@@ -34,7 +34,17 @@ public class ModuleListWidget extends TagSupport {
         String moduleType = "" + m.getType();
         String postCount = "" + m.getPostCount();
         String groupName = "";
-        String template = "<div class='module-list-item'>   <a href='" + url + "'> " + "       <div class='name'>" + name + "</div>" + "       <div class='type'>" + moduleType + "</div>" + "       <div class='group'>" + groupName + "</div>" + "       <div class='postCount'>" + postCount + "</div>" + "       <div class='img'>" + "           <img src='" + img + "' >" + "       </div>" + "   </a>" + "</div>";
+        String template = "" +
+                "<div class='module-list-item'>   <a href='" + url + "'> " +
+                "       <div class='name'>" + name + "</div>" +
+                "       <div class='type'>" + moduleType + "</div>" +
+                "       <div class='group'>" + groupName + "</div>" +
+                "       <div class='postCount'>" + postCount + "</div>" +
+                "       <div class='img'>" +
+                "           <img src='" + img + "' >" +
+                "       </div>" +
+                "   </a>" +
+                "</div>";
         sb.append(template);
     }
 

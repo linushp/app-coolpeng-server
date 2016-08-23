@@ -56,11 +56,11 @@ public class BlogListWidget extends TagSupport {
         String postUrl = ForumUrlUtils.toPostContentHttpURL(postId);
         ForumCategory module = publicCategories.getById(post.getCategoryId());
         String createTime = DateUtil.toPrettyString(post.getCreateTime());
+        String ctx = TmsCurrentRequest.getContext();
 
         if (StringUtils.isBlank(image1)) {
             int intPostId = NumberUtils.toInt(postId, 1);
             int index = intPostId % 13;
-            String ctx = TmsCurrentRequest.getContext();
             String sIndex;
             if (index < 10)
                 sIndex = "0" + index;
@@ -74,6 +74,9 @@ public class BlogListWidget extends TagSupport {
             image1 = TmsFunctions.toImageThumb(image1,250,90);
         }
 
+
+        String categoryLink = ctx + "/forum/post-list.shtml?orderBy=new&moduleId="+module.getId();
+
         String x = "" +
                 "<div class=\"blogs\">\n        " +
                 "       <figure><img src=\"" + image1 + "\"></figure>\n" +
@@ -84,7 +87,7 @@ public class BlogListWidget extends TagSupport {
                 "          <p>" + StringUtils.htmlEncode(post.getSummary()) + "</p>\n" +
                 "          <p class=\"autor\">\n" +
                 "               <span class=\"lm f_l\">\n" +
-                "                   <a href=\"/\">" + module.getName() + "</a>\n" +
+                "                   <a href=\""+categoryLink+"\">" + module.getName() + "</a>\n" +
                 "               </span>\n" +
                 "               <span class=\"dtime f_l\">" + createTime + "</span>\n" +
                 "               <span class=\"viewnum f_r\">浏览（<a>" + post.getViewCount() + "</a>）</span>\n" +

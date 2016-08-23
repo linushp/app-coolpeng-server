@@ -35,18 +35,18 @@ public class HomeController {
     @RequestMapping(value = {"/home"}, method = {org.springframework.web.bind.annotation.RequestMethod.GET})
     public ModelAndView showHome()
             throws FieldNotFoundException, ParameterErrorException, ClassNotFoundException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-        PageResult postList = this.forumService.getPostList(1, 30, null, null, ModuleTypeEnum.BLOG, AccessControl.PUBLIC);
+        PageResult postList = this.forumService.getPostList(1, 30, null, null,null, AccessControl.PUBLIC);
 
         ForumCategoryTree publicCategories = forumCategoryService.getPublicForumCategory();
 
-        List<ForumCategory>  moduleList = publicCategories.getOriginNodeList();
+        List<ForumCategory>  categoryList = publicCategories.getOriginNodeList();
 
 
         List<ForumPostReply> lastReplyList = this.forumService.getLastPostReply(5);
 
         ModelMap modelMap = new ModelMap();
         modelMap.put("postList", postList);
-        modelMap.put("categoryList", moduleList);
+        modelMap.put("categoryList", categoryList);
         modelMap.put("lastReplyList", lastReplyList);
 
         return new ModelAndView("home/jsp/index", modelMap);

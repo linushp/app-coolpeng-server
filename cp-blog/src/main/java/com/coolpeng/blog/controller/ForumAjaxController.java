@@ -8,6 +8,7 @@ import com.coolpeng.blog.service.ForumCategoryService;
 import com.coolpeng.blog.service.ForumService;
 import com.coolpeng.framework.exception.FieldNotFoundException;
 import com.coolpeng.framework.exception.ParameterErrorException;
+import com.coolpeng.framework.exception.TMSMsgException;
 import com.coolpeng.framework.exception.UpdateErrorException;
 import com.coolpeng.framework.mvc.TMSResponse;
 import com.coolpeng.framework.mvc.TmsCurrentRequest;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +42,7 @@ public class ForumAjaxController {
             @RequestParam(value = "orderBy", required = false, defaultValue = "time") String orderBy,
             @RequestParam(value = "postContent", required = false, defaultValue = "") String postContent,
             @RequestParam(value = "imageList", required = false, defaultValue = "") String imageList )
-            throws FieldNotFoundException, UpdateErrorException, ParameterErrorException {
+            throws FieldNotFoundException, UpdateErrorException, ParameterErrorException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
 
         List<String> images = new ArrayList<>();
 
@@ -83,4 +85,37 @@ public class ForumAjaxController {
 
         return "error";
     }
+
+
+
+    @ResponseBody
+    @RequestMapping(value = {"/forum/ajax/deletePostContent"})
+    public TMSResponse deletePostContent(@RequestParam(value = "postId", required = false, defaultValue = "") String postId) throws ParameterErrorException, FieldNotFoundException, UpdateErrorException, TMSMsgException {
+
+        if (!TmsCurrentRequest.isAdmin()){
+            throw new TMSMsgException("只有管理员可以执行此操作");
+        }
+
+        ForumPost.DAO.deleteById(postId);
+        return TMSResponse.success();
+    }
+
+
+    @ResponseBody
+    @RequestMapping(value = {"/forum/ajax/deletePostReply"})
+    public TMSResponse deletePostReply(@RequestParam(value = "replyId", required = false, defaultValue = "") String replyId) throws ParameterErrorException, FieldNotFoundException, UpdateErrorException, TMSMsgException {
+
+        if (!TmsCurrentRequest.isAdmin()){
+            throw new TMSMsgException("只有管理员可以执行此操作");
+        }
+
+        ForumPostReply.DAO.deleteById(replyId);
+        return TMSResponse.success();
+    }
+
+
+
+
+
+
 }

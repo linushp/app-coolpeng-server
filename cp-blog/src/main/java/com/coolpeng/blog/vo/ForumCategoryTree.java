@@ -30,6 +30,19 @@ public class ForumCategoryTree {
         return map.get(parentId);
     }
 
+    public String getCategoryIdPath(String categoryId) {
+        List<ForumCategory> parents = this.getByIdWidthParents(categoryId);
+        StringBuffer sb = new StringBuffer();
+        for (ForumCategory cp:parents){
+            sb.append("S");
+            sb.append(cp.getId());
+            sb.append("E");
+            sb.append(" ");
+        }
+
+        // S2121E S1E S2E S3E
+        return sb.toString();
+    }
 
     public List<ForumCategory> getByIdWidthParents(String id){
         List<ForumCategory> result = new ArrayList<>();
@@ -86,4 +99,5 @@ public class ForumCategoryTree {
     public void setOriginNodeList(List<ForumCategory> originNodeList) {
         this.originNodeList = originNodeList;
     }
+
 }

@@ -112,7 +112,7 @@ public class CloudNoteService {
 
 
     /******************saveOrUpdateNote********************/
-    public NoteVO saveOrUpdateNote(NoteVO noteVO) throws FieldNotFoundException, UpdateErrorException, ParameterErrorException {
+    public NoteVO saveOrUpdateNote(NoteVO noteVO) throws FieldNotFoundException, UpdateErrorException, ParameterErrorException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
 
         String moduleId = noteVO.getCategoryId();
         String myModuleId = noteVO.getMyCategoryId();
