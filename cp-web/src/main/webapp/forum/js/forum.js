@@ -128,7 +128,7 @@ jQuery(document).ready(function () {
     $body.on("click",".blog-content-delete",function(){
         var id = $(this).data("id");
         var moduleId = $(this).data("module");
-        $.get(_.path("/admin/forum/deletePostContent.shtml?postId="+id),function(d){
+        $.get(_.path("/forum/ajax/deletePostContent.shtml?postId="+id),function(d){
             _.layer(function(layer){
                 layer.msg('删除成功',function(){
                     window.location.href = _.path("/forum/post-list.shtml?orderBy=time&moduleId="+moduleId);
@@ -140,7 +140,7 @@ jQuery(document).ready(function () {
     $body.on("click",".blog-reply-delete",function(){
         var id = $(this).data("id");
 
-        $.get(_.path("/admin/forum/deletePostReply.shtml?replyId="+id),function(d){
+        $.get(_.path("/forum/ajax/deletePostReply.shtml?replyId="+id),function(d){
             _.layer(function(layer){
                 layer.msg('删除成功',function(){
                     window.location.reload();

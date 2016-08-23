@@ -31,22 +31,22 @@
                 <c:if test="${g.status==0}">
 
                     <li class="header_blog_nav_li">
-                        <c:if test="${tms:isSizeEqual(g.moduleList,1)}">
-                            <c:forEach var="m" items="${g.moduleList}">
+                        <c:if test="${tms:isSizeEqual(g.children,1)}">
+                            <c:forEach var="m" items="${g.children}">
                                 <c:if test="${m.status==0}">
-                                    <a href="${ctx}/forum/post-list.shtml?orderBy=time&moduleId=${m.id}">${m.moduleName}</a>
+                                    <a href="${ctx}/forum/post-list.shtml?orderBy=time&moduleId=${m.id}">${m.name}</a>
                                 </c:if>
                             </c:forEach>
                         </c:if>
 
-                        <c:if test="${!tms:isSizeEqual(g.moduleList,1)}">
-                            <span style="color: #FFFFFF;cursor: default;"> ${g.groupName}</span>
+                        <c:if test="${!tms:isSizeEqual(g.children,1)}">
+                            <span style="color: #FFFFFF;cursor: default;"> ${g.name}</span>
                             <ul>
                                 <div class="clear20"></div>
-                                <c:forEach var="m" items="${g.moduleList}">
+                                <c:forEach var="m" items="${g.children}">
                                     <c:if test="${m.status==0}">
                                         <li>
-                                            <a href="${ctx}/forum/post-list.shtml?orderBy=time&moduleId=${m.id}">${m.moduleName}</a>
+                                            <a href="${ctx}/forum/post-list.shtml?orderBy=time&moduleId=${m.id}">${m.name}</a>
                                         </li>
                                     </c:if>
                                 </c:forEach>

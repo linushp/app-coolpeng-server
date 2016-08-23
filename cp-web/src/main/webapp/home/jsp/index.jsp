@@ -112,7 +112,7 @@
     <div class="module-list-wrapper">
 
       <div class="clear10"></div>
-      <blog:moduleList moduleList="${moduleList}"></blog:moduleList>
+      <blog:moduleList moduleList="${categoryList}"></blog:moduleList>
       <div class="clear10"></div>
     </div>
     <div class="clear"></div>

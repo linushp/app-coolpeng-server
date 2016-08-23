@@ -4,19 +4,19 @@
     <link rel="stylesheet" href="${ctx}/forum/css/forum.css" />
     <script src="${ctx}/common/lib/layer/layer.js"></script>
     <div class="mainContent1">
-        <blog:breadWidget pageMainObject="${belongModule}"></blog:breadWidget>
+        <blog:breadWidget pageMainObject="${belongCategory}"></blog:breadWidget>
     </div>
     <div class="mainContent1">
         <div class="forum-list-topic-desc">
-            <h3>${belongModule.moduleName}</h3>
-            <p>${belongModule.moduleDesc}</p>
+            <h3>${belongCategory.name}</h3>
+            <p>${belongCategory.desc}</p>
         </div>
         <div class="">
             <div class="forum-list-menu1">
                 <div style="height: 10px"></div>
                 <ul>
-                    <li class='${orderBy!="hot"?"on":""}'><a href="${ctx}/forum/post-list.shtml?orderBy=time&moduleId=${belongModule.id}">最新</a></li>
-                    <li class='${orderBy=="hot"?"on":""}'><a href="${ctx}/forum/post-list.shtml?orderBy=hot&moduleId=${belongModule.id}">最热</a></li>
+                    <li class='${orderBy!="hot"?"on":""}'><a href="${ctx}/forum/post-list.shtml?orderBy=time&moduleId=${belongCategory.id}">最新</a></li>
+                    <li class='${orderBy=="hot"?"on":""}'><a href="${ctx}/forum/post-list.shtml?orderBy=hot&moduleId=${belongCategory.id}">最热</a></li>
                 </ul>
             </div>
         </div>
@@ -81,7 +81,7 @@
             <form style="display: none" id="forum-new-form" action="${ctx}/forum/createPost.shtml" method="post">
                 <input type="text" class="postTitle" name="postTitle">
                 <input type="text" class="postContent" name="postContent">
-                <input type="text" class="parentId" name="parentId" value="${belongModule.id}">
+                <input type="text" class="parentId" name="parentId" value="${belongCategory.id}">
                 <input type="text" class="orderBy" name="orderBy" value="${orderBy}">
                 <input type="text" class="method" name="method" value="post">
             </form>

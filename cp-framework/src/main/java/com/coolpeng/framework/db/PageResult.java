@@ -16,9 +16,13 @@ public class PageResult<T> {
 		this.pageSize = pageSize;
 		this.pageNumber = pageNumber;
 		this.pageData = pageData;
-		this.pageCount = totalCount % pageSize == 0 ? (totalCount / pageSize) : ((totalCount / pageSize) + 1);
+		this.recalculatePageCount();
 	}
 
+
+	public void recalculatePageCount(){
+		this.pageCount = totalCount % pageSize == 0 ? (totalCount / pageSize) : ((totalCount / pageSize) + 1);
+	}
 
 
 	public int getTotalCount() {

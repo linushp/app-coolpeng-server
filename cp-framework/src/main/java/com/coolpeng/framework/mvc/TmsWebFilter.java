@@ -80,9 +80,8 @@ public class TmsWebFilter
             response.addHeader("Access-Control-Allow-Credentials","true");
             response.addHeader("Access-Control-Max-Age","18000");
 
-            if (!isRejectByAdmin(request, response) && !isRejectByApp(request, response)){
-                chain.doFilter(request, res);
-            }
+            chain.doFilter(request, res);
+
             return;
         }
 
@@ -90,24 +89,8 @@ public class TmsWebFilter
 
 
 
-    private boolean isRejectByApp(ServletRequest request, HttpServletResponse response) {
-        return false;
-    }
 
-    private boolean isRejectByAdmin(ServletRequest request, HttpServletResponse response)
-            throws IOException {
-        String uri = ((HttpServletRequest) request).getRequestURI();
 
-        uri = uri.toLowerCase();
-        if ((uri.indexOf("admin") != -1) && (uri.indexOf("/admin/login") == -1) &&
-                (!TmsCurrentRequest.isAdmin())) {
-            HttpServletResponse response1 = (HttpServletResponse) response;
-            response1.sendRedirect(TmsCurrentRequest.getContext() + "/admin/login.shtml");
-            return true;
-        }
-
-        return false;
-    }
 
     public void destroy() {
     }

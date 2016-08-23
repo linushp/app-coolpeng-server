@@ -1,6 +1,6 @@
 <%@ page isELIgnored="false" language="java" pageEncoding="UTF-8" contentType="text/html;charset=utf-8" %>
 <%@ include file="/common/jsp/taglibs.jsp" %>
-<tms:view require="ueditor" title="${belongModule.moduleName}">
+<tms:view require="ueditor" title="${belongCategory.name}">
     <link rel="stylesheet" href="${ctx}/forum/css/forum.css"/>
     <script src="${ctx}/common/lib/layer/layer.js"></script>
     <style>
@@ -33,7 +33,7 @@
     </style>
     <div class="blog-list-bg"></div>
     <div class="mainContent1">
-        <blog:breadWidget pageMainObject="${belongModule}"></blog:breadWidget>
+        <blog:breadWidget pageMainObject="${belongCategory}"></blog:breadWidget>
     </div>
     <%--<div class="mainContent1">--%>
     <%--<div class="forum-list-topic-desc">--%>
@@ -48,7 +48,7 @@
             <div class="layout-column31-left post-list-wrapper">
                 <div class="blog-list-wrapper1">
                     <h2 class="title">
-            <span>${belongModule.moduleName}
+            <span>${belongCategory.name}
               <span style="color: blueviolet;font-size: 13px;font-weight: normal;">
                 [最新文章]
               </span></span>
@@ -61,7 +61,7 @@
                         <tms:pagination
                                 pageTotal="${postList.pageCount}"
                                 pageNow="${postList.pageNumber}"
-                                pageUrl="${ctx}/forum/post-list.shtml?orderBy=${orderBy}&moduleId=${belongModule.id}&pageNumber="
+                                pageUrl="${ctx}/forum/post-list.shtml?orderBy=${orderBy}&moduleId=${belongCategory.id}&pageNumber="
                                 withFirstLast="false"></tms:pagination>
                     </div>
 
@@ -103,7 +103,7 @@
                 <form style="display: none" id="forum-new-form" action="${ctx}/forum/createPost.shtml" method="post">
                     <input type="text" class="postTitle" name="postTitle">
                     <input type="text" class="postContent" name="postContent">
-                    <input type="text" class="parentId" name="parentId" value="${belongModule.id}">
+                    <input type="text" class="parentId" name="parentId" value="${belongCategory.id}">
                     <input type="text" class="orderBy" name="orderBy" value="${orderBy}">
                     <input type="text" class="method" name="method" value="post">
                 </form>

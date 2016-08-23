@@ -12,7 +12,7 @@
 
       <c:if test="${tms:isAdmin()}">
           <div style="margin-left: 10px">
-              <span class="cm-button blog-content-edit" data-id="${postContent.id}">编辑</span><span class="cm-button blog-content-delete" data-id="${postContent.id}" data-module="${postContent.forumModuleId}">删除</span>
+              <span class="cm-button blog-content-edit" data-id="${postContent.id}">编辑</span><span class="cm-button blog-content-delete" data-id="${postContent.id}" data-module="${postContent.categoryId}">删除</span>
           </div>
       </c:if>
 
