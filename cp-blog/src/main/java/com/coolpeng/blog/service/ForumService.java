@@ -98,7 +98,7 @@ public class ForumService {
             return null;
         }
 
-        ForumModule module = forumPost.getForumModule();
+        ForumModule module = forumPost.getMyForumModule();
 
         String content = forumPost.getPostContent();
 
@@ -494,7 +494,7 @@ public class ForumService {
 
     private ForumPost toForumPost(String moduleId, String postTitle, String postContent,String summary,AccessControl accessControl)
             throws FieldNotFoundException, UpdateErrorException, ParameterErrorException {
-        ForumModule module = this.forumModuleService.getForumModule(moduleId);
+        ForumModule module = ForumModule.DAO.queryById(moduleId);
 
         if (module != null) {
             ForumPost forumPost = new ForumPost();
@@ -506,6 +506,7 @@ public class ForumService {
             }
 
             forumPost.setMyModuleId(moduleId);
+            forumPost.setMyForumModule(module);
             forumPost.setAccessControl(accessControl.toString());
 
             forumPost.setPostContent(postContent);

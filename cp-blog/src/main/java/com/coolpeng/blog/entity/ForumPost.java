@@ -46,6 +46,9 @@ public class ForumPost extends BlogBaseEntity {
     private ForumModule forumModule;
 
     @VOTemp
+    private ForumModule myForumModule;
+
+    @VOTemp
     private PageResult<ForumPostReply> replyPageResult;
 
     @VOTemp
@@ -537,5 +540,13 @@ public class ForumPost extends BlogBaseEntity {
 
     public void setMyModuleId(String myModuleId) {
         this.myModuleId = myModuleId;
+    }
+
+    public ForumModule getMyForumModule() {
+        return myForumModule;
+    }
+
+    public void setMyForumModule(ForumModule myForumModule) {
+        this.myForumModule = myForumModule;
     }
 }

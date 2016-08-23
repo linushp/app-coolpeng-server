@@ -33,6 +33,8 @@ public class ForumModuleService {
     private static Map<String, ForumGroup> GROUP_MAP = new HashMap();
     private static Map<String, ForumModule> MODULE_MAP = new HashMap();
 
+    private static long lastUpdateTime = System.currentTimeMillis();
+
     public void updateCache() {
         Map<String,Object> params = new HashMap<>();
         //只查询被公开的
@@ -59,10 +61,14 @@ public class ForumModuleService {
     }
 
     private void makeSureNotNull() {
-        if ((MODULE_LIST == null) || (GROUP_LIST == null)) {
+        long currentTime = System.currentTimeMillis();
+        //每隔五分钟更新一次
+        if ((MODULE_LIST == null) || (GROUP_LIST == null) || (currentTime - lastUpdateTime > 1000 * 60 * 5)) {
             updateCache();
+            lastUpdateTime = currentTime;
         }
     }
+
 
     public List<ForumModule> getForumModuleList(boolean hasGroup) {
         makeSureNotNull();
@@ -158,7 +164,7 @@ public class ForumModuleService {
                 }
             }
         }
-        return null;
+        return new ForumModule();
     }
 
     public void updatePostCount(ForumModule module)

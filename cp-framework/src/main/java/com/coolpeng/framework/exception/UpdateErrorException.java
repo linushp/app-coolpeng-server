@@ -24,7 +24,7 @@ public class UpdateErrorException extends Exception {
     @Override
     public String toString() {
         return "UpdateErrorException{" +
-                "entity=" + entity +
+                "entity=" + entity.toString() +
                 '}';
     }
 }

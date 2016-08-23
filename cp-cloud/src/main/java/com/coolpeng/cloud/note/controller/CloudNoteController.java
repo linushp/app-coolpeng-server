@@ -54,25 +54,26 @@ public class CloudNoteController extends RestBaseController {
 
     @ResponseBody
     @RequestMapping({"/saveOrUpdateNoteCategory"})
-    public TMSResponse saveOrUpdateNoteCategory(@RequestBody JSONObject jsonObject) throws FieldNotFoundException, ParameterErrorException, UpdateErrorException {
+    public TMSResponse saveOrUpdateNoteCategory(@RequestBody JSONObject jsonObject) throws FieldNotFoundException, ParameterErrorException, UpdateErrorException, TMSMsgException {
         CategoryVO categoryVO = jsonObject.getObject("CategoryVO", CategoryVO.class);  //用户ID,
 
         /******************************/
         UserEntity user = getCurrentUserIfToken(jsonObject);
-        categoryVO = cloudNoteService.saveOrUpdateNoteCategory(categoryVO, user);
-        return TMSResponse.success(categoryVO);
+        cloudNoteService.saveOrUpdateNoteCategory(categoryVO, user);
+        return getNoteCategory(jsonObject);
+
     }
 
 
     @ResponseBody
     @RequestMapping({"/deleteNoteCategory"})
-    public TMSResponse deleteNoteCategory(@RequestBody JSONObject jsonObject) throws FieldNotFoundException, ParameterErrorException, UpdateErrorException {
+    public TMSResponse deleteNoteCategory(@RequestBody JSONObject jsonObject) throws FieldNotFoundException, ParameterErrorException, UpdateErrorException, TMSMsgException {
         CategoryVO categoryVO = jsonObject.getObject("CategoryVO", CategoryVO.class);  //用户ID,
 
         /******************************/
         UserEntity user = getCurrentUserIfToken(jsonObject);
-        categoryVO = cloudNoteService.deleteNoteCategory(categoryVO, user);
-        return TMSResponse.success(categoryVO);
+        cloudNoteService.deleteNoteCategory(categoryVO, user);
+        return getNoteCategory(jsonObject);
     }
 
 
