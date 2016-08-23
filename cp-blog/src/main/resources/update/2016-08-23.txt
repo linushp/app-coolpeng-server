@@ -1,0 +1,19 @@
+update ForumPost{
+    categoryId:String,
+    categoryType:int
+    myCategoryId:String,
+    imageList:longText,
+    allImageList:longText
+}
+
+
+update ForumPostReply{
+    imageList:longText
+}
+
+delete ForumModule;
+delete ForumGroup;
+
+create ForumCategory{
+    ///所有的
+}

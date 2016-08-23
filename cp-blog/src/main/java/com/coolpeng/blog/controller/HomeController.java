@@ -1,13 +1,12 @@
 package com.coolpeng.blog.controller;
 
-import com.coolpeng.blog.entity.ForumModule;
-import com.coolpeng.blog.entity.ForumPost;
+import com.coolpeng.blog.entity.ForumCategory;
 import com.coolpeng.blog.entity.ForumPostReply;
 import com.coolpeng.blog.entity.enums.AccessControl;
 import com.coolpeng.blog.entity.enums.ModuleTypeEnum;
-import com.coolpeng.blog.service.ForumModuleService;
+import com.coolpeng.blog.service.ForumCategoryService;
 import com.coolpeng.blog.service.ForumService;
-import com.coolpeng.blog.service.ModelMapService;
+import com.coolpeng.blog.vo.ForumCategoryTree;
 import com.coolpeng.framework.db.PageResult;
 import com.coolpeng.framework.exception.FieldNotFoundException;
 import com.coolpeng.framework.exception.ParameterErrorException;
@@ -19,6 +18,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 @Controller
@@ -28,29 +28,25 @@ public class HomeController {
     @Autowired
     private ForumService forumService;
 
-    @Autowired
-    private ModelMapService modelMapService;
 
     @Autowired
-    private ForumModuleService forumModuleService;
+    private ForumCategoryService forumCategoryService;
 
     @RequestMapping(value = {"/home"}, method = {org.springframework.web.bind.annotation.RequestMethod.GET})
     public ModelAndView showHome()
-            throws FieldNotFoundException, ParameterErrorException, ClassNotFoundException {
+            throws FieldNotFoundException, ParameterErrorException, ClassNotFoundException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         PageResult postList = this.forumService.getPostList(1, 30, null, null, ModuleTypeEnum.BLOG, AccessControl.PUBLIC);
 
-        List<ForumPost> list = postList.getPageData();
-        for (ForumPost p : list) {
-            p.createTempImageEntity(1);
-        }
+        ForumCategoryTree publicCategories = forumCategoryService.getPublicForumCategory();
 
-        List<ForumModule>  moduleList = this.forumModuleService.getForumModuleList(true);
+        List<ForumCategory>  moduleList = publicCategories.getOriginNodeList();
+
 
         List<ForumPostReply> lastReplyList = this.forumService.getLastPostReply(5);
 
         ModelMap modelMap = new ModelMap();
         modelMap.put("postList", postList);
-        modelMap.put("moduleList", moduleList);
+        modelMap.put("categoryList", moduleList);
         modelMap.put("lastReplyList", lastReplyList);
 
         return new ModelAndView("home/jsp/index", modelMap);

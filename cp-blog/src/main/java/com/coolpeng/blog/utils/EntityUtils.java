@@ -1,6 +1,6 @@
 package com.coolpeng.blog.utils;
 
-import com.coolpeng.blog.entity.ForumModule;
+//import com.coolpeng.blog.entity.ForumModule;
 import com.coolpeng.blog.entity.ForumPost;
 import com.coolpeng.blog.entity.ForumPostReply;
 import com.coolpeng.blog.entity.UserEntity;
@@ -166,20 +166,20 @@ public class EntityUtils {
         }
     }
 
-
-    public static void setModuleDefaultIcon(List<ForumModule> moduleList,String context){
-        String [] imgList = new String[]{"001.png","002.png","003.png","004.png","005.png","006.png","007.png","008.jpg","009.jpg","010.jpg","011.png"};
-        if (!CollectionUtil.isEmpty(moduleList)){
-            int i=0;
-            int imgLength = imgList.length;
-            for (ForumModule m : moduleList){
-                String icon = m.getModuleIcon();
-                if (StringUtils.isBlank(icon) || (!icon.endsWith(".png") && !icon.endsWith(".jpg"))){
-                    int index = i % imgLength;
-                    m.setModuleIcon(context + "/forum/images/modules/"+ imgList[index]);
-                }
-                i++;
-            }
-        }
-    }
+//
+//    public static void setModuleDefaultIcon(List<ForumModule> moduleList,String context){
+//        String [] imgList = new String[]{"001.png","002.png","003.png","004.png","005.png","006.png","007.png","008.jpg","009.jpg","010.jpg","011.png"};
+//        if (!CollectionUtil.isEmpty(moduleList)){
+//            int i=0;
+//            int imgLength = imgList.length;
+//            for (ForumModule m : moduleList){
+//                String icon = m.getModuleIcon();
+//                if (StringUtils.isBlank(icon) || (!icon.endsWith(".png") && !icon.endsWith(".jpg"))){
+//                    int index = i % imgLength;
+//                    m.setModuleIcon(context + "/forum/images/modules/"+ imgList[index]);
+//                }
+//                i++;
+//            }
+//        }
+//    }
 }

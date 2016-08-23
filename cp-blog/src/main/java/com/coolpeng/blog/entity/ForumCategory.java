@@ -17,11 +17,10 @@ public class ForumCategory extends BlogBaseEntity {
     private String name;
     private String desc;
     private int postCount = 0;
-    private int postType = 3;//板块类型：论坛（1），问答（2），博客类型（3），留言板（4）
+    private int type = 3;//板块类型：论坛（1），问答（2），博客类型（3），留言板（4）
     private String accessControl; //public private
-
-
     private String parentId;
+    private String icon;
 
     @VOTemp
     private List<ForumCategory> children;
@@ -35,10 +34,10 @@ public class ForumCategory extends BlogBaseEntity {
         this.name = e.name;
         this.desc =  e.desc;
         this.postCount =  e.postCount;
-        this.postType =  e.postType;
+        this.type =  e.type;
         this.accessControl =  e.accessControl;
         this.parentId =  e.parentId;
-
+        this.icon = e.icon;
 //        this.parent =  e.parent;
 //        this.children =  e.children;
     }
@@ -68,12 +67,12 @@ public class ForumCategory extends BlogBaseEntity {
         this.postCount = postCount;
     }
 
-    public int getPostType() {
-        return postType;
+    public int getType() {
+        return type;
     }
 
-    public void setPostType(int postType) {
-        this.postType = postType;
+    public void setType(int type) {
+        this.type = type;
     }
 
     public String getAccessControl() {
@@ -97,6 +96,14 @@ public class ForumCategory extends BlogBaseEntity {
             this.children = new ArrayList<>();
         }
         return this.children;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 
     public void setChildren(List<ForumCategory> children) {

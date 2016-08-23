@@ -14,8 +14,8 @@ import java.util.*;
 
 public class ForumPost extends BlogBaseEntity {
     public static SimpleDAO<ForumPost> DAO = new SimpleDAO(ForumPost.class);
-    private String forumModuleId;
-    private int moduleType;
+    private String categoryId;///----
+    private int categoryType; //----
     private String postTitle;
 
     @FieldDef(dbType = "longtext")
@@ -40,30 +40,23 @@ public class ForumPost extends BlogBaseEntity {
     private String lastReplyMail;
     private String lastReplyTime = DateUtil.currentTimeFormat();
     private String accessControl; //public private
-    private String myModuleId;
+    private String myCategoryId; //-----
+
+    @FieldDef(jsonColumn = {List.class, String.class})
+    private List<String> imageList; //--
+
+    @FieldDef(jsonColumn = {List.class, String.class})
+    private List<String> allImageList;  //--
+
 
     @VOTemp
-    private ForumModule forumModule;
-
+    private ForumCategory category;
     @VOTemp
-    private ForumModule myForumModule;
+    private ForumCategory myCategory;
 
     @VOTemp
     private PageResult<ForumPostReply> replyPageResult;
 
-    @VOTemp
-    private List<String> imageList;
-
-    private String image1;
-    private String image2;
-    private String image3;
-    private String image4;
-    private String image5;
-    private String image6;
-    private String image7;
-    private String image8;
-    private String image9;
-    private String moreImages;
 
 //    @FieldDef(jsonColumn={List.class,ForumGroup.class})
 //    private List<ForumGroup> moreImages1;
@@ -81,12 +74,11 @@ public class ForumPost extends BlogBaseEntity {
     }
 
 
-
     public ForumPost(ForumPost p) {
         super(p);
 
-        this.forumModuleId = p.forumModuleId;
-        this.moduleType = p.moduleType;
+        this.categoryId = p.categoryId;
+        this.categoryType = p.categoryType;
         this.postTitle = p.postTitle;
         this.postContent = p.postContent;
         this.summary = p.summary;
@@ -104,20 +96,11 @@ public class ForumPost extends BlogBaseEntity {
         this.lastReplyAvatar = p.lastReplyAvatar;
         this.lastReplyMail = p.lastReplyMail;
         this.lastReplyTime = p.lastReplyTime;
-        this.forumModule = p.forumModule;
+        this.category = p.category;
+        this.myCategory = p.myCategory;
         this.replyPageResult = p.replyPageResult;
         this.imageList = p.imageList;
-        this.image1 = p.image1;
-        this.image2 = p.image2;
-        this.image3 = p.image3;
-        this.image4 = p.image4;
-        this.image5 = p.image5;
-        this.image6 = p.image6;
-        this.image7 = p.image7;
-        this.image8 = p.image8;
-        this.image9 = p.image9;
-        this.moreImages = p.moreImages;
-
+        this.allImageList = p.allImageList;
     }
 
     public int getRecommend() {
@@ -168,21 +151,6 @@ public class ForumPost extends BlogBaseEntity {
         this.lastReplyMail = lastReplyMail;
     }
 
-    public int getModuleType() {
-        return this.moduleType;
-    }
-
-    public void setModuleType(int moduleType) {
-        this.moduleType = moduleType;
-    }
-
-    public String getMoreImages() {
-        return this.moreImages;
-    }
-
-    public void setMoreImages(String moreImages) {
-        this.moreImages = moreImages;
-    }
 
     public String getSummary() {
         return this.summary;
@@ -232,93 +200,6 @@ public class ForumPost extends BlogBaseEntity {
         this.lastReplyUserId = lastReplyUserId;
     }
 
-    public String getImage1() {
-        return this.image1;
-    }
-
-    public void setImage1(String image1) {
-        this.image1 = image1;
-    }
-
-    public String getImage2() {
-        return this.image2;
-    }
-
-    public void setImage2(String image2) {
-        this.image2 = image2;
-    }
-
-    public String getImage3() {
-        return this.image3;
-    }
-
-    public void setImage3(String image3) {
-        this.image3 = image3;
-    }
-
-    public String getImage4() {
-        return this.image4;
-    }
-
-    public void setImage4(String image4) {
-        this.image4 = image4;
-    }
-
-    public String getImage5() {
-        return this.image5;
-    }
-
-    public void setImage5(String image5) {
-        this.image5 = image5;
-    }
-
-    public String getImage6() {
-        return this.image6;
-    }
-
-    public void setImage6(String image6) {
-        this.image6 = image6;
-    }
-
-    public String getImage7() {
-        return this.image7;
-    }
-
-    public void setImage7(String image7) {
-        this.image7 = image7;
-    }
-
-    public String getImage8() {
-        return this.image8;
-    }
-
-    public void setImage8(String image8) {
-        this.image8 = image8;
-    }
-
-    public String getImage9() {
-        return this.image9;
-    }
-
-    public void setImage9(String image9) {
-        this.image9 = image9;
-    }
-
-    public String getForumModuleId() {
-        return this.forumModuleId;
-    }
-
-    public void setForumModuleId(String forumModuleId) {
-        this.forumModuleId = forumModuleId;
-    }
-
-    public ForumModule getForumModule() {
-        return this.forumModule;
-    }
-
-    public void setForumModule(ForumModule forumModule) {
-        this.forumModule = forumModule;
-    }
 
     public PageResult<ForumPostReply> getReplyPageResult() {
         return this.replyPageResult;
@@ -328,13 +209,6 @@ public class ForumPost extends BlogBaseEntity {
         this.replyPageResult = replyPageResult;
     }
 
-    public List<String> getImageList() {
-        return this.imageList;
-    }
-
-    public void setImageList(List<String> imageList) {
-        this.imageList = imageList;
-    }
 
     public String getLastReplyMsg() {
         return this.lastReplyMsg;
@@ -377,129 +251,7 @@ public class ForumPost extends BlogBaseEntity {
     }
 
 
-    public List<String> createTempImageEntity(int maxCount) {
-        if (this.imageList == null) {
-            this.imageList = new ArrayList();
-        }
-        this.imageList.clear();
-
-        if (StringUtils.isNotBlank(this.image1)) {
-            this.imageList.add(this.image1);
-        }
-        if (StringUtils.isNotBlank(this.image2)) {
-            this.imageList.add(this.image2);
-        }
-        if (StringUtils.isNotBlank(this.image3)) {
-            this.imageList.add(this.image3);
-        }
-        if (StringUtils.isNotBlank(this.image4)) {
-            this.imageList.add(this.image4);
-        }
-        if (StringUtils.isNotBlank(this.image5)) {
-            this.imageList.add(this.image5);
-        }
-        if (StringUtils.isNotBlank(this.image6)) {
-            this.imageList.add(this.image6);
-        }
-        if (StringUtils.isNotBlank(this.image7)) {
-            this.imageList.add(this.image7);
-        }
-        if (StringUtils.isNotBlank(this.image8)) {
-            this.imageList.add(this.image8);
-        }
-        if (StringUtils.isNotBlank(this.image9)) {
-            this.imageList.add(this.image9);
-        }
-        if (StringUtils.isNotBlank(this.moreImages)) {
-            List images = JSON.parseArray(this.moreImages, String.class);
-            this.imageList.addAll(images);
-        }
-
-        if (this.imageList.size() > maxCount) {
-            this.imageList = this.imageList.subList(0, maxCount);
-        }
-
-
-        return this.imageList;
-
-    }
-
-    public void addImageList(List<String> images) {
-        if (CollectionUtil.isEmpty(images)){
-            return;
-        }
-
-        String moreImages = this.moreImages;
-        List beforeImages;
-        if (StringUtils.isNotBlank(moreImages)) {
-            beforeImages = JSON.parseArray(moreImages, String.class);
-            LinkedHashSet imageSet = new LinkedHashSet(beforeImages);
-            imageSet.addAll(images);
-            List newImages = new ArrayList(imageSet);
-            this.moreImages = JSON.toJSONString(newImages, true);
-        } else {
-            for (String img : images){
-                addImage(img);
-            }
-        }
-    }
-
-
-    public void addImage(String imageUrl) {
-        if (StringUtils.isBlank(this.image1)) {
-            this.image1 = imageUrl;
-            return;
-        } else if (StringUtils.isBlank(this.image2)) {
-            this.image2 = imageUrl;
-            return;
-        } else if (StringUtils.isBlank(this.image3)) {
-            this.image3 = imageUrl;
-            return;
-        } else if (StringUtils.isBlank(this.image4)) {
-            this.image4 = imageUrl;
-            return;
-        } else if (StringUtils.isBlank(this.image5)) {
-            this.image5 = imageUrl;
-            return;
-        } else if (StringUtils.isBlank(this.image6)) {
-            this.image6 = imageUrl;
-            return;
-        } else if (StringUtils.isBlank(this.image7)) {
-            this.image7 = imageUrl;
-            return;
-        } else if (StringUtils.isBlank(this.image8)) {
-            this.image8 = imageUrl;
-            return;
-        } else if (StringUtils.isBlank(this.image9)) {
-            this.image9 = imageUrl;
-            return;
-        } else {
-            String moreImages = this.moreImages;
-            List images = new ArrayList();
-            if (StringUtils.isNotBlank(moreImages)) {
-                images = JSON.parseArray(moreImages, String.class);
-            }
-            images.add(imageUrl);
-            this.moreImages = JSON.toJSONString(images, true);
-            return;
-        }
-    }
-
-
-    public void clearImageList(){
-        this.image1 = null;
-        this.image2 = null;
-        this.image3 = null;
-        this.image4 = null;
-        this.image5 = null;
-        this.image6 = null;
-        this.image7 = null;
-        this.image8 = null;
-        this.image9 = null;
-        this.moreImages = null;
-    }
-
-    public ForumPostReply extractLastReply(){
+    public ForumPostReply extractLastReply() {
         ForumPost post = this;
         ForumPostReply reply = new ForumPostReply();
         reply.setCreateTime(post.getLastReplyTime());
@@ -534,19 +286,74 @@ public class ForumPost extends BlogBaseEntity {
         this.createIpStr = createIpStr;
     }
 
-    public String getMyModuleId() {
-        return myModuleId;
+
+    public String getCategoryId() {
+        return categoryId;
     }
 
-    public void setMyModuleId(String myModuleId) {
-        this.myModuleId = myModuleId;
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
     }
 
-    public ForumModule getMyForumModule() {
-        return myForumModule;
+    public int getCategoryType() {
+        return categoryType;
     }
 
-    public void setMyForumModule(ForumModule myForumModule) {
-        this.myForumModule = myForumModule;
+    public void setCategoryType(int categoryType) {
+        this.categoryType = categoryType;
+    }
+
+    public String getMyCategoryId() {
+        return myCategoryId;
+    }
+
+    public void setMyCategoryId(String myCategoryId) {
+        this.myCategoryId = myCategoryId;
+    }
+
+
+    public ForumCategory getCategory() {
+        return category;
+    }
+
+    public void setCategory(ForumCategory category) {
+        this.category = category;
+    }
+
+    public ForumCategory getMyCategory() {
+        return myCategory;
+    }
+
+    public void setMyCategory(ForumCategory myCategory) {
+        this.myCategory = myCategory;
+    }
+
+    public List<String> getImageList() {
+        return imageList;
+    }
+
+    public void setImageList(List<String> imageList) {
+        this.imageList = imageList;
+    }
+
+    public List<String> getAllImageList() {
+        if (allImageList == null) {
+            allImageList = new ArrayList<>();
+        }
+        return allImageList;
+    }
+
+    public void setAllImageList(List<String> allImageList) {
+        this.allImageList = allImageList;
+    }
+
+    public void appendToAllImageList(List<String> images) {
+        //去重，并保证先后顺序
+        if (!CollectionUtil.isEmpty(images)) {
+            this.getAllImageList().addAll(images);
+            LinkedHashSet<String> mm = new LinkedHashSet<>(this.getAllImageList());
+            List<String> mm2 = new ArrayList<>(mm);
+            setAllImageList(mm2);
+        }
     }
 }

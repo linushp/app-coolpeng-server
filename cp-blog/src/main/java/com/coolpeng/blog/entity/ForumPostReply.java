@@ -4,6 +4,8 @@ import com.coolpeng.blog.entity.base.BlogBaseEntity;
 import com.coolpeng.framework.db.SimpleDAO;
 import com.coolpeng.framework.db.annotation.FieldDef;
 
+import java.util.List;
+
 public class ForumPostReply extends BlogBaseEntity {
     public static SimpleDAO<ForumPostReply> DAO = new SimpleDAO(ForumPostReply.class);
     private String forumPostId;
@@ -20,6 +22,9 @@ public class ForumPostReply extends BlogBaseEntity {
     private String createAvatar;
     private String createMail;
     private String createIpAddr;
+
+    @FieldDef(jsonColumn={List.class,String.class})
+    private List<String> imageList; //--
 
     public String getForumPostId() {
         return this.forumPostId;
@@ -108,5 +113,13 @@ public class ForumPostReply extends BlogBaseEntity {
 
     public void setReplySummary(String replySummary) {
         this.replySummary = replySummary;
+    }
+
+    public List<String> getImageList() {
+        return imageList;
+    }
+
+    public void setImageList(List<String> imageList) {
+        this.imageList = imageList;
     }
 }

@@ -33,14 +33,6 @@ public class ImageController {
 
 
 
-
-
-
-
-
-
-
-
     /**
      * 获取论坛所有的帖子
      *
@@ -60,8 +52,7 @@ public class ImageController {
             Map<String, ForumPostImage> oldImages = CollectionUtil.toMap(images, "imagePath");
 
             for (ForumPost post:posts){
-                List<String> imageList = post.createTempImageEntity(10000);
-
+                List<String> imageList = post.getAllImageList();
                 for (String imagePath:imageList){
                     if (!oldImages.containsKey(imagePath)){
                         insertImages.add(createImageInfo(imagePath,post));

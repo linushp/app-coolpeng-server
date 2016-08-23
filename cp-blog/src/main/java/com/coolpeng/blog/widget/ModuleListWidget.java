@@ -1,7 +1,6 @@
 package com.coolpeng.blog.widget;
 
-import com.coolpeng.blog.entity.ForumGroup;
-import com.coolpeng.blog.entity.ForumModule;
+import com.coolpeng.blog.entity.ForumCategory;
 import com.coolpeng.blog.utils.ForumUrlUtils;
 import com.coolpeng.framework.utils.CollectionUtil;
 
@@ -12,13 +11,13 @@ import java.io.IOException;
 import java.util.List;
 
 public class ModuleListWidget extends TagSupport {
-    private List<ForumModule> moduleList;
+    private List<ForumCategory>  moduleList;
 
     private String toHtml() {
         if (!CollectionUtil.isEmpty(this.moduleList)) {
             StringBuffer sb = new StringBuffer();
             sb.append("<div class='module-list'>");
-            for (ForumModule m : this.moduleList) {
+            for (ForumCategory m : this.moduleList) {
                 appendHtml(sb, m);
             }
             sb.append("<div class='clear'></div>");
@@ -28,17 +27,14 @@ public class ModuleListWidget extends TagSupport {
         return "<div class='module-list-empty'><span>没有内容</span></div>";
     }
 
-    private void appendHtml(StringBuffer sb, ForumModule m) {
-        String name = m.getModuleName();
+    private void appendHtml(StringBuffer sb, ForumCategory m) {
+        String name = m.getName();
         String url = ForumUrlUtils.toPostListHttpURL(m.getId(), "time");
-        String img = m.getModuleIcon();
-        String moduleType = "" + m.getModuleType();
-        ForumGroup group = m.getForumGroup();
-        String groupName = group != null ? group.getGroupName() : "";
+        String img = m.getIcon();
+        String moduleType = "" + m.getType();
         String postCount = "" + m.getPostCount();
-
+        String groupName = "";
         String template = "<div class='module-list-item'>   <a href='" + url + "'> " + "       <div class='name'>" + name + "</div>" + "       <div class='type'>" + moduleType + "</div>" + "       <div class='group'>" + groupName + "</div>" + "       <div class='postCount'>" + postCount + "</div>" + "       <div class='img'>" + "           <img src='" + img + "' >" + "       </div>" + "   </a>" + "</div>";
-
         sb.append(template);
     }
 
@@ -58,11 +54,11 @@ public class ModuleListWidget extends TagSupport {
         return 6;
     }
 
-    public List<ForumModule> getModuleList() {
+    public List<ForumCategory> getModuleList() {
         return this.moduleList;
     }
 
-    public void setModuleList(List<ForumModule> moduleList) {
+    public void setModuleList(List<ForumCategory> moduleList) {
         this.moduleList = moduleList;
     }
 }

@@ -1,10 +1,12 @@
 package com.coolpeng.blog.widget;
 
-import com.coolpeng.blog.entity.ForumModule;
+import com.coolpeng.blog.entity.ForumCategory;
 import com.coolpeng.blog.entity.ForumPost;
-import com.coolpeng.blog.service.ForumModuleService;
+import com.coolpeng.blog.service.ForumCategoryService;
 import com.coolpeng.blog.utils.ForumUrlUtils;
+import com.coolpeng.blog.vo.ForumCategoryTree;
 import com.coolpeng.framework.db.PageResult;
+import com.coolpeng.framework.exception.FieldNotFoundException;
 import com.coolpeng.framework.mvc.TmsCurrentRequest;
 import com.coolpeng.framework.mvc.jsptag.TmsFunctions;
 import com.coolpeng.framework.utils.CollectionUtil;
@@ -12,22 +14,24 @@ import com.coolpeng.framework.utils.DateUtil;
 import com.coolpeng.framework.utils.ServiceUtils;
 import com.coolpeng.framework.utils.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 public class BlogListWidget extends TagSupport {
+
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+
     private PageResult<ForumPost> pageResult;
 
 
     private String getImage1(ForumPost post) {
-        if (CollectionUtil.isEmpty(post.getImageList())) {
-            post.createTempImageEntity(10);
-        }
-
         if (CollectionUtil.isEmpty(post.getImageList())) {
             return null;
         }
@@ -44,11 +48,13 @@ public class BlogListWidget extends TagSupport {
         return null;
     }
 
-    private void appendPostHtml(StringBuffer sb, ForumPost post, ForumModuleService forumModuleService) {
+    private void appendPostHtml(StringBuffer sb, ForumPost post, ForumCategoryService forumCategoryService) throws FieldNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        ForumCategoryTree publicCategories = forumCategoryService.getPublicForumCategory();
+
         String postId = post.getId();
         String image1 = getImage1(post);
         String postUrl = ForumUrlUtils.toPostContentHttpURL(postId);
-        ForumModule module = forumModuleService.getForumModule(post.getForumModuleId());
+        ForumCategory module = publicCategories.getById(post.getCategoryId());
         String createTime = DateUtil.toPrettyString(post.getCreateTime());
 
         if (StringUtils.isBlank(image1)) {
@@ -78,7 +84,7 @@ public class BlogListWidget extends TagSupport {
                 "          <p>" + StringUtils.htmlEncode(post.getSummary()) + "</p>\n" +
                 "          <p class=\"autor\">\n" +
                 "               <span class=\"lm f_l\">\n" +
-                "                   <a href=\"/\">" + module.getModuleName() + "</a>\n" +
+                "                   <a href=\"/\">" + module.getName() + "</a>\n" +
                 "               </span>\n" +
                 "               <span class=\"dtime f_l\">" + createTime + "</span>\n" +
                 "               <span class=\"viewnum f_r\">浏览（<a>" + post.getViewCount() + "</a>）</span>\n" +
@@ -90,16 +96,16 @@ public class BlogListWidget extends TagSupport {
         sb.append(x);
     }
 
-    private String toHtml() {
+    private String toHtml() throws FieldNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         List<ForumPost> postList = this.pageResult.getPageData();
 
         if (!CollectionUtil.isEmpty(postList)) {
-            ForumModuleService forumModuleService = (ForumModuleService) ServiceUtils.getBean("forumModuleService");
+            ForumCategoryService forumCategoryService = (ForumCategoryService) ServiceUtils.getBean("forumCategoryService");
 
             StringBuffer sb = new StringBuffer();
             sb.append("<div class='blog-list'>");
             for (ForumPost post : postList) {
-                appendPostHtml(sb, post, forumModuleService);
+                appendPostHtml(sb, post, forumCategoryService);
             }
             sb.append("</div>");
             return sb.toString();
@@ -115,6 +121,9 @@ public class BlogListWidget extends TagSupport {
             out.print(html);
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (Throwable e) {
+            e.printStackTrace();
+            logger.error("",e);
         }
 
         return 0;

@@ -5,6 +5,7 @@ import com.coolpeng.blog.entity.enums.AccessControl;
 import com.coolpeng.blog.vo.ForumCategoryTree;
 import com.coolpeng.framework.db.QueryCondition;
 import com.coolpeng.framework.exception.FieldNotFoundException;
+import com.coolpeng.framework.exception.UpdateErrorException;
 import com.coolpeng.framework.utils.CollectionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,20 +24,48 @@ import java.util.Map;
 public class ForumCategoryService {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private static ForumCategoryTree PUBLIC_FORUM_CATEGORY_CACHE = null;
+    private static long LAST_UPDATE_TIME = System.currentTimeMillis();
 
 
     public ForumCategoryTree getPublicForumCategory() throws FieldNotFoundException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-        Map<String,Object> params = new HashMap<>();
-        params.put("accessControl", AccessControl.PUBLIC.getValue());
-        List<ForumCategory> list = ForumCategory.DAO.queryForList(params);
-        return buildTree(list);
+        long nowTime = System.currentTimeMillis();
+        if (PUBLIC_FORUM_CATEGORY_CACHE == null || (nowTime - LAST_UPDATE_TIME > 1000 * 60 * 5)) {
+            Map<String, Object> params = new HashMap<>();
+            params.put("accessControl", AccessControl.PUBLIC.getValue());
+            List<ForumCategory> list = ForumCategory.DAO.queryForList(params);
+            PUBLIC_FORUM_CATEGORY_CACHE = buildTree(list);
+            LAST_UPDATE_TIME = nowTime;
+        }
+        return PUBLIC_FORUM_CATEGORY_CACHE;
     }
+
+
 
     public ForumCategoryTree getForumCategoryByCreateUserId(String userId) throws FieldNotFoundException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         Map<String,Object> params = new HashMap<>();
         params.put("createUserId", userId);
         List<ForumCategory> list = ForumCategory.DAO.queryForList(params);
         return buildTree(list);
+    }
+
+
+    public ForumCategory saveOrUpdate(ForumCategory entity) throws UpdateErrorException {
+        ForumCategory.DAO.insertOrUpdate(entity);
+        return entity;
+    }
+
+
+    public ForumCategory incrementPostCount(ForumCategory entity) throws UpdateErrorException {
+        int count = entity.getPostCount();
+        entity.setPostCount(count++);
+        ForumCategory.DAO.insertOrUpdate(entity);
+        return entity;
+    }
+
+
+    public int deleteEntity(String entityId) throws UpdateErrorException {
+        return ForumCategory.DAO.deleteById(entityId);
     }
 
 

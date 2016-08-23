@@ -2,12 +2,11 @@ package com.coolpeng.cloud.note.service;
 
 import com.coolpeng.blog.entity.*;
 import com.coolpeng.blog.entity.enums.AccessControl;
-import com.coolpeng.blog.service.ForumModuleService;
+import com.coolpeng.blog.service.ForumCategoryService;
 import com.coolpeng.blog.service.ForumService;
-import com.coolpeng.cloud.note.vo.CategoryVO;
+import com.coolpeng.blog.vo.ForumCategoryTree;
 import com.coolpeng.cloud.note.vo.NoteVO;
 import com.coolpeng.framework.db.PageResult;
-import com.coolpeng.framework.db.QueryCondition;
 import com.coolpeng.framework.exception.FieldNotFoundException;
 import com.coolpeng.framework.exception.ParameterErrorException;
 import com.coolpeng.framework.exception.UpdateErrorException;
@@ -16,10 +15,9 @@ import com.coolpeng.framework.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by luanhaipeng on 16/8/17.
@@ -29,9 +27,13 @@ public class CloudNoteService {
 
     @Autowired
     private ForumService forumService;
+//
+//    @Autowired
+//    private CloudPrivateModuleService cloudPrivateModuleService;
+
 
     @Autowired
-    private CloudPrivateModuleService cloudPrivateModuleService;
+    private ForumCategoryService forumCategoryService;
 
 
 
@@ -41,23 +43,18 @@ public class CloudNoteService {
      * @param currentUser
      * @return
      */
-    public CategoryVO saveOrUpdateNoteCategory(CategoryVO categoryVO, UserEntity currentUser) throws ParameterErrorException, FieldNotFoundException, UpdateErrorException {
+    public ForumCategory saveOrUpdateNoteCategory(ForumCategory categoryVO, UserEntity currentUser) throws ParameterErrorException, FieldNotFoundException, UpdateErrorException {
 
-        if (CloudConst.LEVEL_GROUP.equalsIgnoreCase(categoryVO.getLevel())){
-            if (StringUtils.isBlank(categoryVO.getId())){
-                return cloudPrivateModuleService.createGroup(categoryVO,currentUser);
-            }
-            return cloudPrivateModuleService.updateGroup(categoryVO,currentUser);
+        ForumCategory forumCategory = new ForumCategory();
+        if (StringUtils.isNotBlank(categoryVO.getId())){
+            forumCategory = ForumCategory.DAO.queryById(categoryVO.getId());
         }
-
-        if (CloudConst.LEVEL_MODULE.equalsIgnoreCase(categoryVO.getLevel())){
-            if (StringUtils.isBlank(categoryVO.getId())){
-                return cloudPrivateModuleService.createModule(categoryVO,currentUser);
-            }
-            return cloudPrivateModuleService.updateModule(categoryVO, currentUser);
-        }
-
-        return null;
+        forumCategory.setName(categoryVO.getName());
+        forumCategory.setDesc(categoryVO.getDesc());
+        forumCategory.setParentId(categoryVO.getParentId());
+        forumCategory.setAccessControl(AccessControl.PRIVATE.getValue());
+        forumCategoryService.saveOrUpdate(forumCategory);
+        return categoryVO;
     }
 
 
@@ -67,67 +64,27 @@ public class CloudNoteService {
      * @param user
      * @return
      */
-    public CategoryVO deleteNoteCategory(CategoryVO categoryVO, UserEntity user) {
-        if (CloudConst.LEVEL_GROUP.equalsIgnoreCase(categoryVO.getLevel())){
-            ForumGroup.DAO.deleteById(categoryVO.getId());
-        }
-        if (CloudConst.LEVEL_MODULE.equalsIgnoreCase(categoryVO.getLevel())){
-            ForumModule.DAO.deleteById(categoryVO.getId());
-        }
+    public ForumCategory deleteNoteCategory(ForumCategory categoryVO, UserEntity user) throws UpdateErrorException {
+        forumCategoryService.deleteEntity(categoryVO.getId());
         return categoryVO;
     }
 
 
     /******************getNoteCategory********************/
-    public List<CategoryVO> getNoteCategory(String ownerId) throws FieldNotFoundException {
-
-        Map<String,Object> groupQueryParams = new HashMap<>();
-        groupQueryParams.put("createUserId",ownerId);
-
-        List<ForumGroup> allGroupList = ForumGroup.DAO.queryForList(groupQueryParams);
-        List<ForumModule> allModuleList = ForumModule.DAO.queryForList(groupQueryParams);
-
-        List<CategoryVO> result = new ArrayList<>();
-        List<ForumGroup> groupList = allGroupList;
-        for (ForumGroup g : groupList) {
-            CategoryVO c = new CategoryVO(g.getId(), "g_", g.getGroupName(), g.getGroupDesc());
-            c.setLevel(CloudConst.LEVEL_GROUP);
-            c.setChildren(toCategoryVOList(g.getId(),allModuleList));
-            result.add(c);
-        }
-        return result;
+    public List<ForumCategory> getNoteCategory(String ownerId) throws FieldNotFoundException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+        ForumCategoryTree categoryTree = forumCategoryService.getForumCategoryByCreateUserId(ownerId);
+        return categoryTree.getTreeNodeList();
     }
 
-    private List<CategoryVO> toCategoryVOList(String groupId ,List<ForumModule> moduleList) {
-        List<CategoryVO> result = new ArrayList<>();
-        for (ForumModule m : moduleList) {
-            if (groupId.equals(m.getForumGroupId())){
-                CategoryVO c = new CategoryVO(m.getId(), "m_" + m.getModuleType(), m.getModuleName(), m.getModuleDesc());
-                c.setLevel(CloudConst.LEVEL_MODULE);
-                c.setParentId(groupId);
-                //TODO 无限层级树
-                c.setParentLevel(CloudConst.LEVEL_GROUP);
-                result.add(c);
-            }
-        }
-        return result;
-    }
+
 
 
 
 
     /******************getNoteListByCategory********************/
-    public PageResult<NoteVO>  getNoteListByCategory(String level,String categoryId, int pageSize, int pageNumber,String titleLike) throws ClassNotFoundException, FieldNotFoundException {
+    public PageResult<NoteVO>  getNoteListByCategory(String categoryId, int pageSize, int pageNumber,String titleLike) throws ClassNotFoundException, FieldNotFoundException {
 
-        PageResult<ForumPost> postPage = null;
-
-        if (CloudConst.LEVEL_MODULE.equals(level)){
-            postPage = forumService.getPostListByModuleId(categoryId, pageNumber, pageSize, titleLike);
-        }else if (CloudConst.LEVEL_GROUP.equals(level)){
-            postPage = forumService.getPostListByGroupId(categoryId, pageNumber, pageSize, titleLike);
-        }else {
-            postPage = forumService.getPostListByModuleId(null,pageNumber, pageSize, titleLike);
-        }
+        PageResult<ForumPost> postPage = forumService.getPostListByMyCategoryId(categoryId, pageNumber, pageSize, titleLike);
 
         List<ForumPost> postList = postPage.getPageData();
         List<NoteVO> noteList = new ArrayList<>();
@@ -135,7 +92,6 @@ public class CloudNoteService {
             p.setPostContent(null);//不返回详细内容
             noteList.add(new NoteVO(p));
         }
-
 
         PageResult<NoteVO> notePage = new PageResult<>(postPage.getTotalCount(), pageSize, pageNumber, noteList);
         return notePage;
@@ -158,8 +114,8 @@ public class CloudNoteService {
     /******************saveOrUpdateNote********************/
     public NoteVO saveOrUpdateNote(NoteVO noteVO) throws FieldNotFoundException, UpdateErrorException, ParameterErrorException {
 
-        String moduleId = noteVO.getForumModuleId();
-        String myModuleId = noteVO.getMyModuleId();
+        String moduleId = noteVO.getCategoryId();
+        String myModuleId = noteVO.getMyCategoryId();
         String postTitle = noteVO.getPostTitle();
         String postContent = noteVO.getPostContent();
         String summary = noteVO.getSummary();
@@ -193,8 +149,10 @@ public class CloudNoteService {
     public ForumPostReply saveOrUpdateNoteReply(ForumPostReply forumPostReply,UserEntity user) throws FieldNotFoundException, UpdateErrorException, ParameterErrorException {
         String postId = forumPostReply.getForumPostId();
         String replyId = forumPostReply.getId();
+        List<String> imageList = forumPostReply.getImageList();
+
         if (StringUtils.isBlank(replyId)){
-            return forumService.createPostReply(postId,forumPostReply.getReplyContent());
+            return forumService.createPostReply(postId,forumPostReply.getReplyContent(),imageList);
         }
         else {
             forumPostReply.setUpdateTime(DateUtil.currentTimeFormat());
