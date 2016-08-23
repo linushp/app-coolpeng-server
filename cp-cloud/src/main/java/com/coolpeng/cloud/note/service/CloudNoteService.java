@@ -48,11 +48,18 @@ public class CloudNoteService {
         ForumCategory forumCategory = new ForumCategory();
         if (StringUtils.isNotBlank(categoryVO.getId())){
             forumCategory = ForumCategory.DAO.queryById(categoryVO.getId());
+            forumCategory.setUpdateUserId(currentUser.getId());
         }
+        else {
+            forumCategory.setUpdateUserId(currentUser.getId());
+            forumCategory.setCreateUserId(currentUser.getId());
+        }
+
         forumCategory.setName(categoryVO.getName());
         forumCategory.setDesc(categoryVO.getDesc());
         forumCategory.setParentId(categoryVO.getParentId());
         forumCategory.setAccessControl(AccessControl.PRIVATE.getValue());
+
         forumCategoryService.saveOrUpdate(forumCategory);
         return categoryVO;
     }
