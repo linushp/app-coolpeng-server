@@ -111,7 +111,9 @@ public class CloudNoteService {
 //        ForumPost post = forumService.getPostById(id,null, true);
 
         ForumPost post = forumService.getPostWithReply(postId, pageNumber, pageSize, null);
-
+        if (post == null) {
+            return null;
+        }
         return new NoteVO(post);
     }
 
