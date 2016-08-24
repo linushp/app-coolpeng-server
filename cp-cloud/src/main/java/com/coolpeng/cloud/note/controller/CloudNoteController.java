@@ -89,6 +89,8 @@ public class CloudNoteController extends RestBaseController {
         String titleLike = jsonObject.getString("titleLike");
         /******************************/
 
+        UserEntity user = getCurrentUserIfToken(jsonObject);
+
         PageResult<NoteVO> pageResult = cloudNoteService.getNoteListByCategory(categoryId, pageSize, pageNumber, titleLike);
         return TMSResponse.successPage(pageResult);
     }

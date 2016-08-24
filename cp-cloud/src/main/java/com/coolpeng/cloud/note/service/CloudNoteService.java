@@ -126,7 +126,12 @@ public class CloudNoteService {
         String postTitle = noteVO.getPostTitle();
         String postContent = noteVO.getPostContent();
         String summary = noteVO.getSummary();
-        String accessControl = noteVO.getAccessControl();
+        String accessControlStr = noteVO.getAccessControl();
+        AccessControl accessControl = AccessControl.PRIVATE;
+        if (AccessControl.PUBLIC.equals(accessControlStr)){
+            accessControl = AccessControl.PUBLIC;
+        }
+
 
         String id = noteVO.getId();
         List <String> imageList = noteVO.getImageList();
@@ -136,7 +141,7 @@ public class CloudNoteService {
             ForumPost post = forumService.updatePost(id,moduleId,myModuleId, postTitle, postContent, summary,imageList,accessControl);
             return new NoteVO(post);
         }else {
-            ForumPost post = forumService.createPost(moduleId, postTitle, postContent, summary, imageList, AccessControl.PUBLIC);
+            ForumPost post = forumService.createPost(moduleId, postTitle, postContent, summary, imageList, accessControl);
             return new NoteVO(post);
         }
     }

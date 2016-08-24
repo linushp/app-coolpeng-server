@@ -374,4 +374,36 @@ public class ForumPost extends BlogBaseEntity {
             setAllImageList(mm2);
         }
     }
+
+
+    @Override
+    public String toString() {
+        return "ForumPost{" +
+                "id = '" + this.getId() + "'" +
+                ", categoryId='" + categoryId + '\'' +
+                ", categoryIdPath='" + categoryIdPath + '\'' +
+                ", categoryType=" + categoryType +
+                ", postTitle='" + postTitle + '\'' +
+                ", postContent='" + postContent + '\'' +
+                ", summary='" + summary + '\'' +
+                ", viewCount=" + viewCount +
+                ", replyCount=" + replyCount +
+                ", likeCount=" + likeCount +
+                ", recommend=" + recommend +
+                ", createNickname='" + createNickname + '\'' +
+                ", createAvatar='" + createAvatar + '\'' +
+                ", createMail='" + createMail + '\'' +
+                ", createIpAddr='" + createIpAddr + '\'' +
+                ", createIpStr='" + createIpStr + '\'' +
+                ", lastReplyUserId='" + lastReplyUserId + '\'' +
+                ", lastReplyMsg='" + lastReplyMsg + '\'' +
+                ", lastReplyNickname='" + lastReplyNickname + '\'' +
+                ", lastReplyAvatar='" + lastReplyAvatar + '\'' +
+                ", lastReplyMail='" + lastReplyMail + '\'' +
+                ", lastReplyTime='" + lastReplyTime + '\'' +
+                ", accessControl='" + accessControl + '\'' +
+                ", myCategoryId='" + myCategoryId + '\'' +
+                ", myCategoryIdPath='" + myCategoryIdPath + '\'' +
+                '}';
+    }
 }

@@ -52,14 +52,14 @@ public class ForumService {
     }
 
 
-    public ForumPost updatePost(String postId,String moduleId,String myModuleId, String postTitle, String postContent, String summary, List<String> imageList,String accessControl) throws FieldNotFoundException, UpdateErrorException, ParameterErrorException {
+    public ForumPost updatePost(String postId,String moduleId,String myModuleId, String postTitle, String postContent, String summary, List<String> imageList,AccessControl accessControl) throws FieldNotFoundException, UpdateErrorException, ParameterErrorException {
         ForumPost post = getPostById(postId,null, false);
 
         post.setCategoryId(moduleId);
         post.setPostTitle(postTitle);
         post.setPostContent(postContent);
         post.setSummary(summary);
-        post.setAccessControl(accessControl);
+        post.setAccessControl(accessControl.getValue());
         post.setMyCategoryId(myModuleId);
         post.setImageList(imageList);
 
@@ -268,7 +268,7 @@ public class ForumService {
 
     /**
      *
-     * @param categoryId   可以为null
+     * @param my_category_id   可以为null
      * @param pageNumber
      * @param pageSize
      * @param titleLike 可以为null
@@ -276,14 +276,14 @@ public class ForumService {
      * @throws FieldNotFoundException
      * @throws ClassNotFoundException
      */
-    public PageResult<ForumPost> getPostListByMyCategoryId(String categoryId, int pageNumber, int pageSize, String titleLike)
+    public PageResult<ForumPost> getPostListByMyCategoryId(String my_category_id, int pageNumber, int pageSize, String titleLike)
             throws FieldNotFoundException, ClassNotFoundException {
 
         Map<String, String> params = new HashMap<>();
         String sql = " FROM  `t_forum_post` p  where 1=1 ";
-        if (StringUtils.isNotBlank(categoryId)){
-            params.put("category_id", categoryId);
-            sql +=" and p.category_id =:category_id  ";
+        if (StringUtils.isNotBlank(my_category_id)){
+            params.put("my_category_id", my_category_id);
+            sql +=" and p.my_category_id =:my_category_id  ";
         }
 
         if (StringUtils.isNotBlank(titleLike)){
@@ -298,7 +298,6 @@ public class ForumService {
         p.setPageSize(pageSize);
         p.setPageNumber(pageNumber);
         p.recalculatePageCount();
-
         EntityUtils.addDefaultUser(p, TmsCurrentRequest.getContext());
         EntityUtils.setAvatarUrl(p, TmsCurrentRequest.getContext());
         return p;

@@ -55,6 +55,13 @@ public class BlogListWidget extends TagSupport {
         String image1 = getImage1(post);
         String postUrl = ForumUrlUtils.toPostContentHttpURL(postId);
         ForumCategory module = publicCategories.getById(post.getCategoryId());
+
+        if (module == null) {
+            logger.error("publicCategories.getById(post.getCategoryId());  {}", post.toString());
+            return;
+        }
+
+
         String createTime = DateUtil.toPrettyString(post.getCreateTime());
         String ctx = TmsCurrentRequest.getContext();
 
@@ -71,11 +78,11 @@ public class BlogListWidget extends TagSupport {
             image1 = ctx + "/common/images/default-blog-thumb/" + sIndex + ".jpg";
         } else {
 //            image1 = BlogFunctions.toImageW250(image1);
-            image1 = TmsFunctions.toImageThumb(image1,250,90);
+            image1 = TmsFunctions.toImageThumb(image1, 250, 90);
         }
 
 
-        String categoryLink = ctx + "/forum/post-list.shtml?orderBy=new&moduleId="+module.getId();
+        String categoryLink = ctx + "/forum/post-list.shtml?orderBy=new&moduleId=" + module.getId();
 
         String x = "" +
                 "<div class=\"blogs\">\n        " +
@@ -87,7 +94,7 @@ public class BlogListWidget extends TagSupport {
                 "          <p>" + StringUtils.htmlEncode(post.getSummary()) + "</p>\n" +
                 "          <p class=\"autor\">\n" +
                 "               <span class=\"lm f_l\">\n" +
-                "                   <a href=\""+categoryLink+"\">" + module.getName() + "</a>\n" +
+                "                   <a href=\"" + categoryLink + "\">" + module.getName() + "</a>\n" +
                 "               </span>\n" +
                 "               <span class=\"dtime f_l\">" + createTime + "</span>\n" +
                 "               <span class=\"viewnum f_r\">浏览（<a>" + post.getViewCount() + "</a>）</span>\n" +
