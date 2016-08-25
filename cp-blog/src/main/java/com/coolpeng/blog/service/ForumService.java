@@ -268,6 +268,7 @@ public class ForumService {
 
     /**
      *
+     * @param createUserId 用户ID
      * @param my_category_id   可以为null
      * @param pageNumber
      * @param pageSize
@@ -276,7 +277,7 @@ public class ForumService {
      * @throws FieldNotFoundException
      * @throws ClassNotFoundException
      */
-    public PageResult<ForumPost> getPostListByMyCategoryId(String my_category_id, int pageNumber, int pageSize, String titleLike)
+    public PageResult<ForumPost> getPostListByMyCategoryId(String createUserId,String my_category_id, int pageNumber, int pageSize, String titleLike)
             throws FieldNotFoundException, ClassNotFoundException {
 
         Map<String, String> params = new HashMap<>();
@@ -284,6 +285,11 @@ public class ForumService {
         if (StringUtils.isNotBlank(my_category_id)){
             params.put("my_category_id", my_category_id);
             sql +=" and p.my_category_id =:my_category_id  ";
+        }
+
+        if (StringUtils.isNotBlank(createUserId)){
+            params.put("createUserId", createUserId);
+            sql +=" and p.create_user_id =:createUserId  ";
         }
 
         if (StringUtils.isNotBlank(titleLike)){

@@ -89,9 +89,9 @@ public class CloudNoteService {
 
 
     /******************getNoteListByCategory********************/
-    public PageResult<NoteVO>  getNoteListByCategory(String categoryId, int pageSize, int pageNumber,String titleLike) throws ClassNotFoundException, FieldNotFoundException {
+    public PageResult<NoteVO>  getNoteListByCategory(UserEntity user,String categoryId, int pageSize, int pageNumber,String titleLike) throws ClassNotFoundException, FieldNotFoundException {
 
-        PageResult<ForumPost> postPage = forumService.getPostListByMyCategoryId(categoryId, pageNumber, pageSize, titleLike);
+        PageResult<ForumPost> postPage = forumService.getPostListByMyCategoryId(user.getId(),categoryId, pageNumber, pageSize, titleLike);
 
         List<ForumPost> postList = postPage.getPageData();
         List<NoteVO> noteList = new ArrayList<>();

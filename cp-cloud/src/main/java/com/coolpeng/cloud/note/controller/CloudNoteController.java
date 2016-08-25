@@ -83,6 +83,7 @@ public class CloudNoteController extends RestBaseController {
     public TMSResponse getNoteListByCategory(@RequestBody JSONObject jsonObject) throws FieldNotFoundException, ClassNotFoundException {
         ForumCategory categoryVO = null;//jsonObject.getObject("CategoryVO", CategoryVO.class);
 
+        //有可能为null
         String categoryId = jsonObject.getString("categoryId");//c101
         int pageSize = jsonObject.getInteger("pageSize");
         int pageNumber = jsonObject.getInteger("pageNumber");
@@ -91,7 +92,7 @@ public class CloudNoteController extends RestBaseController {
 
         UserEntity user = getCurrentUserIfToken(jsonObject);
 
-        PageResult<NoteVO> pageResult = cloudNoteService.getNoteListByCategory(categoryId, pageSize, pageNumber, titleLike);
+        PageResult<NoteVO> pageResult = cloudNoteService.getNoteListByCategory(user,categoryId, pageSize, pageNumber, titleLike);
         return TMSResponse.successPage(pageResult);
     }
 
