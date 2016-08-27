@@ -42,9 +42,7 @@ public class CloudNoteController extends RestBaseController {
 
         /******************************/
         //判断用户有没有登录，只有登录用户才删除
-        assertIsUserLoginIfToken(jsonObject);
-
-        UserEntity user = getCurrentUserIfToken(jsonObject);
+        UserEntity user = assertIsUserLoginIfToken(jsonObject);
         List<ForumCategory> categoryList = cloudNoteService.getNoteCategory(user.getId());
         return TMSResponse.success(categoryList);
     }
@@ -56,7 +54,7 @@ public class CloudNoteController extends RestBaseController {
         ForumCategory categoryVO = jsonObject.getObject("CategoryVO", ForumCategory.class);  //用户ID,
 
         /******************************/
-        UserEntity user = getCurrentUserIfToken(jsonObject);
+        UserEntity user = assertIsUserLoginIfToken(jsonObject);
         cloudNoteService.saveOrUpdateNoteCategory(categoryVO, user);
         return getNoteCategory(jsonObject);
 
@@ -69,7 +67,7 @@ public class CloudNoteController extends RestBaseController {
         ForumCategory categoryVO = jsonObject.getObject("CategoryVO", ForumCategory.class);  //用户ID,
 
         /******************************/
-        UserEntity user = getCurrentUserIfToken(jsonObject);
+        UserEntity user = assertIsUserLoginIfToken(jsonObject);
         cloudNoteService.deleteNoteCategory(categoryVO, user);
         return getNoteCategory(jsonObject);
     }
@@ -80,7 +78,7 @@ public class CloudNoteController extends RestBaseController {
 
     @ResponseBody
     @RequestMapping({"/getNoteListByCategory"})
-    public TMSResponse getNoteListByCategory(@RequestBody JSONObject jsonObject) throws FieldNotFoundException, ClassNotFoundException {
+    public TMSResponse getNoteListByCategory(@RequestBody JSONObject jsonObject) throws FieldNotFoundException, ClassNotFoundException, TMSMsgException {
         ForumCategory categoryVO = null;//jsonObject.getObject("CategoryVO", CategoryVO.class);
 
         //有可能为null
@@ -89,8 +87,8 @@ public class CloudNoteController extends RestBaseController {
         int pageNumber = jsonObject.getInteger("pageNumber");
         String titleLike = jsonObject.getString("titleLike");
         /******************************/
-
-        UserEntity user = getCurrentUserIfToken(jsonObject);
+        //判断用户有没有登录，只有登录用户才能用
+        UserEntity user = assertIsUserLoginIfToken(jsonObject);
 
         PageResult<NoteVO> pageResult = cloudNoteService.getNoteListByCategory(user,categoryId, pageSize, pageNumber, titleLike);
         return TMSResponse.successPage(pageResult);
@@ -125,12 +123,11 @@ public class CloudNoteController extends RestBaseController {
 
         /******************************/
         //判断用户有没有登录，只有登录用户才能发布
-        assertIsUserLoginIfToken(jsonObject);
+        UserEntity user = assertIsUserLoginIfToken(jsonObject);
 
 
         if (StringUtils.isNotBlank(noteVO.getId())) {
             //只有admin,或者 帖子作者 可以修改
-            UserEntity user = getCurrentUserIfToken(jsonObject);
             if (!user.isAdmin() && !user.getId().equals(noteVO.getCreateUserId())) {
                 throw new TMSMsgException("只有管理员和原作者可以修改");
             }
@@ -158,8 +155,7 @@ public class CloudNoteController extends RestBaseController {
 
         /******************************/
         //判断用户有没有登录，只有登录用户才删除
-        assertIsUserLoginIfToken(jsonObject);
-        UserEntity user = getCurrentUserIfToken(jsonObject);
+        UserEntity user = assertIsUserLoginIfToken(jsonObject);
 
         //只有admin,或者 帖子作者 可以删除
         if (!user.isAdmin() && !user.getId().equals(noteVO.getCreateUserId())) {
@@ -187,9 +183,7 @@ public class CloudNoteController extends RestBaseController {
 
         /******************************/
         //判断用户有没有登录，只有登录用户才能发布
-        assertIsUserLoginIfToken(jsonObject);
-
-        UserEntity user = getCurrentUserIfToken(jsonObject);
+        UserEntity user = assertIsUserLoginIfToken(jsonObject);
 
         if (StringUtils.isNotBlank(noteVO.getId())) {
             //只有admin,或者 帖子作者 可以修改
@@ -220,8 +214,7 @@ public class CloudNoteController extends RestBaseController {
 
         /******************************/
         //判断用户有没有登录，只有登录用户才删除
-        assertIsUserLoginIfToken(jsonObject);
-        UserEntity user = getCurrentUserIfToken(jsonObject);
+        UserEntity user = assertIsUserLoginIfToken(jsonObject);
 
         //只有admin,或者 帖子作者 可以删除
         if (!user.isAdmin() && !user.getId().equals(noteVO.getCreateUserId())) {

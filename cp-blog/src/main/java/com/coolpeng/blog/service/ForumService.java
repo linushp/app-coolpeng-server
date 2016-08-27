@@ -488,11 +488,15 @@ public class ForumService {
             forumPost.setPostTitle(postTitle);
 
             if (StringUtils.isBlank(summary)){
-                summary = StringUtils.maxSize(postContent, 500);
-                summary = HtmlUtil.getTextFromHtml2(summary);
-                if ((!summary.isEmpty()) && (summary.length() > 151)) {
-                    summary = summary.substring(0, 150);
-                    summary = summary + "......";
+                try {
+                    summary = StringUtils.maxSize(postContent, 500);
+                    summary = HtmlUtil.getTextFromHtml2(summary);
+                    if ((!summary.isEmpty()) && (summary.length() > 151)) {
+                        summary = summary.substring(0, 150);
+                        summary = summary + "......";
+                    }
+                }catch (Throwable e){
+                    logger.error("",e);
                 }
             }
 
