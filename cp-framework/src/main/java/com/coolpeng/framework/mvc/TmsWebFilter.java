@@ -15,7 +15,7 @@ public class TmsWebFilter
 
     private static String [] supportSuffixDynamic = {".shtml",".json"};
 
-    private static String [] supportSuffixStatic = {".js",".css",".png",".jpg",".gif",".ico",".txt",".jsp"};
+    private static String [] supportSuffixStatic = {".js",".css",".png",".jpg",".gif",".ico",".txt",".jsp",".html",".htm"};
 
     private static boolean isSupporySuffixDynamic(String uri){
         for (String s:supportSuffixDynamic){
@@ -45,9 +45,8 @@ public class TmsWebFilter
 //            response.getWriter().println("hello");
 //            response.getWriter().flush();
 //            response.getWriter().close();
-//            request.getRequestDispatcher("/index.html").forward(request, response);
-
-            response.sendRedirect("/home.shtml");
+            request.getRequestDispatcher("/index.html").forward(request, response);
+//            response.sendRedirect("/home.shtml");
             return;
         }
 
