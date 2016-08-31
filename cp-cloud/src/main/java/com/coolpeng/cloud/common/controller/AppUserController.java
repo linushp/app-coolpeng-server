@@ -7,6 +7,7 @@ import com.coolpeng.blog.entity.UserEntity;
 import com.coolpeng.framework.db.EntityStatusEnum;
 import com.coolpeng.blog.service.UserService;
 import com.coolpeng.framework.exception.FieldNotFoundException;
+import com.coolpeng.framework.exception.ParameterErrorException;
 import com.coolpeng.framework.exception.TMSMsgException;
 import com.coolpeng.framework.exception.UpdateErrorException;
 import com.coolpeng.framework.mvc.TMSResponse;
@@ -178,7 +179,7 @@ public class AppUserController extends RestBaseController {
      */
     @ResponseBody
     @RequestMapping("/updateUserInfo")
-    public TMSResponse<UserEntity> updateUserInfo(@RequestBody JSONObject jsonObject) throws TMSMsgException, FieldNotFoundException, UpdateErrorException {
+    public TMSResponse<UserEntity> updateUserInfo(@RequestBody JSONObject jsonObject) throws TMSMsgException, FieldNotFoundException, UpdateErrorException, ParameterErrorException {
 
         String id = jsonObject.getString("id");
         Map<String,Object> map = jsonObject.getObject("UserEntity", Map.class);
@@ -192,6 +193,7 @@ public class AppUserController extends RestBaseController {
 
         UserEntity.DAO.updateFields(id,map);
 
+        user = UserEntity.DAO.queryById(id);
         return TMSResponse.success(user);
     }
 

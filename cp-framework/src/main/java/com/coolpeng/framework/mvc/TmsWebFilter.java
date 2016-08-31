@@ -15,7 +15,7 @@ public class TmsWebFilter
 
     private static String [] supportSuffixDynamic = {".shtml",".json"};
 
-    private static String [] supportSuffixStatic = {".js",".css",".png",".jpg",".gif",".ico",".txt",".jsp",".html",".htm"};
+    private static String [] supportSuffixStatic = {".js",".css",".png",".jpg",".gif",".ico",".txt",".jsp",".html",".htm",".eot",".svg",".ttf",".woff"};
 
     private static boolean isSupporySuffixDynamic(String uri){
         for (String s:supportSuffixDynamic){
