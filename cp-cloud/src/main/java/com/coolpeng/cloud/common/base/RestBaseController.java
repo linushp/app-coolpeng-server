@@ -3,6 +3,9 @@ package com.coolpeng.cloud.common.base;
 import com.alibaba.fastjson.JSONObject;
 import com.coolpeng.blog.entity.UserEntity;
 import com.coolpeng.blog.service.UserService;
+import com.coolpeng.cloud.common.exception.OperationFrequencyException;
+import com.coolpeng.cloud.common.exception.PermissionException;
+import com.coolpeng.cloud.common.exception.UserNoLoginException;
 import com.coolpeng.framework.exception.FieldNotFoundException;
 import com.coolpeng.framework.exception.TMSMsgException;
 import com.coolpeng.framework.mvc.TmsCurrentRequest;
@@ -48,7 +51,7 @@ public class RestBaseController {
         Long lastTime = (Long) this.getSessionAttribute(key);
         if (lastTime != null) {
             if (System.currentTimeMillis() - lastTime < timeLimit) {
-                throw new TMSMsgException("操作太频繁，请休息一下吧");
+                throw new OperationFrequencyException("操作太频繁，请休息一下吧");
             }
         }
         this.setSessionAttribute(key, System.currentTimeMillis());
@@ -73,7 +76,7 @@ public class RestBaseController {
                 user = userService.getUserEntityByTokenId(reqUser.getTokenId(), reqUser.getDevicePlatform(), reqUser.getUuid());
             } catch (Throwable e) {
                 e.printStackTrace();
-                throw new TMSMsgException("用户查询失败");
+                throw new UserNoLoginException("用户查询失败");
             }
             if (user != null) {
                 setSessionLoginUser(user);
@@ -91,7 +94,7 @@ public class RestBaseController {
                     user = userService.getUserEntityByTokenId(reqUser.getTokenId(), reqUser.getDevicePlatform(), reqUser.getUuid());
                 } catch (Throwable e) {
                     e.printStackTrace();
-                    throw new TMSMsgException("用户查询失败");
+                    throw new UserNoLoginException("用户查询失败");
                 }
                 if (user != null) {
                     setSessionLoginUser(user);
@@ -102,7 +105,7 @@ public class RestBaseController {
         }
 
         if (user == null) {
-            throw new TMSMsgException("用户没有登录,请先登录");
+            throw new UserNoLoginException("用户没有登录,请先登录");
         }
 
         return user;
@@ -129,7 +132,7 @@ public class RestBaseController {
     public UserEntity assertIsAdmin(JSONObject jsonObject) throws TMSMsgException {
         UserEntity user = assertIsUserLoginIfToken(jsonObject);
         if (!user.isAdmin()) {
-            throw new TMSMsgException("您不是管理员");
+            throw new PermissionException("您不是管理员");
         }
         return user;
     }

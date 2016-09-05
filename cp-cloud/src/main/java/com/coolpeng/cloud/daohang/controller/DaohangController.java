@@ -69,7 +69,8 @@ public class DaohangController extends RestBaseController {
 
     @ResponseBody
     @RequestMapping({"/deleteDhCategory"})
-    public TMSResponse deleteDhCategory(@RequestBody JSONObject jsonObject) throws UpdateErrorException {
+    public TMSResponse deleteDhCategory(@RequestBody JSONObject jsonObject) throws UpdateErrorException, TMSMsgException {
+        assertIsAdmin(jsonObject);
         String id = jsonObject.getString("id");
         daohangService.deleteDhCategory(id);
         return TMSResponse.success();
@@ -78,7 +79,9 @@ public class DaohangController extends RestBaseController {
 
     @ResponseBody
     @RequestMapping({"/deleteDhItem"})
-    public TMSResponse deleteDhItem(@RequestBody JSONObject jsonObject){
+    public TMSResponse deleteDhItem(@RequestBody JSONObject jsonObject) throws TMSMsgException {
+        assertIsAdmin(jsonObject);
+
         String id = jsonObject.getString("id");
         daohangService.deleteDhItem(id);
         return TMSResponse.success();

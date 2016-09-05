@@ -72,9 +72,11 @@ public class ExceptionHandler implements HandlerExceptionResolver {
 
             int errorCode = tmsMessageException.getErrorCode();
             String message = tmsMessageException.getMessage();
+            String desc = tmsMessageException.getDesc();
 
             modelMap.addAttribute("responseCode", errorCode);
             modelMap.addAttribute("responseText", message);
+            modelMap.addAttribute("responseDesc", desc);
 
         } else {
             isShowExceptionStack = true;
@@ -91,16 +93,14 @@ public class ExceptionHandler implements HandlerExceptionResolver {
                 logger.error(stackTrace);
 
             } else {
-
                 modelMap.addAttribute("responseCode", 10000);
                 modelMap.addAttribute("responseText", "系统内部错误");
                 logger.error("", ex);
                 ex.printStackTrace();
-
             }
 
+            modelMap.addAttribute("responseDesc", ex.getClass().getSimpleName());
         }
-
 
         return mv;
     }

@@ -9,6 +9,8 @@ public class TMSMsgException extends Exception {
 
     private String message;
 
+    private String desc = "TMSMsgException";
+
     public TMSMsgException(String message) {
         this.message = message;
     }
@@ -16,6 +18,11 @@ public class TMSMsgException extends Exception {
     public TMSMsgException(String message, int errorCode) {
         this.message = message;
         this.errorCode = errorCode;
+    }
+    public TMSMsgException(String message, int errorCode,String desc) {
+        this.message = message;
+        this.errorCode = errorCode;
+        this.desc = desc;
     }
 
     public int getErrorCode() {
@@ -33,5 +40,13 @@ public class TMSMsgException extends Exception {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
     }
 }
