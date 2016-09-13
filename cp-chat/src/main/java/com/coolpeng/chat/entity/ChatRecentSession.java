@@ -9,6 +9,20 @@ import java.util.List;
 
 /**
  * Created by Administrator on 2016/9/10.
+ *
+ CREATE TABLE `t_chat_recent_session` (
+ `id` int(11) NOT NULL AUTO_INCREMENT,
+ `create_time` varchar(256) DEFAULT NULL,
+ `update_time` varchar(256) DEFAULT NULL,
+ `create_user_id` varchar(256) DEFAULT NULL,
+ `update_user_id` varchar(256) DEFAULT NULL,
+ `status` int(11) DEFAULT '0',
+
+ `owner_uid` varchar(256) DEFAULT NULL,
+ `recent_session_ids` varchar(2000) DEFAULT NULL,
+ PRIMARY KEY (`id`)
+ ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
  */
 public class ChatRecentSession extends BlogBaseEntity {
 
