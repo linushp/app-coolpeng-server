@@ -2,10 +2,9 @@ package com.coolpeng.cloud.note.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.coolpeng.blog.entity.ForumCategory;
-import com.coolpeng.blog.entity.ForumPost;
 import com.coolpeng.blog.entity.ForumPostReply;
 import com.coolpeng.blog.entity.UserEntity;
-import com.coolpeng.cloud.common.base.RestBaseController;
+import com.coolpeng.appbase.RestBaseController;
 import com.coolpeng.cloud.note.service.CloudNoteService;
 import com.coolpeng.cloud.note.vo.NoteVO;
 import com.coolpeng.framework.db.PageResult;
@@ -19,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.lang.reflect.InvocationTargetException;

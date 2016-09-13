@@ -15,6 +15,8 @@ public class TmsWebFilter
 
     private static String [] supportSuffixDynamic = {".shtml",".json"};
 
+    private static String [] supportSuffixWebsocket = {".websocket",".socket"};
+
     private static String [] supportSuffixStatic = {".js",".css",".png",".jpg",".gif",".ico",".txt",".jsp",".html",".htm",".eot",".svg",".ttf",".woff"};
 
     private static boolean isSupporySuffixDynamic(String uri){
@@ -35,24 +37,32 @@ public class TmsWebFilter
         return false;
     }
 
+    private static boolean isSupporySuffixWebsocket(String uri){
+        for (String s:supportSuffixWebsocket){
+            if (uri.endsWith(s)){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
             throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response  = (HttpServletResponse)res;
 
         String uri = request.getRequestURI();
-        if (!isSupporySuffixDynamic(uri) && !isSupporySuffixStatic(uri)){
-//            response.getWriter().println("hello");
-//            response.getWriter().flush();
-//            response.getWriter().close();
-            request.getRequestDispatcher("/index.html").forward(request, response);
-//            response.sendRedirect("/home.shtml");
-            return;
-        }
+
 
 
         //js css png jpeg 等文件
         if (isSupporySuffixStatic(uri)){
+            chain.doFilter(request, res);
+            return;
+        }
+
+        //websocket
+        if (isSupporySuffixWebsocket(uri)){
             chain.doFilter(request, res);
             return;
         }
@@ -81,6 +91,16 @@ public class TmsWebFilter
 
             chain.doFilter(request, res);
 
+            return;
+        }
+
+
+        if (!isSupporySuffixDynamic(uri) && !isSupporySuffixStatic(uri)){
+//            response.getWriter().println("hello");
+//            response.getWriter().flush();
+//            response.getWriter().close();
+            request.getRequestDispatcher("/index.html").forward(request, response);
+//            response.sendRedirect("/home.shtml");
             return;
         }
 

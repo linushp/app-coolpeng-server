@@ -36,6 +36,15 @@ public class SimpleDAO<T> {
         return queryForList(sql, null);
     }
 
+    public T findObjectBy(String key, Object value) throws FieldNotFoundException {
+        List<T> objList = findBy(key, value);
+        if (objList == null || objList.isEmpty()) {
+            return null;
+        }
+        return objList.get(0);
+    }
+
+
     public List<T> findBy(String key, Object value) throws FieldNotFoundException {
         Map<String, Object> params = new HashMap<>();
         params.put(key, value);

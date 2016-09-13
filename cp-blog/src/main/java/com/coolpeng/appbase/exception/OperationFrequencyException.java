@@ -1,4 +1,4 @@
-package com.coolpeng.cloud.common.exception;
+package com.coolpeng.appbase.exception;
 
 import com.coolpeng.framework.exception.TMSMsgException;
 

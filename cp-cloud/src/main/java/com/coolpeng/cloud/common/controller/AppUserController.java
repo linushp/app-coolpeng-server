@@ -1,8 +1,8 @@
 package com.coolpeng.cloud.common.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.coolpeng.cloud.common.base.RestBaseController;
-import com.coolpeng.cloud.common.base.ReqParams;
+import com.coolpeng.appbase.RestBaseController;
+import com.coolpeng.appbase.ReqParams;
 import com.coolpeng.blog.entity.UserEntity;
 import com.coolpeng.framework.db.EntityStatusEnum;
 import com.coolpeng.blog.service.UserService;
@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 

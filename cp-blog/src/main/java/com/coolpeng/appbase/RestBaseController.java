@@ -1,12 +1,11 @@
-package com.coolpeng.cloud.common.base;
+package com.coolpeng.appbase;
 
 import com.alibaba.fastjson.JSONObject;
 import com.coolpeng.blog.entity.UserEntity;
 import com.coolpeng.blog.service.UserService;
-import com.coolpeng.cloud.common.exception.OperationFrequencyException;
-import com.coolpeng.cloud.common.exception.PermissionException;
-import com.coolpeng.cloud.common.exception.UserNoLoginException;
-import com.coolpeng.framework.exception.FieldNotFoundException;
+import com.coolpeng.appbase.exception.OperationFrequencyException;
+import com.coolpeng.appbase.exception.PermissionException;
+import com.coolpeng.appbase.exception.UserNoLoginException;
 import com.coolpeng.framework.exception.TMSMsgException;
 import com.coolpeng.framework.mvc.TmsCurrentRequest;
 import com.coolpeng.framework.utils.ServiceUtils;

@@ -1,7 +1,7 @@
 package com.coolpeng.cloud.reply.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.coolpeng.cloud.common.base.RestBaseController;
+import com.coolpeng.appbase.RestBaseController;
 import com.coolpeng.cloud.reply.entity.CloudReply;
 import com.coolpeng.cloud.reply.entity.CloudReplyPage;
 import com.coolpeng.cloud.reply.service.CloudReplyService;

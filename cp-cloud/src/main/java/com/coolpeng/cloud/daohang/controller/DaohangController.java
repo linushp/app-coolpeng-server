@@ -1,7 +1,7 @@
 package com.coolpeng.cloud.daohang.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.coolpeng.cloud.common.base.RestBaseController;
+import com.coolpeng.appbase.RestBaseController;
 import com.coolpeng.cloud.daohang.entity.DhCategory;
 import com.coolpeng.cloud.daohang.entity.DhItem;
 import com.coolpeng.cloud.daohang.service.DaohangService;
@@ -9,7 +9,6 @@ import com.coolpeng.framework.exception.FieldNotFoundException;
 import com.coolpeng.framework.exception.TMSMsgException;
 import com.coolpeng.framework.exception.UpdateErrorException;
 import com.coolpeng.framework.mvc.TMSResponse;
-import com.coolpeng.framework.utils.CollectionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by luanhaipeng on 16/8/3.

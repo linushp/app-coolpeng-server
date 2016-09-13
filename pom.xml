@@ -14,6 +14,7 @@
         <module>cp-framework</module>
         <module>cp-blog</module>
         <module>cp-cloud</module>
+        <module>cp-chat</module>
         <module>cp-web</module>
     </modules>
 
@@ -131,7 +132,7 @@
                     <useTestClasspath>true</useTestClasspath>
 
                     <!--<war>main/target/${project.artifactId}</war>-->
-                    <classesDirectory>cp-framework/target/classes/, cp-blog/target/classes/,cp-cloud/target/classes/,cp-web/target/classes/
+                    <classesDirectory>cp-framework/target/classes/, cp-blog/target/classes/,cp-cloud/target/classes/,cp-chat/target/classes/,cp-web/target/classes/
                     </classesDirectory>
 
                     <webAppSourceDirectory>cp-web/src/main/webapp</webAppSourceDirectory>
@@ -283,8 +284,17 @@
             <artifactId>spring-orm</artifactId>
             <version>${spring.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-websocket</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
 
-
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-messaging</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>c3p0</groupId>
