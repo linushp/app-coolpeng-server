@@ -25,7 +25,7 @@ public class RecentSessionService {
             return sessionVOList;
         }
 
-        List<String> recentIdList = userRecentSession.getRecentIdList();
+        List<String> recentIdList = userRecentSession.getRecentSessionIds();
         Map<String, ChatSessionVO> map = CollectionUtil.toMap(sessionVOList, "sessionId");
         Set<String> hashSet = new HashSet<>();
         List<ChatSessionVO> result = new ArrayList<>();
@@ -52,7 +52,7 @@ public class RecentSessionService {
             userRecentSession = new ChatRecentSession(user.getId());
         }
 
-        List<String> recentList = userRecentSession.getRecentIdList();
+        List<String> recentList = userRecentSession.getRecentSessionIds();
         recentList = removeElement(recentList, sessionId);
         recentList.add(sessionId);
 
@@ -62,7 +62,7 @@ public class RecentSessionService {
             recentList = linkedList;
         }
 
-        userRecentSession.setRecentIdList(recentList);
+        userRecentSession.setRecentSessionIds(recentList);
         ChatRecentSession.DAO.insertOrUpdate(userRecentSession);
     }
 

@@ -17,7 +17,7 @@ public class ChatRecentSession extends BlogBaseEntity {
     private String ownerUid;
 
     @FieldDef(jsonColumn = {List.class, String.class})
-    private List<String> recentIdList = new ArrayList<>();
+    private List<String> recentSessionIds = new ArrayList<>();
 
 
     public ChatRecentSession(String ownerUid) {
@@ -35,14 +35,14 @@ public class ChatRecentSession extends BlogBaseEntity {
         this.ownerUid = ownerUid;
     }
 
-    public List<String> getRecentIdList() {
-        if (recentIdList == null) {
-            recentIdList = new ArrayList<>();
+    public List<String> getRecentSessionIds() {
+        if (recentSessionIds==null){
+            recentSessionIds = new ArrayList<>();
         }
-        return recentIdList;
+        return recentSessionIds;
     }
 
-    public void setRecentIdList(List<String> recentIdList) {
-        this.recentIdList = recentIdList;
+    public void setRecentSessionIds(List<String> recentSessionIds) {
+        this.recentSessionIds = recentSessionIds;
     }
 }
