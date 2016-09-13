@@ -1,7 +1,7 @@
 package com.coolpeng.chat.service;
 
 import com.coolpeng.blog.entity.UserEntity;
-import com.coolpeng.chat.entity.UserRecentSession;
+import com.coolpeng.chat.entity.ChatRecentSession;
 import com.coolpeng.chat.model.ChatSessionVO;
 import com.coolpeng.framework.exception.FieldNotFoundException;
 import com.coolpeng.framework.exception.UpdateErrorException;
@@ -20,7 +20,7 @@ public class RecentSessionService {
     private static final int MAX_RECENT_SIZE = 20;
 
     public List<ChatSessionVO> sortSessionByRecent(List<ChatSessionVO> sessionVOList, UserEntity user) throws FieldNotFoundException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-        UserRecentSession userRecentSession = getUserRecentSession(user.getId());
+        ChatRecentSession userRecentSession = getUserRecentSession(user.getId());
         if (userRecentSession == null) {
             return sessionVOList;
         }
@@ -47,12 +47,13 @@ public class RecentSessionService {
     }
 
     public void saveRecentSession(String sessionId, UserEntity user) throws FieldNotFoundException, UpdateErrorException {
-        UserRecentSession userRecentSession = getUserRecentSession(user.getId());
+        ChatRecentSession userRecentSession = getUserRecentSession(user.getId());
         if (userRecentSession == null) {
-            userRecentSession = new UserRecentSession(user.getId());
+            userRecentSession = new ChatRecentSession(user.getId());
         }
 
         List<String> recentList = userRecentSession.getRecentIdList();
+        recentList = removeElement(recentList, sessionId);
         recentList.add(sessionId);
 
         if (recentList.size()> MAX_RECENT_SIZE){
@@ -62,11 +63,21 @@ public class RecentSessionService {
         }
 
         userRecentSession.setRecentIdList(recentList);
-        UserRecentSession.DAO.insertOrUpdate(userRecentSession);
+        ChatRecentSession.DAO.insertOrUpdate(userRecentSession);
+    }
+
+    private List<String> removeElement(List<String> recentList, String sessionId) {
+        List<String> result = new ArrayList<>();
+        for (String s:recentList){
+            if(!sessionId.equals(s)){
+                result.add(s);
+            }
+        }
+        return result;
     }
 
 
-    private UserRecentSession getUserRecentSession(String uid) throws FieldNotFoundException {
-        return UserRecentSession.DAO.findObjectBy("ownerUid",uid);
+    private ChatRecentSession getUserRecentSession(String uid) throws FieldNotFoundException {
+        return ChatRecentSession.DAO.findObjectBy("ownerUid",uid);
     }
 }

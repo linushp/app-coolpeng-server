@@ -10,9 +10,9 @@ import java.util.List;
 /**
  * Created by Administrator on 2016/9/10.
  */
-public class UserRecentSession extends BlogBaseEntity {
+public class ChatRecentSession extends BlogBaseEntity {
 
-    public static final SimpleDAO<UserRecentSession> DAO = new SimpleDAO(UserRecentSession.class);
+    public static final SimpleDAO<ChatRecentSession> DAO = new SimpleDAO(ChatRecentSession.class);
 
     private String ownerUid;
 
@@ -20,11 +20,11 @@ public class UserRecentSession extends BlogBaseEntity {
     private List<String> recentIdList = new ArrayList<>();
 
 
-    public UserRecentSession(String ownerUid) {
+    public ChatRecentSession(String ownerUid) {
         this.ownerUid = ownerUid;
     }
 
-    public UserRecentSession() {
+    public ChatRecentSession() {
     }
 
     public String getOwnerUid() {
@@ -36,7 +36,7 @@ public class UserRecentSession extends BlogBaseEntity {
     }
 
     public List<String> getRecentIdList() {
-        if (recentIdList==null){
+        if (recentIdList == null) {
             recentIdList = new ArrayList<>();
         }
         return recentIdList;
