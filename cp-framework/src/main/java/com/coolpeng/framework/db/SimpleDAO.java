@@ -37,7 +37,7 @@ public class SimpleDAO<T> {
     }
 
     public T findObjectBy(String key, Object value) throws FieldNotFoundException {
-        List<T> objList = findBy(key, value);
+        List<T> objList = findListBy(key, value);
         if (objList == null || objList.isEmpty()) {
             return null;
         }
@@ -45,13 +45,13 @@ public class SimpleDAO<T> {
     }
 
 
-    public List<T> findBy(String key, Object value) throws FieldNotFoundException {
+    public List<T> findListBy(String key, Object value) throws FieldNotFoundException {
         Map<String, Object> params = new HashMap<>();
         params.put(key, value);
         return queryForList(params);
     }
 
-    public List<T> findBy(String key1, Object value1, String key2, Object value2) throws FieldNotFoundException {
+    public List<T> findListBy(String key1, Object value1, String key2, Object value2) throws FieldNotFoundException {
         Map<String, Object> params = new HashMap<>();
         params.put(key1, value1);
         params.put(key2, value2);

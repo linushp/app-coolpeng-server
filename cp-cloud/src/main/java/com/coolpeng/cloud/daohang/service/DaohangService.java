@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 /**
@@ -53,8 +52,8 @@ public class DaohangService {
 
     public List<DhCategory> getCategoryList(Integer type) throws IllegalAccessException, FieldNotFoundException {
 
-        List<DhCategory> categoryList = DhCategory.DAO.findBy(FIELD_TYPE, type);
-        List<DhItem> itemList = DhItem.DAO.findBy(FIELD_TYPE, type);
+        List<DhCategory> categoryList = DhCategory.DAO.findListBy(FIELD_TYPE, type);
+        List<DhItem> itemList = DhItem.DAO.findListBy(FIELD_TYPE, type);
 
 
         Map<Object, List<DhItem>> itemMap = CollectionUtil.groupBy(itemList, FIELD_CATEGORY_ID);
