@@ -4,15 +4,17 @@ import com.coolpeng.chat.model.ChatMsgVO;
 import com.coolpeng.framework.event.TMSEvent;
 
 /**
- * Created by Administrator on 2016/9/10.
+ * Created by Administrator on 2016/9/15.
  */
-public class PublicMsgEvent extends TMSEvent {
-    private ChatMsgVO chatMsgVO;
-    private String sessionId;
+public class PeerMsgEvent extends TMSEvent  {
 
-    public PublicMsgEvent(ChatMsgVO chatMsgVO,String sessionId) {
+    private ChatMsgVO chatMsgVO;
+
+    private String receiveUserId;
+
+    public PeerMsgEvent(ChatMsgVO chatMsgVO, String receiveUserId) {
         this.chatMsgVO = chatMsgVO;
-        this.sessionId = sessionId;
+        this.receiveUserId = receiveUserId;
         this.setName(this.getClass().getSimpleName());
     }
 
@@ -24,11 +26,11 @@ public class PublicMsgEvent extends TMSEvent {
         this.chatMsgVO = chatMsgVO;
     }
 
-    public String getSessionId() {
-        return sessionId;
+    public String getReceiveUserId() {
+        return receiveUserId;
     }
 
-    public void setSessionId(String sessionId) {
-        this.sessionId = sessionId;
+    public void setReceiveUserId(String receiveUserId) {
+        this.receiveUserId = receiveUserId;
     }
 }

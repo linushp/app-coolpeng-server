@@ -1,6 +1,7 @@
 package com.coolpeng.chat.model;
 
 import com.coolpeng.blog.entity.UserEntity;
+import com.coolpeng.chat.service.UniqueId;
 import com.coolpeng.framework.utils.DateUtil;
 
 /**
@@ -8,27 +9,28 @@ import com.coolpeng.framework.utils.DateUtil;
  */
 public class ChatMsgVO {
 
-    private UserEntity sendUser;
+    private String msgId;
+    private ChatUserVO sendUser;
     private String msg;
     private String createTime;
     private Long createTimeMillis;
 
-    public ChatMsgVO() {
-    }
-
     public ChatMsgVO(UserEntity sendUser, String msg) {
-        this.sendUser = new UserEntity(sendUser);
-        this.sendUser.setPassword(null);
+        this.sendUser = new ChatUserVO(sendUser);
         this.msg = msg;
         this.createTime = DateUtil.currentTimeFormat();
         this.createTimeMillis = System.currentTimeMillis();
+        this.msgId = UniqueId.getOne();
     }
 
-    public UserEntity getSendUser() {
+    public ChatMsgVO() {
+    }
+
+    public ChatUserVO getSendUser() {
         return sendUser;
     }
 
-    public void setSendUser(UserEntity sendUser) {
+    public void setSendUser(ChatUserVO sendUser) {
         this.sendUser = sendUser;
     }
 
@@ -54,5 +56,13 @@ public class ChatMsgVO {
 
     public void setCreateTimeMillis(Long createTimeMillis) {
         this.createTimeMillis = createTimeMillis;
+    }
+
+    public String getMsgId() {
+        return msgId;
+    }
+
+    public void setMsgId(String msgId) {
+        this.msgId = msgId;
     }
 }

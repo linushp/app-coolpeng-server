@@ -44,16 +44,7 @@ public class TMSEventBus {
         for (TMSEventListener listener : listeners) {
             if (listener != null) {
                 try {
-
-                    Class c = getEventClazz(listener);
-                    if (c!=null){
-                        if (event.getClass().equals(c)){
-                            listener.onEvent(event);
-                        }
-                    }else {
-                        listener.onEvent(event);
-                    }
-
+                    listener.onEvent(event);
                 }catch (Throwable e){
                     //一个事件监听器报错了，让其不影响其他监听器
                     logger.error("",e);
@@ -63,16 +54,7 @@ public class TMSEventBus {
     }
 
 
-    private static Class getEventClazz(TMSEventListener listener){
-        Class entityClass = null;
-        Type t = listener.getClass().getGenericSuperclass();
-//        t.getTypeName();
-        if(t instanceof ParameterizedType){
-            Type[] p = ((ParameterizedType)t).getActualTypeArguments();
-            entityClass = (Class)p[0];
-        }
-        return entityClass;
-    }
+
 
     private static String getListenerName(TMSEventListener listener) {
         String listenerName = listener.getName();

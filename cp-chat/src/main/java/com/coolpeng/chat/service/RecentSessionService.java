@@ -19,56 +19,30 @@ public class RecentSessionService {
 
     private static final int MAX_RECENT_SIZE = 20;
 
-    public List<ChatSessionVO> sortSessionByRecent(List<ChatSessionVO> sessionVOList, UserEntity user) throws FieldNotFoundException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-        ChatRecentSession userRecentSession = getUserRecentSession(user.getId());
-        if (userRecentSession == null) {
-            return sessionVOList;
-        }
 
-        List<String> recentIdList = userRecentSession.getRecentSessionIds();
-        Map<String, ChatSessionVO> map = CollectionUtil.toMap(sessionVOList, "sessionId");
-        Set<String> hashSet = new HashSet<>();
-        List<ChatSessionVO> result = new ArrayList<>();
-        for (String sessionId : recentIdList) {
-            ChatSessionVO vo = map.get(sessionId);
-            if (vo != null) {
-                result.add(vo);
-                hashSet.add(sessionId);
-            }
-        }
-
-        for (ChatSessionVO sessionVO : sessionVOList) {
-            if (!hashSet.contains(sessionVO.getSessionId())) {
-                result.add(sessionVO);
-            }
-        }
-        return result;
-
-    }
-
-    public void saveRecentSession(String sessionId, UserEntity user) throws FieldNotFoundException, UpdateErrorException {
+    public void saveRecentSession(ChatSessionVO sessionVO, UserEntity user) throws FieldNotFoundException, UpdateErrorException {
         ChatRecentSession userRecentSession = getUserRecentSession(user.getId());
         if (userRecentSession == null) {
             userRecentSession = new ChatRecentSession(user.getId());
         }
 
-        List<String> recentList = userRecentSession.getRecentSessionIds();
-        recentList = removeElement(recentList, sessionId);
-        recentList.add(sessionId);
+        List<ChatSessionVO> recentList = userRecentSession.getRecentSessions();
+        recentList = removeElement(recentList, sessionVO);
+        recentList.add(sessionVO);
 
         if (recentList.size()> MAX_RECENT_SIZE){
-            LinkedList<String> linkedList = new LinkedList(recentList);
+            LinkedList<ChatSessionVO> linkedList = new LinkedList(recentList);
             linkedList.removeFirst();
             recentList = linkedList;
         }
 
-        userRecentSession.setRecentSessionIds(recentList);
+        userRecentSession.setRecentSessions(recentList);
         ChatRecentSession.DAO.insertOrUpdate(userRecentSession);
     }
 
-    private List<String> removeElement(List<String> recentList, String sessionId) {
-        List<String> result = new ArrayList<>();
-        for (String s:recentList){
+    private List<ChatSessionVO> removeElement( List<ChatSessionVO> recentList, ChatSessionVO sessionId) {
+        List<ChatSessionVO> result = new ArrayList<>();
+        for (ChatSessionVO s:recentList){
             if(!sessionId.equals(s)){
                 result.add(s);
             }
@@ -79,5 +53,28 @@ public class RecentSessionService {
 
     private ChatRecentSession getUserRecentSession(String uid) throws FieldNotFoundException {
         return ChatRecentSession.DAO.findObjectBy("ownerUid",uid);
+    }
+
+
+    public List<ChatSessionVO> getRecentChatSessionVOList(UserEntity user) throws FieldNotFoundException {
+        ChatRecentSession userRecentSession = getUserRecentSession(user.getId());
+        if (userRecentSession == null) {
+            userRecentSession = new ChatRecentSession(user.getId());
+        }
+
+        List<ChatSessionVO> recentSessions = userRecentSession.getRecentSessions();
+        ChatSessionVO m1 = new ChatSessionVO(ChatSessionVO.TYPE_PUBLIC, "1", "公共频道");
+        ChatSessionVO m2 = new ChatSessionVO(ChatSessionVO.TYPE_PUBLIC, "2", "技术灌水");
+
+        if (!recentSessions.contains(m1)){
+            recentSessions.add(m1);
+        }
+
+        if (!recentSessions.contains(m2)){
+            recentSessions.add(m2);
+        }
+
+        return recentSessions;
+
     }
 }

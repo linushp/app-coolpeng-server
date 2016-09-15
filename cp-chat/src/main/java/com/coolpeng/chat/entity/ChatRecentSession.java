@@ -1,6 +1,8 @@
 package com.coolpeng.chat.entity;
 
 import com.coolpeng.blog.entity.base.BlogBaseEntity;
+import com.coolpeng.chat.model.ChatSessionVO;
+import com.coolpeng.framework.db.BaseEntity;
 import com.coolpeng.framework.db.SimpleDAO;
 import com.coolpeng.framework.db.annotation.FieldDef;
 
@@ -24,14 +26,14 @@ import java.util.List;
  ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
  */
-public class ChatRecentSession extends BlogBaseEntity {
+public class ChatRecentSession extends BaseEntity {
 
     public static final SimpleDAO<ChatRecentSession> DAO = new SimpleDAO(ChatRecentSession.class);
 
     private String ownerUid;
 
-    @FieldDef(jsonColumn = {List.class, String.class})
-    private List<String> recentSessionIds = new ArrayList<>();
+    @FieldDef(jsonColumn = {List.class, ChatSessionVO.class})
+    private List<ChatSessionVO> recentSessions = new ArrayList<>();
 
 
     public ChatRecentSession(String ownerUid) {
@@ -49,14 +51,14 @@ public class ChatRecentSession extends BlogBaseEntity {
         this.ownerUid = ownerUid;
     }
 
-    public List<String> getRecentSessionIds() {
-        if (recentSessionIds==null){
-            recentSessionIds = new ArrayList<>();
+    public List<ChatSessionVO> getRecentSessions() {
+        if (recentSessions==null){
+            recentSessions = new ArrayList<>();
         }
-        return recentSessionIds;
+        return recentSessions;
     }
 
-    public void setRecentSessionIds(List<String> recentSessionIds) {
-        this.recentSessionIds = recentSessionIds;
+    public void setRecentSessions(List<ChatSessionVO> recentSessions) {
+        this.recentSessions = recentSessions;
     }
 }

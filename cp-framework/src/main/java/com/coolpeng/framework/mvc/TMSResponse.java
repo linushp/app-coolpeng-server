@@ -160,11 +160,12 @@ public class TMSResponse<T> {
         this.extendData = extendData;
     }
 
-    public void addExtendData(String key, Object value) {
+    public TMSResponse addExtendData(String key, Object value) {
         if (this.extendData == null) {
             this.extendData = new HashMap<>();
         }
         this.extendData.put(key, value);
+        return this;
     }
 
 }
