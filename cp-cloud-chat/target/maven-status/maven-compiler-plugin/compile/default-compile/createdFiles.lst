@@ -1,7 +1,9 @@
 com\coolpeng\chat\entity\ChatRecentSession.class
+com\coolpeng\chat\service\RecentSessionService$1.class
 com\coolpeng\chat\websocket\event\init\EventListenerInit.class
 com\coolpeng\chat\websocket\event\listener\PublicMsgEventListener.class
 com\coolpeng\chat\model\ChatMsgVO.class
+com\coolpeng\chat\utils\AsynDaoUtils.class
 com\coolpeng\chat\websocket\event\listener\PeerMsgEventListener.class
 com\coolpeng\chat\entity\ChatPeerSession.class
 com\coolpeng\chat\model\ChatSessionVO.class

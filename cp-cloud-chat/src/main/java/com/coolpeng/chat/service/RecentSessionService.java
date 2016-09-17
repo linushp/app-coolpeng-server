@@ -1,13 +1,23 @@
 package com.coolpeng.chat.service;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.coolpeng.blog.entity.UserEntity;
 import com.coolpeng.chat.entity.ChatRecentSession;
 import com.coolpeng.chat.model.ChatSessionVO;
 import com.coolpeng.framework.exception.FieldNotFoundException;
 import com.coolpeng.framework.exception.UpdateErrorException;
+import com.coolpeng.framework.qtask.QueueTask;
+import com.coolpeng.framework.qtask.QueueTaskRunner;
 import com.coolpeng.framework.utils.CollectionUtil;
+import com.coolpeng.framework.utils.RESTUtils;
+import com.coolpeng.framework.utils.StringUtils;
+import com.coolpeng.framework.utils.ipaddr.IPAddrResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
@@ -17,10 +27,26 @@ import java.util.*;
 @Service
 public class RecentSessionService {
 
+    private static final Logger logger = LoggerFactory.getLogger(RecentSessionService.class);
     private static final int MAX_RECENT_SIZE = 20;
 
+    private static QueueTaskRunner queueTaskRunner = new QueueTaskRunner();
 
-    public void saveRecentSession(ChatSessionVO sessionVO, UserEntity user,String msg) throws FieldNotFoundException, UpdateErrorException {
+    public void saveRecentSession(final ChatSessionVO sessionVO, final UserEntity user, final String msg) throws Exception {
+        queueTaskRunner.addTask(new QueueTask() {
+            @Override
+            public void runTask() {
+                try {
+                    doSaveRecentSession(sessionVO,user,msg);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    logger.error("",e);
+                }
+            }
+        });
+    }
+
+    private void doSaveRecentSession(ChatSessionVO sessionVO, UserEntity user,String msg) throws Exception {
         ChatRecentSession userRecentSession = getUserRecentSession(user.getId());
         if (userRecentSession == null) {
             userRecentSession = new ChatRecentSession(user.getId());

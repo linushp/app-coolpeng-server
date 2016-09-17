@@ -14,9 +14,11 @@ import java.io.IOException;
  */
 public class IPAddrParse {
 
+    private static QueueTaskRunner queueTaskRunner = new QueueTaskRunner();
+
     public static void parseIpAddr(final String ipAddr,final IPAddrCallback ipAddrCallback){
 
-        QueueTaskRunner.addTask(new QueueTask() {
+        queueTaskRunner.addTask(new QueueTask() {
             @Override
             public void runTask() {
 

@@ -80,6 +80,7 @@ public class ChatController extends RestBaseController {
     @ResponseBody
     @RequestMapping({"/sendMessage"})
     public TMSResponse sendMessage(@RequestBody JSONObject jsonObject) throws Exception {
+
         ChatSessionVO sessionVO = jsonObject.getObject("sessionVO", ChatSessionVO.class);
         String msg = jsonObject.getString("msg");
         boolean refreshRecent = jsonObject.getBoolean("refreshRecent");
@@ -93,7 +94,6 @@ public class ChatController extends RestBaseController {
         IChatMsgService chatMsgService = getChatMsgService(sessionVO.getSessionType());
         TMSEvent event = chatMsgService.saveMessage(user, msg, sessionVO);
         TMSEventBus.sendEvent(event);
-
         return TMSResponse.success().addExtendData("sessionVO",sessionVO);
     }
 

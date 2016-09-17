@@ -8,13 +8,20 @@ import java.util.concurrent.TimeUnit;
  */
 public class QueueTaskRunner {
 
-    private static final LinkedBlockingQueue<QueueTask> taskQueue = new LinkedBlockingQueue<>(1000);
+    private LinkedBlockingQueue<QueueTask> taskQueue =null;
+
+    private boolean isRunning = false;
 
 
-    private static boolean isRunning = false;
+    public QueueTaskRunner() {
+        this.taskQueue = new LinkedBlockingQueue<>(1000);
+    }
 
+    public QueueTaskRunner(int num) {
+        this.taskQueue = new LinkedBlockingQueue<>(num);
+    }
 
-    public static void addTask(QueueTask task){
+    public void addTask(QueueTask task){
         startTaskRunner();
         try {
             taskQueue.put(task);
@@ -23,8 +30,7 @@ public class QueueTaskRunner {
         }
     }
 
-
-    public static void startTaskRunner(){
+    private void startTaskRunner(){
 
         if (isRunning){
             return;
