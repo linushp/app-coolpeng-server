@@ -63,8 +63,8 @@ public class PeerChatService implements IChatMsgService {
 
         ChatSessionVO sessionVO1 = toChatSessionVO(chatPeerSession, user1, user2);
         ChatSessionVO sessionVO2 = toChatSessionVO(chatPeerSession, user2, user1);
-        recentSessionService.saveRecentSession(sessionVO1, user1);
-        recentSessionService.saveRecentSession(sessionVO2, user2);
+        recentSessionService.saveRecentSession(sessionVO1, user1,"");
+        recentSessionService.saveRecentSession(sessionVO2, user2,"");
 
 
         sessionVO1.setParticipateUidList(tempSessionVO.getParticipateUidList());

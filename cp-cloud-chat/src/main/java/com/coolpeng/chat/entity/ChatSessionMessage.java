@@ -9,7 +9,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Administrator on 2016/9/15.
+
+
+ CREATE TABLE `t_chat_session_message` (
+ `id` int(11) NOT NULL AUTO_INCREMENT,
+ `create_time` varchar(256) DEFAULT NULL,
+ `update_time` varchar(256) DEFAULT NULL,
+ `create_user_id` varchar(256) DEFAULT NULL,
+ `update_user_id` varchar(256) DEFAULT NULL,
+ `status` int(11) DEFAULT '0',
+
+ `session_type` varchar(20) DEFAULT NULL,
+ `entity_id` varchar(256) DEFAULT NULL,
+ `session_id` varchar(256) DEFAULT NULL,
+ `chat_msg` longtext,
+
+ PRIMARY KEY (`id`)
+ ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+
  */
 public class ChatSessionMessage extends BaseEntity {
 

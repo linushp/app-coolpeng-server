@@ -33,7 +33,7 @@ import java.util.List;
  * Created by Administrator on 2016/9/10.
  */
 @Controller
-@RequestMapping(value = "/chat", produces = "application/json; charset=UTF-8")
+@RequestMapping(value = "/cloud/chat", produces = "application/json; charset=UTF-8")
 public class ChatController extends RestBaseController {
 
     @Autowired
@@ -87,7 +87,7 @@ public class ChatController extends RestBaseController {
         /**********************/
         UserEntity user = assertIsUserLoginIfToken(jsonObject);
         if (refreshRecent) {
-            recentSessionService.saveRecentSession(sessionVO, user);
+            recentSessionService.saveRecentSession(sessionVO, user,msg);
         }
 
         IChatMsgService chatMsgService = getChatMsgService(sessionVO.getSessionType());

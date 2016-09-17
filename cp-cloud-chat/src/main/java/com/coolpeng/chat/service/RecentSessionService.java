@@ -20,7 +20,7 @@ public class RecentSessionService {
     private static final int MAX_RECENT_SIZE = 20;
 
 
-    public void saveRecentSession(ChatSessionVO sessionVO, UserEntity user) throws FieldNotFoundException, UpdateErrorException {
+    public void saveRecentSession(ChatSessionVO sessionVO, UserEntity user,String msg) throws FieldNotFoundException, UpdateErrorException {
         ChatRecentSession userRecentSession = getUserRecentSession(user.getId());
         if (userRecentSession == null) {
             userRecentSession = new ChatRecentSession(user.getId());
@@ -28,6 +28,14 @@ public class RecentSessionService {
 
         List<ChatSessionVO> recentList = userRecentSession.getRecentSessions();
         recentList = removeElement(recentList, sessionVO);
+
+        sessionVO.setLastMsgText(msg);
+        sessionVO.setLastMsgAvatar(user.getAvatar());
+        sessionVO.setLastMsgNickname(user.getNickname());
+        sessionVO.setLastMsgTimeMillis(System.currentTimeMillis());
+        sessionVO.setLastMsgUsername(user.getUsername());
+        sessionVO.setLastMsgUid(user.getId());
+
         recentList.add(sessionVO);
 
         if (recentList.size()> MAX_RECENT_SIZE){

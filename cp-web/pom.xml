@@ -30,7 +30,7 @@
         </dependency>
         <dependency>
             <groupId>com.coolpeng</groupId>
-            <artifactId>cp-chat</artifactId>
+            <artifactId>cp-cloud-chat</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>

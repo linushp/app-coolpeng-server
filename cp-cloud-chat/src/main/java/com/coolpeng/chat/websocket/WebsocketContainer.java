@@ -19,15 +19,18 @@ public class WebsocketContainer {
     private static final Map<String, Session> userId2Session = new ConcurrentHashMap<>();
     private static final Map<String, ChatUserVO> userId2UserVO = new ConcurrentHashMap<>();
 
-    public static void onOpen(Session session) throws ParameterErrorException, FieldNotFoundException {
+    public static void onOpen(Session session) throws Exception {
 
         Map<String, List<String>> map = session.getRequestParameterMap();
         List<String> uidList = map.get("uid");
         String uid = uidList.get(0);
+        UserEntity userEntity = UserEntity.DAO.queryById(uid);
+
         userId2Session.put(uid, session);
         sessionId2Session.put(session.getId(), session);
-        UserEntity userEntity = UserEntity.DAO.queryById(uid);
         userId2UserVO.put(uid, new ChatUserVO(userEntity));
+
+        System.out.println("WebSocket Connected , uid = " + uid  + ", current online userCount = " + sessionId2Session.size());
     }
 
     public static void onClose(Session session) {

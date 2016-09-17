@@ -4,7 +4,31 @@ import com.coolpeng.framework.db.BaseEntity;
 import com.coolpeng.framework.db.SimpleDAO;
 
 /**
- * Created by Administrator on 2016/9/15.
+
+ CREATE TABLE `t_chat_peer_session` (
+ `id` int(11) NOT NULL AUTO_INCREMENT,
+ `create_time` varchar(256) DEFAULT NULL,
+ `update_time` varchar(256) DEFAULT NULL,
+ `create_user_id` varchar(256) DEFAULT NULL,
+ `update_user_id` varchar(256) DEFAULT NULL,
+ `status` int(11) DEFAULT '0',
+
+ `peer1_uid` varchar(256) DEFAULT NULL,
+ `peer1_avatar` varchar(256) DEFAULT NULL,
+ `peer1_username` varchar(256) DEFAULT NULL,
+ `peer1_nickname` varchar(256) DEFAULT NULL,
+
+ `peer2_uid` varchar(256) DEFAULT NULL,
+ `peer2_avatar` varchar(256) DEFAULT NULL,
+ `peer2_username` varchar(256) DEFAULT NULL,
+ `peer2_nickname` varchar(256) DEFAULT NULL,
+
+ PRIMARY KEY (`id`)
+ ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+
  */
 public class ChatPeerSession extends BaseEntity {
 

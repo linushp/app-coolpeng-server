@@ -3,7 +3,7 @@
 /cp-framework/target/
 /cp-cloud/target/
 /cp-cloud/cp-cloud.iml
-/cp-chat/target/
+/cp-cloud-chat/target/
 /cp-web/target/
 /cp-web/cp-web.iml
 /cp-web/src/main/resources/db-connection.properties

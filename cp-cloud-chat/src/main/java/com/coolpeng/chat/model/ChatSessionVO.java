@@ -16,6 +16,13 @@ public class ChatSessionVO {
     private String sessionTitle;
     private String sessionIcon;
 
+    private String lastMsgText;
+    private long lastMsgTimeMillis;
+    private String lastMsgUsername;
+    private String lastMsgNickname;
+    private String lastMsgAvatar;
+    private String lastMsgUid;
+
     List<String> participateUidList;
 
     public ChatSessionVO() {
@@ -75,6 +82,55 @@ public class ChatSessionVO {
     public void setSessionIcon(String sessionIcon) {
         this.sessionIcon = sessionIcon;
     }
+
+    public String getLastMsgUid() {
+        return lastMsgUid;
+    }
+
+    public void setLastMsgUid(String lastMsgUid) {
+        this.lastMsgUid = lastMsgUid;
+    }
+
+    public String getLastMsgText() {
+        return lastMsgText;
+    }
+
+    public void setLastMsgText(String lastMsgText) {
+        this.lastMsgText = lastMsgText;
+    }
+
+    public long getLastMsgTimeMillis() {
+        return lastMsgTimeMillis;
+    }
+
+    public void setLastMsgTimeMillis(long lastMsgTimeMillis) {
+        this.lastMsgTimeMillis = lastMsgTimeMillis;
+    }
+
+    public String getLastMsgUsername() {
+        return lastMsgUsername;
+    }
+
+    public void setLastMsgUsername(String lastMsgUsername) {
+        this.lastMsgUsername = lastMsgUsername;
+    }
+
+    public String getLastMsgNickname() {
+        return lastMsgNickname;
+    }
+
+    public void setLastMsgNickname(String lastMsgNickname) {
+        this.lastMsgNickname = lastMsgNickname;
+    }
+
+    public String getLastMsgAvatar() {
+        return lastMsgAvatar;
+    }
+
+    public void setLastMsgAvatar(String lastMsgAvatar) {
+        this.lastMsgAvatar = lastMsgAvatar;
+    }
+
 
     @Override
     public boolean equals(Object o) {
