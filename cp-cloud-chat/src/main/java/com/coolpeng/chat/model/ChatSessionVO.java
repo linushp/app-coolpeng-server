@@ -1,5 +1,8 @@
 package com.coolpeng.chat.model;
 
+import com.coolpeng.chat.utils.ChatConstant;
+import com.coolpeng.framework.utils.StringUtils;
+
 import java.util.List;
 
 /**
@@ -14,7 +17,7 @@ public class ChatSessionVO {
     private String sessionType; //
     private String sessionId; // "peer_1", "public_1" 即 type + entityId
     private String sessionTitle;
-    private String sessionIcon;
+    private String sessionIcon = ChatConstant.DEFAULT_SESSION_ICON;
 
     private String lastMsgText;
     private long lastMsgTimeMillis;
@@ -76,6 +79,9 @@ public class ChatSessionVO {
     }
 
     public String getSessionIcon() {
+        if (StringUtils.isBlank(this.sessionIcon)){
+            this.sessionIcon = ChatConstant.DEFAULT_SESSION_ICON;
+        }
         return sessionIcon;
     }
 

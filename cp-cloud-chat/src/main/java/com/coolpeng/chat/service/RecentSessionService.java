@@ -32,12 +32,12 @@ public class RecentSessionService {
 
     private static QueueTaskRunner queueTaskRunner = new QueueTaskRunner();
 
-    public void saveRecentSession(final ChatSessionVO sessionVO, final UserEntity user, final String msg) throws Exception {
+    public void saveRecentSession(final ChatSessionVO sessionVO, final UserEntity user, final String msg,final String msgSummary) throws Exception {
         queueTaskRunner.addTask(new QueueTask() {
             @Override
             public void runTask() {
                 try {
-                    doSaveRecentSession(sessionVO,user,msg);
+                    doSaveRecentSession(sessionVO,user,msg,msgSummary);
                 } catch (Exception e) {
                     e.printStackTrace();
                     logger.error("",e);
@@ -46,7 +46,7 @@ public class RecentSessionService {
         });
     }
 
-    private void doSaveRecentSession(ChatSessionVO sessionVO, UserEntity user,String msg) throws Exception {
+    private void doSaveRecentSession(ChatSessionVO sessionVO, UserEntity user,String msg,String msgSummary) throws Exception {
         ChatRecentSession userRecentSession = getUserRecentSession(user.getId());
         if (userRecentSession == null) {
             userRecentSession = new ChatRecentSession(user.getId());
@@ -55,7 +55,7 @@ public class RecentSessionService {
         List<ChatSessionVO> recentList = userRecentSession.getRecentSessions();
         recentList = removeElement(recentList, sessionVO);
 
-        sessionVO.setLastMsgText(msg);
+        sessionVO.setLastMsgText(msgSummary);
         sessionVO.setLastMsgAvatar(user.getAvatar());
         sessionVO.setLastMsgNickname(user.getNickname());
         sessionVO.setLastMsgTimeMillis(System.currentTimeMillis());

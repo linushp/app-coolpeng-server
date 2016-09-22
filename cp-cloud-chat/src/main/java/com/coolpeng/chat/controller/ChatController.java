@@ -83,12 +83,13 @@ public class ChatController extends RestBaseController {
 
         ChatSessionVO sessionVO = jsonObject.getObject("sessionVO", ChatSessionVO.class);
         String msg = jsonObject.getString("msg");
+        String msgSummary = jsonObject.getString("msgSummary");
         boolean refreshRecent = jsonObject.getBoolean("refreshRecent");
 
         /**********************/
         UserEntity user = assertIsUserLoginIfToken(jsonObject);
         if (refreshRecent) {
-            recentSessionService.saveRecentSession(sessionVO, user,msg);
+            recentSessionService.saveRecentSession(sessionVO, user,msg,msgSummary);
         }
 
         IChatMsgService chatMsgService = getChatMsgService(sessionVO.getSessionType());

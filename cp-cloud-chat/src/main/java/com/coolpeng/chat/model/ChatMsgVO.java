@@ -1,7 +1,7 @@
 package com.coolpeng.chat.model;
 
 import com.coolpeng.blog.entity.UserEntity;
-import com.coolpeng.chat.service.UniqueId;
+import com.coolpeng.framework.utils.UniqueId;
 import com.coolpeng.framework.utils.DateUtil;
 
 /**

@@ -1,4 +1,4 @@
-package com.coolpeng.chat.service;
+package com.coolpeng.framework.utils;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -14,5 +14,9 @@ public class UniqueId {
     public static String getOne() {
         int num = counter.incrementAndGet();
         return "" + START_TIME_MILLIS + "-" + num;
+    }
+
+    public static int getInt(){
+        return counter.incrementAndGet();
     }
 }
