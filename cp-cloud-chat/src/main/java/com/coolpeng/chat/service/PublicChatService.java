@@ -25,17 +25,17 @@ public class PublicChatService implements IChatMsgService {
     private static final String CACHE_KEY = PublicChatService.class.getName();
 
     @Override
-    public TMSEvent saveMessage(UserEntity user, String msg, ChatSessionVO chatSessionVO){
-        String sessionId = chatSessionVO.getSessionId();
-        LinkedList<ChatMsgVO> msgList = getChatMsgList(chatSessionVO);
-        ChatMsgVO chatMsgVO = new ChatMsgVO(user, msg);
+    public TMSEvent saveMessage(UserEntity user, String msg,String msgSummary,String msgId, ChatSessionVO sessionVO){
+        String sessionId = sessionVO.getSessionId();
+        LinkedList<ChatMsgVO> msgList = getChatMsgList(sessionVO);
+        ChatMsgVO chatMsgVO = new ChatMsgVO(user, msg,msgId);
         msgList.add(chatMsgVO);
 
         if (msgList.size() > MAX_STORE_COUNT) {
             msgList.removeFirst();
         }
         saveGroupChatMsgList(msgList,sessionId);
-        return new PublicMsgEvent(chatMsgVO,sessionId);
+        return new PublicMsgEvent(chatMsgVO,sessionId,msgSummary);
     }
 
 

@@ -14,13 +14,14 @@ public class ChatMsgVO {
     private String msg;
     private String createTime;
     private Long createTimeMillis;
+    private String status="sent"; //"send,pending"
 
-    public ChatMsgVO(UserEntity sendUser, String msg) {
+    public ChatMsgVO(UserEntity sendUser, String msg,String msgId) {
         this.sendUser = new ChatUserVO(sendUser);
         this.msg = msg;
+        this.msgId = msgId;
         this.createTime = DateUtil.currentTimeFormat();
         this.createTimeMillis = System.currentTimeMillis();
-        this.msgId = UniqueId.getOne();
     }
 
     public ChatMsgVO() {
@@ -64,5 +65,13 @@ public class ChatMsgVO {
 
     public void setMsgId(String msgId) {
         this.msgId = msgId;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

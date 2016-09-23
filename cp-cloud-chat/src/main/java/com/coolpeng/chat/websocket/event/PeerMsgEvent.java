@@ -10,10 +10,13 @@ public class PeerMsgEvent extends TMSEvent  {
 
     private ChatMsgVO chatMsgVO;
 
+    private String msgSummary;
+
     private String receiveUserId;
 
-    public PeerMsgEvent(ChatMsgVO chatMsgVO, String receiveUserId) {
+    public PeerMsgEvent(ChatMsgVO chatMsgVO, String receiveUserId, String msgSummary) {
         this.chatMsgVO = chatMsgVO;
+        this.msgSummary = msgSummary;
         this.receiveUserId = receiveUserId;
         this.setName(this.getClass().getSimpleName());
     }
@@ -32,5 +35,13 @@ public class PeerMsgEvent extends TMSEvent  {
 
     public void setReceiveUserId(String receiveUserId) {
         this.receiveUserId = receiveUserId;
+    }
+
+    public String getMsgSummary() {
+        return msgSummary;
+    }
+
+    public void setMsgSummary(String msgSummary) {
+        this.msgSummary = msgSummary;
     }
 }

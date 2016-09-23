@@ -28,13 +28,15 @@ public class CreateSessionEventListener extends TMSEventListener {
             String json = JSON.toJSONString(event);
             List<String> uidList = sessionVO.getParticipateUidList();
             for (String toUserId : uidList) {
-                Session session = WebsocketContainer.getSessionByUid(toUserId);
-                if (session != null) {
-                    try {
-                        session.getBasicRemote().sendText(json);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        logger.error("", e);
+                List<Session>sessions = WebsocketContainer.getSessionByUid(toUserId);
+                if (sessions != null) {
+                    for(Session session:sessions){
+                        try {
+                            session.getBasicRemote().sendText(json);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            logger.error("", e);
+                        }
                     }
                 }
             }

@@ -8,11 +8,13 @@ import com.coolpeng.framework.event.TMSEvent;
  */
 public class PublicMsgEvent extends TMSEvent {
     private ChatMsgVO chatMsgVO;
+    private String msgSummary;
     private String sessionId;
 
-    public PublicMsgEvent(ChatMsgVO chatMsgVO,String sessionId) {
+    public PublicMsgEvent(ChatMsgVO chatMsgVO,String sessionId,String msgSummary) {
         this.chatMsgVO = chatMsgVO;
         this.sessionId = sessionId;
+        this.msgSummary = msgSummary;
         this.setName(this.getClass().getSimpleName());
     }
 
@@ -30,5 +32,13 @@ public class PublicMsgEvent extends TMSEvent {
 
     public void setSessionId(String sessionId) {
         this.sessionId = sessionId;
+    }
+
+    public String getMsgSummary() {
+        return msgSummary;
+    }
+
+    public void setMsgSummary(String msgSummary) {
+        this.msgSummary = msgSummary;
     }
 }

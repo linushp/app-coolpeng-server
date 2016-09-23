@@ -32,12 +32,12 @@ public class RecentSessionService {
 
     private static QueueTaskRunner queueTaskRunner = new QueueTaskRunner();
 
-    public void saveRecentSession(final ChatSessionVO sessionVO, final UserEntity user, final String msg,final String msgSummary) throws Exception {
+    public void saveRecentSession(final ChatSessionVO sessionVO, final UserEntity user,final String msgSummary) throws Exception {
         queueTaskRunner.addTask(new QueueTask() {
             @Override
             public void runTask() {
                 try {
-                    doSaveRecentSession(sessionVO,user,msg,msgSummary);
+                    doSaveRecentSession(sessionVO,user,msgSummary);
                 } catch (Exception e) {
                     e.printStackTrace();
                     logger.error("",e);
@@ -46,7 +46,7 @@ public class RecentSessionService {
         });
     }
 
-    private void doSaveRecentSession(ChatSessionVO sessionVO, UserEntity user,String msg,String msgSummary) throws Exception {
+    private void doSaveRecentSession(ChatSessionVO sessionVO, UserEntity user,String msgSummary) throws Exception {
         ChatRecentSession userRecentSession = getUserRecentSession(user.getId());
         if (userRecentSession == null) {
             userRecentSession = new ChatRecentSession(user.getId());

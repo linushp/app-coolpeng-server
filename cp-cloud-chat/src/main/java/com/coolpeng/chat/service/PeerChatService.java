@@ -28,10 +28,10 @@ public class PeerChatService implements IChatMsgService {
     private RecentSessionService recentSessionService;
 
     @Override
-    public TMSEvent saveMessage(UserEntity user, String msg,ChatSessionVO sessionVO) throws Exception {
+    public TMSEvent saveMessage(UserEntity user, String msg,String msgSummary,String msgId, ChatSessionVO sessionVO) throws Exception {
         String entityId = sessionVO.getEntityId();
         ChatPeerSession chatSessionInfo = ChatPeerSession.DAO.findObjectBy("id", entityId);
-        ChatMsgVO chatMsgVO = new ChatMsgVO(user, msg);
+        ChatMsgVO chatMsgVO = new ChatMsgVO(user, msg,msgId);
         String currentUid = user.getId();
         String receiveUserId = null;
         if (currentUid.equals(chatSessionInfo.getPeer1Uid())) {
@@ -41,7 +41,7 @@ public class PeerChatService implements IChatMsgService {
         }
 
         chatSessionMessageService.saveSessionMessage(user,sessionVO,chatMsgVO);
-        return new PeerMsgEvent(chatMsgVO, receiveUserId);
+        return new PeerMsgEvent(chatMsgVO, receiveUserId,msgSummary);
     }
 
     @Override
@@ -63,8 +63,8 @@ public class PeerChatService implements IChatMsgService {
 
         ChatSessionVO sessionVO1 = toChatSessionVO(chatPeerSession, user1, user2);
         ChatSessionVO sessionVO2 = toChatSessionVO(chatPeerSession, user2, user1);
-        recentSessionService.saveRecentSession(sessionVO1, user1,"","");
-        recentSessionService.saveRecentSession(sessionVO2, user2,"","");
+        recentSessionService.saveRecentSession(sessionVO1, user1,"");
+        recentSessionService.saveRecentSession(sessionVO2, user2,"");
 
 
         sessionVO1.setParticipateUidList(tempSessionVO.getParticipateUidList());
