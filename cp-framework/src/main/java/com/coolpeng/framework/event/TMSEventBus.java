@@ -1,5 +1,7 @@
 package com.coolpeng.framework.event;
 
+import com.coolpeng.framework.qtask.QueueTask;
+import com.coolpeng.framework.qtask.QueueTaskRunner;
 import com.coolpeng.framework.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +20,7 @@ public class TMSEventBus {
 
     private static final Logger logger = LoggerFactory.getLogger(TMSEventBus.class);
 
+    private static final QueueTaskRunner queueTaskRunner = new QueueTaskRunner();
 
     private static final Map<String, TMSEventListener> eventListeners = new HashMap<>();
 
@@ -55,13 +58,28 @@ public class TMSEventBus {
 
 
 
-
     private static String getListenerName(TMSEventListener listener) {
         String listenerName = listener.getName();
         if (StringUtils.isBlank(listenerName)) {
             listenerName = listener.getClass().getName();
         }
         return listenerName;
+    }
+
+
+
+    public static void asynSendEvent(final TMSEvent event) {
+        queueTaskRunner.addTask(new QueueTask() {
+            @Override
+            public void runTask() {
+                try {
+                    sendEvent(event);
+                } catch (Throwable e) {
+                    e.printStackTrace();
+                    logger.error("",e);
+                }
+            }
+        });
     }
 
 

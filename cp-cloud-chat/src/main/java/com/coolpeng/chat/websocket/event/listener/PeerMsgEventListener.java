@@ -6,11 +6,13 @@ import com.coolpeng.chat.websocket.WebsocketContainer;
 import com.coolpeng.chat.websocket.event.PeerMsgEvent;
 import com.coolpeng.framework.event.TMSEvent;
 import com.coolpeng.framework.event.TMSEventListener;
+import com.coolpeng.framework.utils.CollectionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.websocket.Session;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Created by Administrator on 2016/9/15.
@@ -24,14 +26,18 @@ public class PeerMsgEventListener extends TMSEventListener {
         if (event instanceof PeerMsgEvent){
             PeerMsgEvent event1 =(PeerMsgEvent)event ;
             String toUserId = event1.getReceiveUserId();
-            Session session = WebsocketContainer.getSessionByUid(toUserId);
-            if (session!=null){
-                try {
-                    String json = JSON.toJSONString(event1);
-                    session.getBasicRemote().sendText(json);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    logger.error("",e);
+            List<Session> sessions = WebsocketContainer.getSessionByUid(toUserId);
+            if (!CollectionUtil.isEmpty(sessions)){
+                for (Session session :sessions){
+                    if (session!=null){
+                        try {
+                            String json = JSON.toJSONString(event1);
+                            session.getBasicRemote().sendText(json);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            logger.error("",e);
+                        }
+                    }
                 }
             }
         }

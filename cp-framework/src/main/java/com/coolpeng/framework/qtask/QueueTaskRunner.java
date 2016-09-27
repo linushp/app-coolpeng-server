@@ -1,5 +1,7 @@
 package com.coolpeng.framework.qtask;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
@@ -8,20 +10,19 @@ import java.util.concurrent.TimeUnit;
  */
 public class QueueTaskRunner {
 
-    private LinkedBlockingQueue<QueueTask> taskQueue =null;
+    private LinkedBlockingQueue<QueueTask> taskQueue = null;
 
     private boolean isRunning = false;
 
-
     public QueueTaskRunner() {
-        this.taskQueue = new LinkedBlockingQueue<>(1000);
+        this(1000);
     }
 
-    public QueueTaskRunner(int num) {
-        this.taskQueue = new LinkedBlockingQueue<>(num);
+    public QueueTaskRunner(int blockQueueCount) {
+        this.taskQueue = new LinkedBlockingQueue<>(blockQueueCount);
     }
 
-    public void addTask(QueueTask task){
+    public void addTask(QueueTask task) {
         startTaskRunner();
         try {
             taskQueue.put(task);
@@ -30,9 +31,9 @@ public class QueueTaskRunner {
         }
     }
 
-    private void startTaskRunner(){
+    private void startTaskRunner() {
 
-        if (isRunning){
+        if (isRunning) {
             return;
         }
 
@@ -43,13 +44,13 @@ public class QueueTaskRunner {
             @Override
             public void run() {
 
-                while (true){
+                while (true) {
                     try {
                         QueueTask task = taskQueue.poll();
-                        if (task!=null){
+                        if (task != null) {
                             try {
                                 task.runTask();
-                            }catch (Throwable e){
+                            } catch (Throwable e) {
                                 e.printStackTrace();
                             }
                         }
@@ -63,7 +64,6 @@ public class QueueTaskRunner {
         thread.start();
 
     }
-
 
 
 }

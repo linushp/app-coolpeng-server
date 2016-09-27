@@ -3,6 +3,7 @@ com/coolpeng/chat/websocket/event/listener/CreateSessionEventListener.class
 com/coolpeng/chat/model/ChatMsgVO.class
 com/coolpeng/chat/websocket/event/init/EventListenerInit.class
 com/coolpeng/chat/websocket/socket/ChatWebSocketHandler.class
+com/coolpeng/chat/utils/ChatConstant.class
 com/coolpeng/chat/websocket/event/listener/PublicMsgEventListener.class
 com/coolpeng/chat/model/ChatSessionVO.class
 com/coolpeng/chat/websocket/event/PeerMsgEvent.class
