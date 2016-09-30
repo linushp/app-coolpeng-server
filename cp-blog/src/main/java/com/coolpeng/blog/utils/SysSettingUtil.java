@@ -23,7 +23,7 @@ public class SysSettingUtil {
         try {
             Map<String, Object> params = new HashMap<>();
             params.put("name", name);
-            SysSetting setting = SysSetting.DAO.queryForObject(params);
+            SysSetting setting = SysSetting.DAO.queryByAndParams(params);
             if (setting != null) {
                 String content = setting.getContent();
                 T vo = JSON.parseObject(content, clazz);

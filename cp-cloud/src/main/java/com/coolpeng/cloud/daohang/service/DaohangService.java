@@ -52,8 +52,8 @@ public class DaohangService {
 
     public List<DhCategory> getCategoryList(Integer type) throws IllegalAccessException, FieldNotFoundException {
 
-        List<DhCategory> categoryList = DhCategory.DAO.findListBy(FIELD_TYPE, type);
-        List<DhItem> itemList = DhItem.DAO.findListBy(FIELD_TYPE, type);
+        List<DhCategory> categoryList = DhCategory.DAO.queryListByKV(FIELD_TYPE, type);
+        List<DhItem> itemList = DhItem.DAO.queryListByKV(FIELD_TYPE, type);
 
 
         Map<Object, List<DhItem>> itemMap = CollectionUtil.groupBy(itemList, FIELD_CATEGORY_ID);

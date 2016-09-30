@@ -3,7 +3,6 @@ package com.coolpeng.blog.service;
 import com.coolpeng.blog.entity.ForumCategory;
 import com.coolpeng.blog.entity.enums.AccessControl;
 import com.coolpeng.blog.vo.ForumCategoryTree;
-import com.coolpeng.framework.db.QueryCondition;
 import com.coolpeng.framework.exception.FieldNotFoundException;
 import com.coolpeng.framework.exception.UpdateErrorException;
 import com.coolpeng.framework.utils.CollectionUtil;
@@ -31,7 +30,7 @@ public class ForumCategoryService {
         if (PUBLIC_FORUM_CATEGORY_CACHE == null || (nowTime - LAST_UPDATE_TIME > 1000 * 60 * 5)) {
             Map<String, Object> params = new HashMap<>();
             params.put("accessControl", AccessControl.PUBLIC.getValue());
-            List<ForumCategory> list = ForumCategory.DAO.queryForList(params);
+            List<ForumCategory> list = ForumCategory.DAO.queryListByAndParams(params);
             PUBLIC_FORUM_CATEGORY_CACHE = buildTree(list);
             LAST_UPDATE_TIME = nowTime;
         }
@@ -43,7 +42,7 @@ public class ForumCategoryService {
     public ForumCategoryTree getForumCategoryByCreateUserId(String userId) throws FieldNotFoundException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         Map<String,Object> params = new HashMap<>();
         params.put("createUserId", userId);
-        List<ForumCategory> list = ForumCategory.DAO.queryForList(params);
+        List<ForumCategory> list = ForumCategory.DAO.queryListByAndParams(params);
         return buildTree(list);
     }
 
@@ -54,13 +53,13 @@ public class ForumCategoryService {
 
         Map<String, Object> params2 = new HashMap<>();
         params2.put("accessControl", AccessControl.PUBLIC.getValue());
-        List<ForumCategory> list2 = ForumCategory.DAO.queryForList(params2);
+        List<ForumCategory> list2 = ForumCategory.DAO.queryListByAndParams(params2);
 
         List<ForumCategory> list1 = new ArrayList<>();
         if(StringUtils.isNotBlank(userId)){
             Map<String,Object> params1 = new HashMap<>();
             params1.put("createUserId", userId);
-            list1 = ForumCategory.DAO.queryForList(params1);
+            list1 = ForumCategory.DAO.queryListByAndParams(params1);
         }
 
 

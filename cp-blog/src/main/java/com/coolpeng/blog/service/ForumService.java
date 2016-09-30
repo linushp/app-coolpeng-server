@@ -31,8 +31,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Service
 public class ForumService {
@@ -146,7 +144,7 @@ public class ForumService {
 
     public ForumPostReply createPostReply(String postId, String postContent,List<String> images)
             throws FieldNotFoundException, UpdateErrorException, ParameterErrorException {
-        ForumPost p = ForumPost.DAO.queryForObject(postId);
+        ForumPost p = ForumPost.DAO.queryById(postId);
         int replyCount = p.getReplyCount();
         p.setReplyCount(replyCount + 1);
         p.appendToAllImageList(images);
@@ -339,7 +337,7 @@ public class ForumService {
         Map<String, Object> params = new HashMap<>();
         params.put("category_id", categoryId);
 
-        List<ForumPost> posts = ForumPost.DAO.queryForList("SELECT * FROM t_forum_post where last_reply_msg !='' and category_id=:category_id order by last_reply_time desc limit 0,100;", params);
+        List<ForumPost> posts = ForumPost.DAO.queryListBySQL("SELECT * FROM t_forum_post where last_reply_msg !='' and category_id=:category_id order by last_reply_time desc limit 0,100;", params);
 
         List<ForumPostReply> replyList = new ArrayList<>();
         for (ForumPost post : posts) {
@@ -362,7 +360,7 @@ public class ForumService {
     public List<ForumPostReply> getLastPostReply(int pageCount) throws FieldNotFoundException, ClassNotFoundException {
 
 
-        List<ForumPost> posts = ForumPost.DAO.queryForList("SELECT * FROM t_forum_post where last_reply_msg !='' order by last_reply_time desc limit 0,100", null);
+        List<ForumPost> posts = ForumPost.DAO.queryListBySQL("SELECT * FROM t_forum_post where last_reply_msg !='' order by last_reply_time desc limit 0,100", null);
 
         List<ForumPostReply> replyList = new ArrayList<>();
         for (ForumPost post : posts) {
@@ -395,7 +393,7 @@ public class ForumService {
      * @throws FieldNotFoundException
      */
     public ForumPost getPostById(String postId,AccessControl accessControl,boolean updateViewCount) throws UpdateErrorException, ParameterErrorException, FieldNotFoundException {
-        ForumPost p = ForumPost.DAO.queryForObject(postId);
+        ForumPost p = ForumPost.DAO.queryById(postId);
 
         if (p == null) {
             return null;
@@ -429,7 +427,7 @@ public class ForumService {
         String createUserId = p.getCreateUserId();
         UserEntity createUser = null;
         if (createUserId != null) {
-            createUser = (UserEntity) UserEntity.DAO.queryForObject(createUserId);
+            createUser = (UserEntity) UserEntity.DAO.queryById(createUserId);
         }
         if (createUser == null) {
             createUser = EntityUtils.getDefaultUser(TmsCurrentRequest.getContext());
@@ -511,7 +509,7 @@ public class ForumService {
     }
 
     public ForumPost getForumPost(String postId) throws ParameterErrorException, FieldNotFoundException {
-        return (ForumPost) ForumPost.DAO.queryForObject(postId);
+        return (ForumPost) ForumPost.DAO.queryById(postId);
     }
 
 }

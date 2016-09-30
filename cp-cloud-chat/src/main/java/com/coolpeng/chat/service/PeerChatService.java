@@ -2,15 +2,12 @@ package com.coolpeng.chat.service;
 
 import com.coolpeng.blog.entity.UserEntity;
 import com.coolpeng.chat.entity.ChatPeerSession;
-import com.coolpeng.chat.entity.ChatSessionMessage;
 import com.coolpeng.chat.model.ChatMsgVO;
 import com.coolpeng.chat.model.ChatSessionVO;
 import com.coolpeng.chat.service.api.IChatMsgService;
 import com.coolpeng.chat.websocket.event.CreateSessionEvent;
 import com.coolpeng.chat.websocket.event.PeerMsgEvent;
 import com.coolpeng.framework.event.TMSEvent;
-import com.coolpeng.framework.exception.FieldNotFoundException;
-import com.coolpeng.framework.exception.ParameterErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +27,7 @@ public class PeerChatService implements IChatMsgService {
     @Override
     public TMSEvent saveMessage(UserEntity user, String msg,String msgSummary,String msgId, ChatSessionVO sessionVO) throws Exception {
         String entityId = sessionVO.getEntityId();
-        ChatPeerSession chatSessionInfo = ChatPeerSession.DAO.findObjectBy("id", entityId);
+        ChatPeerSession chatSessionInfo = ChatPeerSession.DAO.queryObjectByKV("id", entityId);
         ChatMsgVO chatMsgVO = new ChatMsgVO(user, msg,msgId);
         String currentUid = user.getId();
         String receiveUserId = null;
@@ -84,9 +81,9 @@ public class PeerChatService implements IChatMsgService {
         String uid1= user1.getId();
         String uid2= user2.getId();
 
-        ChatPeerSession chatPeerSession = ChatPeerSession.DAO.findObjectBy("peer1Uid", uid1, "peer2Uid", uid2);
+        ChatPeerSession chatPeerSession = ChatPeerSession.DAO.queryObjectByKV("peer1Uid", uid1, "peer2Uid", uid2);
         if (chatPeerSession == null) {
-            chatPeerSession = ChatPeerSession.DAO.findObjectBy("peer2Uid", uid1, "peer1Uid", uid2);
+            chatPeerSession = ChatPeerSession.DAO.queryObjectByKV("peer2Uid", uid1, "peer1Uid", uid2);
         }
 
         if (chatPeerSession == null) {

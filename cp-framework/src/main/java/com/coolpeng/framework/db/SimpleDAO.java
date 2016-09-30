@@ -25,6 +25,8 @@ public class SimpleDAO<T> {
     private TemplateSQL sqlTemplate;
     private Class<T> clazz;
 
+    private static final String SPLIT_AND = " and ";
+    private static final String SPLIT_OR = " or ";
 
     public SimpleDAO(Class<T> clazz) {
         this.sqlTemplate = new TemplateSQL(clazz);
@@ -33,19 +35,19 @@ public class SimpleDAO<T> {
 
     public List<T> findAll() {
         String sql = this.sqlTemplate.getSelectSQL();
-        return queryForList(sql, null);
+        return queryListBySQL(sql, null);
     }
 
-    public T findObjectBy(String key, Object value) throws FieldNotFoundException {
-        List<T> objList = findListBy(key, value);
+    public T queryObjectByKV(String key, Object value) throws FieldNotFoundException {
+        List<T> objList = queryListByKV(key, value);
         if (objList == null || objList.isEmpty()) {
             return null;
         }
         return objList.get(0);
     }
 
-    public T findObjectBy(String key1, Object value1, String key2, Object value2) throws FieldNotFoundException {
-        List<T> objList = findListBy(key1, value1, key2, value2);
+    public T queryObjectByKV(String key1, Object value1, String key2, Object value2) throws FieldNotFoundException {
+        List<T> objList = queryListByKV(key1, value1, key2, value2);
         if (objList == null || objList.isEmpty()) {
             return null;
         }
@@ -53,21 +55,21 @@ public class SimpleDAO<T> {
     }
 
 
-    public List<T> findListBy(String key, Object value) throws FieldNotFoundException {
+    public List<T> queryListByKV(String key, Object value) throws FieldNotFoundException {
         Map<String, Object> params = new HashMap<>();
         params.put(key, value);
-        return queryForList(params);
+        return queryListByAndParams(params);
     }
 
-    public List<T> findListBy(String key1, Object value1, String key2, Object value2) throws FieldNotFoundException {
+    public List<T> queryListByKV(String key1, Object value1, String key2, Object value2) throws FieldNotFoundException {
         Map<String, Object> params = new HashMap<>();
         params.put(key1, value1);
         params.put(key2, value2);
-        return queryForList(params);
+        return queryListByAndParams(params);
     }
 
 
-    public T queryForObject(String sql, Map<String, Object> params) {
+    public T queryBySQL(String sql, Map<String, Object> params) {
         MapSqlParameterSource sps = new MapSqlParameterSource(params);
         try {
             return (T) getJdbcTemplate().queryForObject(sql, sps, new TMSBeanRowMapper<>(this.clazz));
@@ -79,24 +81,41 @@ public class SimpleDAO<T> {
         return null;
     }
 
-    public int count(Map<String, Object> params)
+    public int count(Map<String, Object> params) throws FieldNotFoundException {
+        return this.count(params, SPLIT_AND);
+    }
+
+    public int countOR(Map<String, Object> params) throws FieldNotFoundException {
+        return this.count(params, SPLIT_OR);
+    }
+
+    private int count(Map<String, Object> params, String paramSplit)
             throws FieldNotFoundException {
         MapSqlParameterSource sps = new MapSqlParameterSource(params);
-        String sql = this.sqlTemplate.getCountSQL(params.keySet());
-        Integer count = (Integer) getJdbcTemplate().queryForObject(sql, sps, Integer.class);
+        String sql = this.sqlTemplate.getCountSQL(params.keySet(), paramSplit);
+        Integer count = getJdbcTemplate().queryForObject(sql, sps, Integer.class);
         return count.intValue();
     }
 
-    public T queryForObject(Map<String, Object> params)
+    public T queryByAndParams(Map<String, Object> params)
+            throws FieldNotFoundException {
+        return this.queryByParams(params, SPLIT_AND);
+    }
+
+    public T queryByOrParams(Map<String, Object> params)
+            throws FieldNotFoundException {
+        return this.queryByParams(params, SPLIT_OR);
+    }
+
+    private T queryByParams(Map<String, Object> params, String paramSplit)
             throws FieldNotFoundException {
         String sql = null;
         if (params == null)
             sql = this.sqlTemplate.getSelectSQL();
         else {
-            sql = this.sqlTemplate.getSelectSQL(params.keySet());
+            sql = this.sqlTemplate.getSelectSQL(params.keySet(), paramSplit);
         }
-
-        return queryForObject(sql, params);
+        return queryBySQL(sql, params);
     }
 
 
@@ -107,34 +126,30 @@ public class SimpleDAO<T> {
         }
         Map params = new HashMap();
         params.put("id", id);
-        return (T) queryForObject(params);
+        return (T) queryByAndParams(params);
     }
 
-    public T queryForObject(String id) throws ParameterErrorException, FieldNotFoundException {
-        return queryById(id);
-    }
 
-    public T queryForObject(String id, String[] leftJoinFieldNameArray)
+    public T queryById(String id, String[] leftJoinFieldNameArray)
             throws ClassNotFoundException, FieldNotFoundException {
         Map params = new HashMap();
         params.put("id", id);
-
         QueryCondition qc = new QueryCondition();
         qc.setParams(params);
 
-        List<T> result = queryForList(qc, leftJoinFieldNameArray);
+        List<T> result = queryListByCondition(qc, leftJoinFieldNameArray);
         if (CollectionUtil.isEmpty(result)) {
             return null;
         }
         return result.get(0);
     }
 
-    public List<T> queryForList(String[] leftJoinFieldNameArray)
+    public List<T> queryListWithJoin(String[] leftJoinFieldNameArray)
             throws FieldNotFoundException, ClassNotFoundException {
-        return queryForList(null, leftJoinFieldNameArray);
+        return queryListByCondition(null, leftJoinFieldNameArray);
     }
 
-    public List<T> queryForList(QueryCondition qc, String[] leftJoinFieldNameArray)
+    public List<T> queryListByCondition(QueryCondition qc, String[] leftJoinFieldNameArray)
             throws FieldNotFoundException, ClassNotFoundException {
         Set where = null;
         MapSqlParameterSource sps = null;
@@ -161,19 +176,28 @@ public class SimpleDAO<T> {
         return result;
     }
 
-    public List<T> queryForList(Map<String, Object> params)
+    public List<T> queryListByAndParams(Map<String, Object> params) throws FieldNotFoundException {
+        return this.queryListByParams(params, SPLIT_AND);
+    }
+
+    public List<T> queryListByOrParams(Map<String, Object> params) throws FieldNotFoundException {
+        return this.queryListByParams(params, SPLIT_OR);
+    }
+
+
+    private List<T> queryListByParams(Map<String, Object> params, String paramSplit)
             throws FieldNotFoundException {
-        String sql = null;
+        String sql;
         if (CollectionUtil.isEmpty(params))
             sql = this.sqlTemplate.getSelectSQL();
         else {
-            sql = this.sqlTemplate.getSelectSQL(params.keySet());
+            sql = this.sqlTemplate.getSelectSQL(params.keySet(), paramSplit);
         }
-
-        return queryForList(sql, params);
+        return queryListBySQL(sql, params);
     }
 
-    public List<T> queryForList(String sql, Map<String, Object> params) {
+
+    public List<T> queryListBySQL(String sql, Map<String, Object> params) {
         try {
             if ((params != null) && (!params.isEmpty())) {
                 MapSqlParameterSource sps = new MapSqlParameterSource(params);
@@ -186,16 +210,16 @@ public class SimpleDAO<T> {
         return new ArrayList<>();
     }
 
+
     public List<T> queryByNamingSQL(String namingSqlID, Map<String, Object> params) {
         String sql = NamingSQL.getNamingSqlById(namingSqlID);
-
         if (sql == null) {
             logger.info("error to get naming sql , id = {} ", namingSqlID);
             return null;
         }
-
-        return queryForList(sql, params);
+        return queryListBySQL(sql, params);
     }
+
 
     public PageResult<T> queryForPageBySQL(String listSQL, String countSQL, Map<String, String> params) {
 
@@ -258,9 +282,20 @@ public class SimpleDAO<T> {
 
     public int delete(Map<String, Object> params)
             throws FieldNotFoundException {
+        return this.delete(params, SPLIT_AND);
+    }
+
+    public int deleteOR(Map<String, Object> params)
+            throws FieldNotFoundException {
+        return this.delete(params, SPLIT_OR);
+    }
+
+
+    private int delete(Map<String, Object> params, String paramSplit)
+            throws FieldNotFoundException {
         Set where = params.keySet();
         String[] whereArray = this.sqlTemplate.toStringArray(where);
-        String sql = this.sqlTemplate.getDeleteSQL(whereArray);
+        String sql = this.sqlTemplate.getDeleteSQL(whereArray, paramSplit);
         MapSqlParameterSource sps = new MapSqlParameterSource(params);
         return getJdbcTemplate().update(sql, sps);
     }
@@ -354,6 +389,7 @@ public class SimpleDAO<T> {
 
     /**
      * 指定更新entity的某些字段。只能更新简单字段
+     *
      * @param entity 实体对象
      * @param fields 字段名
      * @return

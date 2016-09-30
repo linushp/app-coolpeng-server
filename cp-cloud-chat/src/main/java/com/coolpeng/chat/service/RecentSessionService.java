@@ -1,24 +1,15 @@
 package com.coolpeng.chat.service;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.coolpeng.blog.entity.UserEntity;
 import com.coolpeng.chat.entity.ChatRecentSession;
 import com.coolpeng.chat.model.ChatSessionVO;
 import com.coolpeng.framework.exception.FieldNotFoundException;
-import com.coolpeng.framework.exception.UpdateErrorException;
 import com.coolpeng.framework.qtask.QueueTask;
 import com.coolpeng.framework.qtask.QueueTaskRunner;
-import com.coolpeng.framework.utils.CollectionUtil;
-import com.coolpeng.framework.utils.RESTUtils;
-import com.coolpeng.framework.utils.StringUtils;
-import com.coolpeng.framework.utils.ipaddr.IPAddrResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 /**
@@ -86,7 +77,7 @@ public class RecentSessionService {
 
 
     private ChatRecentSession getUserRecentSession(String uid) throws FieldNotFoundException {
-        return ChatRecentSession.DAO.findObjectBy("ownerUid",uid);
+        return ChatRecentSession.DAO.queryObjectByKV("ownerUid", uid);
     }
 
 

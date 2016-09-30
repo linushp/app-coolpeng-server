@@ -172,17 +172,17 @@ public class TemplateSQL
 		return sql.toString();
 	}
 
-	public String getCountSQL(Collection<String> where) throws FieldNotFoundException
+	public String getCountSQL(Collection<String> where,String splitWord) throws FieldNotFoundException
 	{
 		String[] whereArray = toStringArray(where);
-		return getCountSQL(whereArray);
+		return getCountSQL(whereArray,splitWord);
 	}
 
-	public String getCountSQL(String[] where) throws FieldNotFoundException {
+	public String getCountSQL(String[] where,String splitWord) throws FieldNotFoundException {
 		StringBuffer sql = new StringBuffer();
 		sql.append("SELECT count(0) FROM ");
 		sql.append("" + this.tableName + "");
-		sql.append(toWhereSQL(where));
+		sql.append(toWhereSQL(where,splitWord));
 		return sql.toString();
 	}
 
@@ -194,25 +194,25 @@ public class TemplateSQL
 		return sql.toString();
 	}
 
-	public String getSelectSQL(Collection<String> where) throws FieldNotFoundException
+	public String getSelectSQL(Collection<String> where,String splitWord) throws FieldNotFoundException
 	{
 		if ((where != null) && (!where.isEmpty()))
 		{
 			String[] whereArray = toStringArray(where);
 
-			return getSelectSQL(whereArray);
+			return getSelectSQL(whereArray,splitWord);
 		}
 		return getSelectSQL();
 	}
 
-	public String getSelectSQL(String[] where)
+	public String getSelectSQL(String[] where,String splitWord)
 			throws FieldNotFoundException
 	{
 		StringBuffer sql = new StringBuffer();
 		sql.append("SELECT * FROM ");
 		sql.append("" + this.tableName + "");
 
-		sql.append(toWhereSQL(where));
+		sql.append(toWhereSQL(where,splitWord));
 
 		return sql.toString();
 	}
@@ -329,14 +329,14 @@ public class TemplateSQL
 		return sql.toString();
 	}
 
-	public String getDeleteSQL(String[] where) throws FieldNotFoundException
+	public String getDeleteSQL(String[] where,String splitWord) throws FieldNotFoundException
 	{
 		StringBuffer sql = new StringBuffer();
 		sql.append("DELETE FROM ");
 		sql.append("" + this.tableName + "");
 
 		if ((where != null) && (where.length > 0)) {
-			sql.append(toWhereSQL(where));
+			sql.append(toWhereSQL(where,splitWord));
 		} else {
 			sql.append(" WHERE ");
 			sql.append(" `id` ");
@@ -435,12 +435,18 @@ public class TemplateSQL
 		return sql.toString();
 	}
 
-	public String toWhereSQL(String[] where) throws FieldNotFoundException
+	/**
+	 *
+	 * @param where
+	 * @param splitWord " and , or "
+	 * @return
+	 * @throws FieldNotFoundException
+	 */
+	public String toWhereSQL(String[] where,String splitWord) throws FieldNotFoundException
 	{
 		StringBuffer sql = new StringBuffer();
 
-		if ((where != null) && (where.length > 0))
-		{
+		if ((where != null) && (where.length > 0)) {
 			sql.append(" WHERE ");
 
 			for (int i = 0; i < where.length; i++) {
@@ -456,7 +462,7 @@ public class TemplateSQL
 				sql.append("=:" + w);
 
 				if (i < where.length - 1) {
-					sql.append(" and ");
+					sql.append(" " + splitWord + " ");
 				}
 			}
 		}

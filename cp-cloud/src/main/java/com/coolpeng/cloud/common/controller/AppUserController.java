@@ -50,7 +50,8 @@ public class AppUserController extends RestBaseController {
         /****************************************************************/
 
         TMSMsgException e = new TMSMsgException("用户名或密码错误");
-        UserEntity user = userService.getUserEntity(username);
+        UserEntity user = userService.getUserEntityByUserName(username);
+
         if (user == null) {
             throw e;
         }
@@ -123,28 +124,40 @@ public class AppUserController extends RestBaseController {
     @ResponseBody
     @RequestMapping("/register")
     public TMSResponse register(@RequestBody JSONObject jsonObject) throws TMSMsgException, FieldNotFoundException, UpdateErrorException {
-        String username = jsonObject.getString("username");
         String password = jsonObject.getString("password");
+        String password2 = jsonObject.getString("password2");
+        String nickname = jsonObject.getString("nickname");
+        String mail = jsonObject.getString("mail");
+        String username = mail;//使用邮箱作为用户名
         /****************************************************************/
 
-        if (StringUtils.isBlank(username)) {
-            throw new TMSMsgException("用户名不能为空");
+        if (StringUtils.isBlank(mail)) {
+            throw new TMSMsgException("邮箱不能为空", "mail_empty");
+        }
+
+        UserEntity user = userService.getUserEntityByUserNameOrEmail(mail);
+        if (user != null) {
+            throw new TMSMsgException("此邮箱已经被注册过了", "mail_used");
         }
 
         if (StringUtils.isBlank(password)) {
-            throw new TMSMsgException("密码不能为空");
+            throw new TMSMsgException("密码不能为空", "password_empty");
         }
 
-
-        UserEntity user = userService.getUserEntity(username);
-        if (user != null) {
-            throw new TMSMsgException("此用户名已经被注册过了");
+        if (!password.equals(password2)){
+            throw new TMSMsgException("两次密码输入的不一致", "password_not_equal");
+        }
+        if (StringUtils.isBlank(nickname)) {
+            throw new TMSMsgException("昵称不能为空", "nickname_empty");
         }
 
 
         UserEntity newUser = new UserEntity();
         newUser.setPassword(password);
         newUser.setUsername(username);
+        newUser.setNickname(nickname);
+        newUser.setMail(mail);
+        newUser.setPermission("");
         userService.saveAndFlush(newUser);
 
         return new TMSResponse();

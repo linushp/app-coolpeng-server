@@ -4,9 +4,6 @@ import com.coolpeng.blog.entity.UserEntity;
 import com.coolpeng.chat.entity.ChatSessionMessage;
 import com.coolpeng.chat.model.ChatMsgVO;
 import com.coolpeng.chat.model.ChatSessionVO;
-import com.coolpeng.framework.exception.FieldNotFoundException;
-import com.coolpeng.framework.exception.UpdateErrorException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -37,7 +34,7 @@ public class ChatSessionMessageService {
 
     private void saveChatSessionMessage(UserEntity user, List<ChatMsgVO> msgList, ChatSessionVO sessionVO) throws Exception {
         String sessionId = sessionVO.getSessionId(); //形如：public_1
-        ChatSessionMessage entity = ChatSessionMessage.DAO.findObjectBy("sessionId", sessionId);
+        ChatSessionMessage entity = ChatSessionMessage.DAO.queryObjectByKV("sessionId", sessionId);
         if (entity == null) {
             entity = new ChatSessionMessage();
             entity.setEntityId(sessionVO.getEntityId());
@@ -52,7 +49,7 @@ public class ChatSessionMessageService {
 
     public List<ChatMsgVO> getChatMsgList(ChatSessionVO sessionVO) throws Exception {
         String sessionId = sessionVO.getSessionId(); //形如：public_1
-        ChatSessionMessage entity = ChatSessionMessage.DAO.findObjectBy("sessionId", sessionId);
+        ChatSessionMessage entity = ChatSessionMessage.DAO.queryObjectByKV("sessionId", sessionId);
         if (entity == null) {
             return new ArrayList<>();
         }

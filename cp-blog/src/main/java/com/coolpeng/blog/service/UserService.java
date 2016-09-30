@@ -29,7 +29,7 @@ public class UserService {
 
         params.put("username", username);
         try {
-            List list = UserEntity.DAO.queryForList(params);
+            List list = UserEntity.DAO.queryListByAndParams(params);
 
             if (CollectionUtil.isEmpty(list)) {
                 return TMSResponse.error(1, "此用户名不存在");
@@ -63,7 +63,7 @@ public class UserService {
 
         Map<String, Object> params = new HashMap<>();
         params.put("lastLoginToken", tokenId);
-        List<UserEntity> userList = UserEntity.DAO.queryForList(params);
+        List<UserEntity> userList = UserEntity.DAO.queryListByAndParams(params);
         if (CollectionUtil.isEmpty(userList)) {
             return null;
         }
@@ -92,9 +92,7 @@ public class UserService {
             return null;
         }
 
-        Map<String, Object> params = new HashMap<>();
-        params.put("lastLoginToken", tokenId);
-        List<UserEntity> userList = UserEntity.DAO.queryForList(params);
+        List<UserEntity> userList = UserEntity.DAO.queryListByKV("lastLoginToken",tokenId);
         if (CollectionUtil.isEmpty(userList)) {
             return null;
         }
@@ -108,17 +106,18 @@ public class UserService {
         return null;
     }
 
+    public UserEntity getUserEntityByUserNameOrEmail(String usernameOrEmail) throws FieldNotFoundException {
+        Map<String, Object> params = new HashMap<>();
+        params.put("username", usernameOrEmail);
+        params.put("mail", usernameOrEmail);
+        //注意：查询条件是  or
+        return UserEntity.DAO.queryByOrParams(params);
+    }
 
-    /**
-     * 根据用户名获取用户实体
-     * @param username
-     * @return
-     * @throws FieldNotFoundException
-     */
-    public UserEntity getUserEntity(String username) throws FieldNotFoundException {
+    public UserEntity getUserEntityByUserName(String username) throws FieldNotFoundException {
         Map<String, Object> params = new HashMap<>();
         params.put("username", username);
-        return UserEntity.DAO.queryForObject(params);
+        return UserEntity.DAO.queryByAndParams(params);
     }
 
 

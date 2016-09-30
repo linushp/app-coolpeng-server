@@ -52,7 +52,7 @@ public class UserController {
 
         params.put("username", username);
         try {
-            List list = UserEntity.DAO.queryForList(params);
+            List list = UserEntity.DAO.queryListByAndParams(params);
 
             if (!CollectionUtil.isEmpty(list)) {
                 return TMSResponse.error(1, "此用户名已经存在");

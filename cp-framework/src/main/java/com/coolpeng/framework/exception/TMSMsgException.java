@@ -15,6 +15,11 @@ public class TMSMsgException extends Exception {
         this.message = message;
     }
 
+    public TMSMsgException(String message, String desc) {
+        this.message = message;
+        this.desc = desc;
+    }
+
     public TMSMsgException(String message, int errorCode) {
         this.message = message;
         this.errorCode = errorCode;

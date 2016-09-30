@@ -37,7 +37,7 @@ public class CloudReplyService {
         Map<String, Object> params = new HashMap<>();
         params.put("pageId", pageId);
         try {
-            CloudReplyPage replyPage = CloudReplyPage.DAO.queryForObject(params);
+            CloudReplyPage replyPage = CloudReplyPage.DAO.queryByAndParams(params);
             return replyPage;
         } catch (FieldNotFoundException e) {
             logger.error("", e);
