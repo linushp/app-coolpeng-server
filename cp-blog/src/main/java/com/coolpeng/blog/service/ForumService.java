@@ -296,7 +296,7 @@ public class ForumService {
         }
 
         int pageBegin = (pageNumber - 1) * pageSize;
-        String listSQL = "SELECT p.* " + sql + "  limit " + pageBegin + "," + pageSize + "  ";
+        String listSQL = "SELECT p.* " + sql + "  order by `id` desc  limit " + pageBegin + "," + pageSize + "  ";
         String countSQL = "Select count(0)  " + sql;
         PageResult<ForumPost> p = ForumPost.DAO.queryForPageBySQL(listSQL, countSQL, params);
         p.setPageSize(pageSize);
