@@ -14,7 +14,7 @@ public class ChatMsgVO {
     private String msg;
     private String createTime;
     private Long createTimeMillis;
-    private String status="sent"; //"send,pending"
+    private String status="sent"; //"sent,pending"
 
     public ChatMsgVO(UserEntity sendUser, String msg,String msgId) {
         this.sendUser = new ChatUserVO(sendUser);

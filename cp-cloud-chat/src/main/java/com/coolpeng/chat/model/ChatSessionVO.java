@@ -20,22 +20,23 @@ public class ChatSessionVO {
     private String sessionIcon = ChatConstant.DEFAULT_SESSION_ICON;
 
     private String lastMsgText;
-    private long lastMsgTimeMillis;
+    private long lastMsgTimeMillis = System.currentTimeMillis();
     private String lastMsgUsername;
     private String lastMsgNickname;
     private String lastMsgAvatar;
     private String lastMsgUid;
 
-    List<String> participateUidList;
+    private List<String> participateUidList;
 
     public ChatSessionVO() {
     }
 
-    public ChatSessionVO(String sessionType,String entityId, String sessionTitle) {
+    public ChatSessionVO(String sessionType, String entityId, String sessionTitle) {
         this.sessionType = sessionType;
         this.entityId = entityId;
         this.sessionId = sessionType + "_" + entityId;
         this.sessionTitle = sessionTitle;
+        this.lastMsgTimeMillis = System.currentTimeMillis();
     }
 
     public String getSessionType() {
@@ -79,7 +80,7 @@ public class ChatSessionVO {
     }
 
     public String getSessionIcon() {
-        if (StringUtils.isBlank(this.sessionIcon)){
+        if (StringUtils.isBlank(this.sessionIcon)) {
             this.sessionIcon = ChatConstant.DEFAULT_SESSION_ICON;
         }
         return sessionIcon;

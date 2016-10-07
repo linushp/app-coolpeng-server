@@ -99,7 +99,21 @@ public class RecentSessionService {
             recentSessions.add(m2);
         }
 
-        return recentSessions;
+        return sortByLastMsgTimeMillis(recentSessions);
 
     }
+
+
+
+    private List<ChatSessionVO> sortByLastMsgTimeMillis(List<ChatSessionVO> recentSessions) {
+        Collections.sort(recentSessions, new Comparator<ChatSessionVO>() {
+            @Override
+            public int compare(ChatSessionVO o1, ChatSessionVO o2) {
+                long m = o2.getLastMsgTimeMillis() - o1.getLastMsgTimeMillis();
+                return (int)m;
+            }
+        });
+        return recentSessions;
+    }
+
 }

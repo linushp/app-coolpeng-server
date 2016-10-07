@@ -52,4 +52,20 @@ public class ChatUserVO {
     public void setAvatar(String avatar) {
         this.avatar = avatar;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ChatUserVO that = (ChatUserVO) o;
+
+        return !(uid != null ? !uid.equals(that.uid) : that.uid != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return uid != null ? uid.hashCode() : 0;
+    }
 }

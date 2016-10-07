@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import javax.websocket.Session;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by Administrator on 2016/9/15.
@@ -24,7 +25,7 @@ public class PublicMsgEventListener extends TMSEventListener {
     @Override
     public void onEvent(TMSEvent event) {
         if (event instanceof PublicMsgEvent){
-            Collection<Session> sessions = WebsocketContainer.getAllOnlineSession();
+            List<Session> sessions = WebsocketContainer.getAllOnlineSession();
             if(!CollectionUtil.isEmpty(sessions)){
                 PublicMsgEvent publicMsgEvent = (PublicMsgEvent)event;
                 String json = JSON.toJSONString(publicMsgEvent);

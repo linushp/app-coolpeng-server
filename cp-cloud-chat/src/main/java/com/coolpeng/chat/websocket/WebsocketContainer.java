@@ -2,14 +2,13 @@ package com.coolpeng.chat.websocket;
 
 import com.coolpeng.blog.entity.UserEntity;
 import com.coolpeng.chat.model.ChatUserVO;
-import com.coolpeng.framework.exception.FieldNotFoundException;
-import com.coolpeng.framework.exception.ParameterErrorException;
-import com.coolpeng.framework.utils.CollectionUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.websocket.Session;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -17,51 +16,24 @@ import java.util.concurrent.ConcurrentHashMap;
  * Created by Administrator on 2016/9/15.
  */
 public class WebsocketContainer {
-    private static final Map<String, Session> connectionId2Session = new ConcurrentHashMap<>();
-    private static final Map<String, List<Session>> userId2Session = new ConcurrentHashMap<>();
-    private static final Map<String, ChatUserVO> userId2UserVO = new ConcurrentHashMap<>();
+    private static final Logger logger = LoggerFactory.getLogger(WebsocketContainer.class);
+    private static final Map<String, ChatWsSession> currentConnections = new ConcurrentHashMap<>();
 
     public static void onOpen(Session session) throws Exception {
         String uid = getUid(session);
         String connectionId = getConnectionId(session);
-
         UserEntity userEntity = UserEntity.DAO.queryById(uid);
-
-        getSessionByUid(uid).add(session);
-        connectionId2Session.put(connectionId, session);
-        userId2UserVO.put(uid, new ChatUserVO(userEntity));
-
-        System.out.println("WebSocket Connected , uid = " + uid + ", current online userCount = " + connectionId2Session.size());
+        if (userEntity != null) {
+            currentConnections.put(connectionId, new ChatWsSession(session, new ChatUserVO(userEntity)));
+        }
+        logger.info("WebSocket Connected , uid = " + uid + ", current online userCount = " + currentConnections.size());
     }
 
     public static void onClose(Session session) {
-
         String uid = getUid(session);
         String connectionId = getConnectionId(session);
-        removeBySessionIdFromUserId2Session(uid, session.getId());
-        userId2UserVO.remove(uid);
-        connectionId2Session.remove(connectionId);
-    }
-
-
-    private static void removeBySessionIdFromUserId2Session(String uid,String sessionId){
-        List<Session> sessions = userId2Session.get(uid);
-        if (CollectionUtil.isEmpty(sessions)){
-            return;
-        }
-
-        List<Session> result = new ArrayList<>();
-        for (Session session:result){
-            if (!sessionId.equals(session.getId())){
-                result.add(session);
-            }
-        }
-
-        if (result.isEmpty()){
-            userId2Session.put(uid,null);
-        }else {
-            userId2Session.put(uid,result);
-        }
+        currentConnections.remove(connectionId);
+        logger.info("WebSocket Closed , uid = " + uid + ", current online userCount = " + currentConnections.size());
     }
 
 
@@ -80,20 +52,32 @@ public class WebsocketContainer {
     }
 
 
-    public static Collection<Session> getAllOnlineSession() {
-        return connectionId2Session.values();
+    public static List<Session> getAllOnlineSession() {
+        List<Session> sessions = new ArrayList<>();
+        Collection<ChatWsSession> values = currentConnections.values();
+        for (ChatWsSession ws : values) {
+            sessions.add(ws.getSession());
+        }
+        return sessions;
     }
 
     public static List<Session> getSessionByUid(String uid) {
-        List<Session> sessions = userId2Session.get(uid);
-        if (sessions == null) {
-            sessions = new ArrayList<>();
-            userId2Session.put(uid, sessions);
+        List<Session> sessions = new ArrayList<>();
+        Collection<ChatWsSession> values = currentConnections.values();
+        for (ChatWsSession ws : values) {
+            if (uid.equals(ws.getChatUserVO().getUid())) {
+                sessions.add(ws.getSession());
+            }
         }
         return sessions;
     }
 
     public static Collection<ChatUserVO> getAllOnlineUserVO() {
-        return userId2UserVO.values();
+        Set<ChatUserVO> userVOList = new HashSet<>();
+        Collection<ChatWsSession> values = currentConnections.values();
+        for (ChatWsSession ws : values) {
+            userVOList.add(ws.getChatUserVO());
+        }
+        return userVOList;
     }
 }
