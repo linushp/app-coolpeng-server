@@ -11,6 +11,7 @@ import java.util.List;
 public class ChatSessionVO {
 
     public static final String TYPE_PUBLIC = "public";
+    public static final String TYPE_ROBOT = "robot";
     public static final String TYPE_PEER = "peer";
 
     private String entityId;
@@ -37,6 +38,11 @@ public class ChatSessionVO {
         this.sessionId = sessionType + "_" + entityId;
         this.sessionTitle = sessionTitle;
         this.lastMsgTimeMillis = System.currentTimeMillis();
+    }
+
+    public ChatSessionVO(String sessionType, String entityId, String sessionTitle,String sessionIcon) {
+        this(sessionType, entityId, sessionTitle);
+        this.sessionIcon = sessionIcon;
     }
 
     public String getSessionType() {

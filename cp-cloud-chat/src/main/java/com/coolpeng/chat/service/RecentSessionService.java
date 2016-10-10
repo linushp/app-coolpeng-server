@@ -3,6 +3,7 @@ package com.coolpeng.chat.service;
 import com.coolpeng.blog.entity.UserEntity;
 import com.coolpeng.chat.entity.ChatRecentSession;
 import com.coolpeng.chat.model.ChatSessionVO;
+import com.coolpeng.chat.utils.ChatConstant;
 import com.coolpeng.framework.exception.FieldNotFoundException;
 import com.coolpeng.framework.qtask.QueueTask;
 import com.coolpeng.framework.qtask.QueueTaskRunner;
@@ -88,8 +89,14 @@ public class RecentSessionService {
         }
 
         List<ChatSessionVO> recentSessions = userRecentSession.getRecentSessions();
+        ChatSessionVO m0 = new ChatSessionVO(ChatSessionVO.TYPE_ROBOT, "1", ChatConstant.UBIBI_ROBOT_USER.getNickname(), ChatConstant.UBIBI_ROBOT_ICON);
         ChatSessionVO m1 = new ChatSessionVO(ChatSessionVO.TYPE_PUBLIC, "1", "公共频道");
         ChatSessionVO m2 = new ChatSessionVO(ChatSessionVO.TYPE_PUBLIC, "2", "技术灌水");
+
+
+        if (!recentSessions.contains(m0)){
+            recentSessions.add(m0);
+        }
 
         if (!recentSessions.contains(m1)){
             recentSessions.add(m1);

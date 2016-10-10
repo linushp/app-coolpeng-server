@@ -19,7 +19,7 @@ public class GetIpAddrInfo {
 
         IPAddrParse.parseIpAddr("60.191.97.50", new IPAddrCallback() {
             @Override
-            public void onResult(IPAddrResult ipAddrResult, String resultStr) {
+            public void onResult(IPAddrResult ipAddrResult ) {
                 System.out.println("111111");
                 System.out.println(ipAddrResult);
             }
@@ -28,7 +28,7 @@ public class GetIpAddrInfo {
 
         IPAddrParse.parseIpAddr("60.191.97.50", new IPAddrCallback() {
             @Override
-            public void onResult(IPAddrResult ipAddrResult, String resultStr) {
+            public void onResult(IPAddrResult ipAddrResult) {
                 System.out.println("22222");
                 System.out.println(ipAddrResult);
             }
@@ -37,7 +37,7 @@ public class GetIpAddrInfo {
 
         IPAddrParse.parseIpAddr("60.191.97.50", new IPAddrCallback() {
             @Override
-            public void onResult(IPAddrResult ipAddrResult, String resultStr) {
+            public void onResult(IPAddrResult ipAddrResult) {
                 System.out.println("33333");
                 System.out.println(ipAddrResult);
             }
@@ -46,7 +46,7 @@ public class GetIpAddrInfo {
 
         IPAddrParse.parseIpAddr("60.191.97.50", new IPAddrCallback() {
             @Override
-            public void onResult(IPAddrResult ipAddrResult, String resultStr) {
+            public void onResult(IPAddrResult ipAddrResult) {
                 System.out.println("44444");
                 System.out.println(ipAddrResult);
             }
@@ -55,7 +55,7 @@ public class GetIpAddrInfo {
 
         IPAddrParse.parseIpAddr("60.191.97.50", new IPAddrCallback() {
             @Override
-            public void onResult(IPAddrResult ipAddrResult, String resultStr) {
+            public void onResult(IPAddrResult ipAddrResult) {
                 System.out.println("55555");
                 System.out.println(ipAddrResult);
             }

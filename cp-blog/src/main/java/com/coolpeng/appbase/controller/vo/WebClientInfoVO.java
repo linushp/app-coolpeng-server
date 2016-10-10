@@ -1,8 +1,9 @@
-package com.coolpeng.cloud.common.vo;
+package com.coolpeng.appbase.controller.vo;
 
 import com.coolpeng.framework.utils.DateUtil;
 import com.coolpeng.framework.utils.UniqueId;
 
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -16,6 +17,7 @@ public class WebClientInfoVO {
     private String requestRandomUUID = "";
     private String clientIpAddress = "";
 
+    private Map<String,Object> config;
 
     public WebClientInfoVO() {
         UUID uuid = UUID.randomUUID();
@@ -61,5 +63,13 @@ public class WebClientInfoVO {
 
     public void setRequestRandomUUID(String requestRandomUUID) {
         this.requestRandomUUID = requestRandomUUID;
+    }
+
+    public Map<String, Object> getConfig() {
+        return config;
+    }
+
+    public void setConfig(Map<String, Object> config) {
+        this.config = config;
     }
 }

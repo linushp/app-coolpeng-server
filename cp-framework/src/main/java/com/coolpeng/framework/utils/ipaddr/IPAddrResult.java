@@ -25,19 +25,20 @@ public class IPAddrResult {
     private String isp;
     private String isp_id;
     private String ip;
-
+    private String resultStr;
 
     public IPAddrResult() {
     }
 
 
 
-    public IPAddrResult(boolean isOK) {
+    public IPAddrResult(boolean isOK,String resultStr) {
         this.setOk(isOK);
+        this.resultStr = resultStr;
     }
 
 
-    public IPAddrResult(JSONObject jsonObject) {
+    public IPAddrResult(JSONObject jsonObject,String resultStr) {
         this.country =jsonObject.getString("country");
         this.country_id = jsonObject.getString("country_id");
         this.area = jsonObject.getString("area");
@@ -52,6 +53,7 @@ public class IPAddrResult {
         this.isp_id = jsonObject.getString("isp_id");
         this.ip = jsonObject.getString("ip");
         this.ok = true;
+        this.resultStr = resultStr;
     }
 
     public String getCountry() {
@@ -166,6 +168,13 @@ public class IPAddrResult {
         this.ok = ok;
     }
 
+    public String getResultStr() {
+        return resultStr;
+    }
+
+    public void setResultStr(String resultStr) {
+        this.resultStr = resultStr;
+    }
 
     public String toDisplayString(){
         StringBuffer sb = new StringBuffer();

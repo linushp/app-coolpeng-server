@@ -5,5 +5,5 @@ package com.coolpeng.framework.utils.ipaddr;
  */
 public interface IPAddrCallback {
 
-    void onResult(IPAddrResult ipAddrResult, String resultStr);
+    void onResult(IPAddrResult ipAddrResult);
 }

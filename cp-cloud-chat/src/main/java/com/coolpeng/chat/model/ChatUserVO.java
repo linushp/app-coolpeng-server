@@ -18,6 +18,13 @@ public class ChatUserVO {
         this.avatar = sendUser.getAvatar();
     }
 
+    public ChatUserVO(String uid, String username, String nickname, String avatar) {
+        this.uid = uid;
+        this.username = username;
+        this.nickname = nickname;
+        this.avatar = avatar;
+    }
+
     public ChatUserVO() {
     }
 

@@ -203,9 +203,23 @@ public class AppUserController extends RestBaseController {
             throw new TMSMsgException("您无权修改");
         }
 
+        boolean isUserSelf = false;
+        if (user.getId().equals(id)){
+            isUserSelf = true;
+        }
+
+
         UserEntity.DAO.updateFields(id,map);
 
         user = UserEntity.DAO.queryById(id);
+
+
+        //员工本人的修改，刷新下当前Session
+        if(isUserSelf){
+            setSessionLoginUser(user);
+        }
+
+
         return TMSResponse.success(user);
     }
 

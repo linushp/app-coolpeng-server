@@ -123,7 +123,7 @@ public class CloudReplyService {
         //3、IP地址解析
         IPAddrParse.parseIpAddr(replyEntity.getCreateIpAddr(), new IPAddrCallback() {
             @Override
-            public void onResult(IPAddrResult ipAddrResult, String resultStr) {
+            public void onResult(IPAddrResult ipAddrResult) {
                 if (ipAddrResult.isOk()){
                     replyEntity.setCreateIpStr(ipAddrResult.toDisplayString());
                     try {
