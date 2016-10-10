@@ -128,6 +128,7 @@ public class AppUserController extends RestBaseController {
         String password2 = jsonObject.getString("password2");
         String nickname = jsonObject.getString("nickname");
         String mail = jsonObject.getString("mail");
+        String avatar = jsonObject.getString("avatar");
         String username = mail;//使用邮箱作为用户名
         /****************************************************************/
 
@@ -158,6 +159,7 @@ public class AppUserController extends RestBaseController {
         newUser.setNickname(nickname);
         newUser.setMail(mail);
         newUser.setPermission("");
+        newUser.setAvatar(avatar);
         userService.saveAndFlush(newUser);
 
         return new TMSResponse();

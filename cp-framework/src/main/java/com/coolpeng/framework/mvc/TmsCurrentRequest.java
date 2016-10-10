@@ -45,7 +45,6 @@ public class TmsCurrentRequest {
             String host = request.getHeader("host");
 
             ctx = scheme + "://" + host + contextPath;
-            setSessionAttribute("TMS_REQUEST_CONTEXT", ctx);
         }
         return (String) ctx;
     }
