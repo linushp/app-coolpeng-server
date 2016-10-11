@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -76,7 +77,7 @@ public class AppUserController extends RestBaseController {
         user.setLastLoginDevPlatform(reqParams.getDevicePlatform());
         user.setLastLoginDevUid(reqParams.getUuid());
         user.setLastLoginIpAddr(TmsCurrentRequest.getClientIpAddr());
-        user.setLoginCount(user.getLoginCount());
+        user.setLoginCount(user.getLoginCount()+1);
         userService.saveAndFlush(user);
 
 
@@ -176,10 +177,20 @@ public class AppUserController extends RestBaseController {
      */
     @ResponseBody
     @RequestMapping("/getCurrentUserInfo")
-    public TMSResponse<UserEntity> getCurrentUserInfo(@RequestBody JSONObject jsonObject) throws TMSMsgException, FieldNotFoundException {
+    public TMSResponse<UserEntity> getCurrentUserInfo(@RequestBody JSONObject jsonObject) throws Exception {
         UserEntity user = assertIsUserLoginIfToken(jsonObject);
         user = new UserEntity(user);
         user.setPassword(null);//隐藏敏感信息
+
+
+        UserEntity user0 = UserEntity.DAO.queryById(user.getId());
+        int viewCount = user0.getViewCount() + 1;
+        Map<String, Object> map = new HashMap<>();
+        map.put("viewCount", viewCount);
+        UserEntity.DAO.updateFields(user.getId(), map);
+
+
+        user.setViewCount(viewCount);
         return TMSResponse.success(user);
     }
 
