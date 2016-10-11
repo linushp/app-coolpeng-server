@@ -10,12 +10,6 @@ public class TmsUserEntity extends BaseEntity {
     private String mail;
     private String permission;
 
-
-
-
-
-
-
     /**
      * 最后一次登录产生的token
      */
@@ -36,6 +30,12 @@ public class TmsUserEntity extends BaseEntity {
      */
     private String lastLoginTime;
 
+    //登录次数
+    private int loginCount = 0;
+
+    //最后一次登录的ip地址
+    //ALTER TABLE t_user_entity ADD last_login_ip_addr VARCHAR(100) NOT NULL;
+    private String lastLoginIpAddr;
 
     public TmsUserEntity(TmsUserEntity user) {
 
@@ -46,11 +46,13 @@ public class TmsUserEntity extends BaseEntity {
         this.lastLoginDevUid = user.lastLoginDevUid;
         this.lastLoginTime = user.lastLoginTime;
         this.lastLoginToken = user.lastLoginToken;
+        this.lastLoginIpAddr = user.lastLoginIpAddr;
         this.mail = user.mail;
         this.nickname = user.nickname;
         this.password = user.password;
         this.permission = user.permission;
         this.username = user.username;
+        this.loginCount = user.loginCount;
     }
 
     public TmsUserEntity() {
@@ -142,5 +144,21 @@ public class TmsUserEntity extends BaseEntity {
 
     public void setLastLoginToken(String lastLoginToken) {
         this.lastLoginToken = lastLoginToken;
+    }
+
+    public int getLoginCount() {
+        return loginCount;
+    }
+
+    public void setLoginCount(int loginCount) {
+        this.loginCount = loginCount;
+    }
+
+    public String getLastLoginIpAddr() {
+        return lastLoginIpAddr;
+    }
+
+    public void setLastLoginIpAddr(String lastLoginIpAddr) {
+        this.lastLoginIpAddr = lastLoginIpAddr;
     }
 }

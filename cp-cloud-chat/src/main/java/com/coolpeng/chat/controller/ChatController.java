@@ -11,6 +11,7 @@ import com.coolpeng.chat.model.ChatUserVO;
 import com.coolpeng.chat.service.PeerChatService;
 import com.coolpeng.chat.service.PublicChatService;
 import com.coolpeng.chat.service.RecentSessionService;
+import com.coolpeng.chat.service.RobotChatService;
 import com.coolpeng.chat.service.api.IChatMsgService;
 import com.coolpeng.chat.websocket.WebsocketContainer;
 import com.coolpeng.chat.websocket.event.CreateSessionEvent;
@@ -36,6 +37,8 @@ import java.util.List;
 @RequestMapping(value = "/cloud/chat", produces = "application/json; charset=UTF-8")
 public class ChatController extends RestBaseController {
 
+    @Autowired
+    private RobotChatService robotChatService;
     @Autowired
     private PublicChatService publicChatService;
     @Autowired
@@ -100,6 +103,7 @@ public class ChatController extends RestBaseController {
         return TMSResponse.success().addExtendData("sessionVO",sessionVO);
     }
 
+
     @ResponseBody
     @RequestMapping({"/getChatMsgList"})
     public TMSResponse getChatMsgList(@RequestBody JSONObject jsonObject) throws Exception {
@@ -117,7 +121,10 @@ public class ChatController extends RestBaseController {
             return publicChatService;
         } else if (ChatSessionVO.TYPE_PEER.equals(sessionType)) {
             return peerChatService;
-        } else {
+        } else if (ChatSessionVO.TYPE_ROBOT.equals(sessionType)){
+            return robotChatService;
+        }
+        else {
             throw new TMSMsgException("sessionType error : " + sessionType);
         }
     }

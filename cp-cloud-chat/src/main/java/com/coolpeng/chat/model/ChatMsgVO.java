@@ -24,6 +24,14 @@ public class ChatMsgVO {
         this.createTimeMillis = System.currentTimeMillis();
     }
 
+    public ChatMsgVO(ChatUserVO sendUser, String msg,String msgId) {
+        this.sendUser = (sendUser);
+        this.msg = msg;
+        this.msgId = msgId;
+        this.createTime = DateUtil.currentTimeFormat();
+        this.createTimeMillis = System.currentTimeMillis();
+    }
+
     public ChatMsgVO() {
     }
 

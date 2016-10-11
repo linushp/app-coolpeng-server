@@ -75,6 +75,8 @@ public class AppUserController extends RestBaseController {
         user.setLastLoginTime(DateUtil.currentTimeFormat());
         user.setLastLoginDevPlatform(reqParams.getDevicePlatform());
         user.setLastLoginDevUid(reqParams.getUuid());
+        user.setLastLoginIpAddr(TmsCurrentRequest.getClientIpAddr());
+        user.setLoginCount(user.getLoginCount());
         userService.saveAndFlush(user);
 
 
