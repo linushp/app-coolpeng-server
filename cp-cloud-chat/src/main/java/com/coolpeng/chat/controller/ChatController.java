@@ -52,6 +52,16 @@ public class ChatController extends RestBaseController {
     public TMSResponse getAllOnlineUserVO(@RequestBody JSONObject jsonObject) throws Exception {
         UserEntity user = assertIsUserLoginIfToken(jsonObject);
         Collection<ChatUserVO> userVOList = WebsocketContainer.getAllOnlineUserVO();
+
+
+//        userVOList = new ArrayList<>();
+//        for (int i=0;i<100;i++){
+//            int x = (i%9) + 1;
+//            String avatar = "http://image.coolpeng.cn/avatar/mv-0001-1957/mv-001"+x+".jpg";
+//            userVOList.add(new ChatUserVO(""+i,"1001"+i,"张三"+i, avatar));
+//        }
+
+
         return TMSResponse.success(userVOList);
     }
 
@@ -61,6 +71,7 @@ public class ChatController extends RestBaseController {
     public TMSResponse getSessionList(@RequestBody JSONObject jsonObject) throws Exception {
         UserEntity user = assertIsUserLoginIfToken(jsonObject);
         List<ChatSessionVO> sessionVOList = recentSessionService.getRecentChatSessionVOList(user);
+
         return TMSResponse.success(sessionVOList);
     }
 
@@ -69,6 +80,7 @@ public class ChatController extends RestBaseController {
     @RequestMapping({"/createSession"})
     public TMSResponse createSession(@RequestBody JSONObject jsonObject) throws Exception {
 
+        //只需要两个字段：participateUidList，sessionType
         ChatSessionVO sessionVO = jsonObject.getObject("sessionVO", ChatSessionVO.class);
 
         /**********************************/
