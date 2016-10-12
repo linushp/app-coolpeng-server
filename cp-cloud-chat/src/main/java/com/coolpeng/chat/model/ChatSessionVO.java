@@ -17,8 +17,12 @@ public class ChatSessionVO {
     private String entityId;
     private String sessionType; //
     private String sessionId; // "peer_1", "public_1" 即 type + entityId
+
     private String sessionTitle;
     private String sessionIcon = ChatConstant.DEFAULT_SESSION_ICON;
+
+    private List<String> participateUidList;
+
 
     private String lastMsgText;
     private long lastMsgTimeMillis = System.currentTimeMillis();
@@ -27,23 +31,42 @@ public class ChatSessionVO {
     private String lastMsgAvatar;
     private String lastMsgUid;
 
-    private List<String> participateUidList;
-
     public ChatSessionVO() {
     }
 
-    public ChatSessionVO(String sessionType, String entityId, String sessionTitle) {
+
+    public ChatSessionVO(String sessionType, String entityId, String sessionTitle, String sessionIcon) {
         this.sessionType = sessionType;
         this.entityId = entityId;
         this.sessionId = sessionType + "_" + entityId;
         this.sessionTitle = sessionTitle;
         this.lastMsgTimeMillis = System.currentTimeMillis();
-    }
-
-    public ChatSessionVO(String sessionType, String entityId, String sessionTitle,String sessionIcon) {
-        this(sessionType, entityId, sessionTitle);
         this.sessionIcon = sessionIcon;
     }
+
+    public ChatSessionVO(ChatSessionVO m, ChatMsgVO chatMsgVO) {
+        this.sessionType = m.getSessionType();
+        this.entityId = m.getEntityId();
+        this.sessionId = m.getSessionId();
+        this.sessionTitle = m.getSessionTitle();
+        this.lastMsgTimeMillis = m.getLastMsgTimeMillis();
+        this.sessionIcon = m.getSessionIcon();
+        this.participateUidList = m.getParticipateUidList();
+        this.makeLastMessage(chatMsgVO);
+    }
+
+
+    public void makeLastMessage(ChatMsgVO chatMsgVO) {
+        ChatUserVO sendUser = chatMsgVO.getSendUser();
+        ChatSessionVO sessionVO = this;
+        sessionVO.setLastMsgText(chatMsgVO.getMsg());
+        sessionVO.setLastMsgAvatar(sendUser.getAvatar());
+        sessionVO.setLastMsgNickname(sendUser.getNickname());
+        sessionVO.setLastMsgTimeMillis(chatMsgVO.getCreateTimeMillis());
+        sessionVO.setLastMsgUsername(sendUser.getUsername());
+        sessionVO.setLastMsgUid(sendUser.getUid());
+    }
+
 
     public String getSessionType() {
         return sessionType;

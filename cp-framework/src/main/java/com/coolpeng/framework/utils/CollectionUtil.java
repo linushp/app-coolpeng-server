@@ -75,6 +75,21 @@ public class CollectionUtil {
         return results;
     }
 
+
+    public static <T> List<Object> getPropValueList(Collection<T> collection, String propName) throws Exception {
+        List<Object> results = new ArrayList<>();
+        if (null != collection) {
+            for (T obj : collection) {
+                Object propObj = PropertyUtils.getProperty(obj, propName);
+                if (propObj != null) {
+                    results.add(propObj);
+                }
+            }
+        }
+        return results;
+    }
+
+
     /**
      * 获取参数中第一个不为空的字符串，如果返回空字符串，说明获取失败
      *
@@ -398,4 +413,6 @@ public class CollectionUtil {
 
         return fields;
     }
+
+
 }

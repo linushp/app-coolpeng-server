@@ -28,9 +28,9 @@ public class CreateSessionEventListener extends TMSEventListener {
             String json = JSON.toJSONString(event);
             List<String> uidList = sessionVO.getParticipateUidList();
             for (String toUserId : uidList) {
-                List<Session>sessions = WebsocketContainer.getSessionByUid(toUserId);
+                List<Session> sessions = WebsocketContainer.getSessionByUid(toUserId);
                 if (sessions != null) {
-                    for(Session session:sessions){
+                    for (Session session : sessions) {
                         try {
                             session.getBasicRemote().sendText(json);
                         } catch (IOException e) {

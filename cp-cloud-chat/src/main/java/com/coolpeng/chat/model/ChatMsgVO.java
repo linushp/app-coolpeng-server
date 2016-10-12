@@ -14,9 +14,9 @@ public class ChatMsgVO {
     private String msg;
     private String createTime;
     private Long createTimeMillis;
-    private String status="sent"; //"sent,pending"
+    private String status = "sent"; //"sent,pending"
 
-    public ChatMsgVO(UserEntity sendUser, String msg,String msgId) {
+    public ChatMsgVO(UserEntity sendUser, String msg, String msgId) {
         this.sendUser = new ChatUserVO(sendUser);
         this.msg = msg;
         this.msgId = msgId;
@@ -24,7 +24,7 @@ public class ChatMsgVO {
         this.createTimeMillis = System.currentTimeMillis();
     }
 
-    public ChatMsgVO(ChatUserVO sendUser, String msg,String msgId) {
+    public ChatMsgVO(ChatUserVO sendUser, String msg, String msgId) {
         this.sendUser = (sendUser);
         this.msg = msg;
         this.msgId = msgId;

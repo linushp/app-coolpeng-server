@@ -11,7 +11,7 @@ public class PublicMsgEvent extends TMSEvent {
     private String msgSummary;
     private String sessionId;
 
-    public PublicMsgEvent(ChatMsgVO chatMsgVO,String sessionId,String msgSummary) {
+    public PublicMsgEvent(ChatMsgVO chatMsgVO, String sessionId, String msgSummary) {
         this.chatMsgVO = chatMsgVO;
         this.sessionId = sessionId;
         this.msgSummary = msgSummary;

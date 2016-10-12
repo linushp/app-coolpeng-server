@@ -1,34 +1,30 @@
 package com.coolpeng.chat.entity;
 
+import com.coolpeng.chat.model.ChatUserVO;
 import com.coolpeng.framework.db.BaseEntity;
 import com.coolpeng.framework.db.SimpleDAO;
 
 /**
-
- CREATE TABLE `t_chat_peer_session` (
- `id` int(11) NOT NULL AUTO_INCREMENT,
- `create_time` varchar(256) DEFAULT NULL,
- `update_time` varchar(256) DEFAULT NULL,
- `create_user_id` varchar(256) DEFAULT NULL,
- `update_user_id` varchar(256) DEFAULT NULL,
- `status` int(11) DEFAULT '0',
-
- `peer1_uid` varchar(256) DEFAULT NULL,
- `peer1_avatar` varchar(256) DEFAULT NULL,
- `peer1_username` varchar(256) DEFAULT NULL,
- `peer1_nickname` varchar(256) DEFAULT NULL,
-
- `peer2_uid` varchar(256) DEFAULT NULL,
- `peer2_avatar` varchar(256) DEFAULT NULL,
- `peer2_username` varchar(256) DEFAULT NULL,
- `peer2_nickname` varchar(256) DEFAULT NULL,
-
- PRIMARY KEY (`id`)
- ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-
-
+ * CREATE TABLE `t_chat_peer_session` (
+ * `id` int(11) NOT NULL AUTO_INCREMENT,
+ * `create_time` varchar(256) DEFAULT NULL,
+ * `update_time` varchar(256) DEFAULT NULL,
+ * `create_user_id` varchar(256) DEFAULT NULL,
+ * `update_user_id` varchar(256) DEFAULT NULL,
+ * `status` int(11) DEFAULT '0',
+ * <p/>
+ * `peer1_uid` varchar(256) DEFAULT NULL,
+ * `peer1_avatar` varchar(256) DEFAULT NULL,
+ * `peer1_username` varchar(256) DEFAULT NULL,
+ * `peer1_nickname` varchar(256) DEFAULT NULL,
+ * <p/>
+ * `peer2_uid` varchar(256) DEFAULT NULL,
+ * `peer2_avatar` varchar(256) DEFAULT NULL,
+ * `peer2_username` varchar(256) DEFAULT NULL,
+ * `peer2_nickname` varchar(256) DEFAULT NULL,
+ * <p/>
+ * PRIMARY KEY (`id`)
+ * ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
  */
 public class ChatPeerSession extends BaseEntity {
 
@@ -55,6 +51,7 @@ public class ChatPeerSession extends BaseEntity {
     public void setSessionTitle(String sessionTitle) {
         this.sessionTitle = sessionTitle;
     }
+
     public String getSessionId() {
         return "peer_" + this.getId();
     }
@@ -121,5 +118,13 @@ public class ChatPeerSession extends BaseEntity {
 
     public void setPeer2Nickname(String peer2Nickname) {
         this.peer2Nickname = peer2Nickname;
+    }
+
+    public ChatUserVO pickOutPeer2Uid() {
+       return new ChatUserVO(this.peer2Uid, this.peer2Username,this.peer2Nickname, this.peer2Avatar);
+    }
+
+    public ChatUserVO pickOutPeer1Uid() {
+        return new ChatUserVO(this.peer1Uid, this.peer1Username,this.peer1Nickname, this.peer1Avatar);
     }
 }

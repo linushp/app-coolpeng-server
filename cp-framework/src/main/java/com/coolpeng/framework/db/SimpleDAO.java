@@ -54,6 +54,13 @@ public class SimpleDAO<T> {
         return objList.get(0);
     }
 
+    public T queryObjectByOrKV(String key1, Object value1, String key2, Object value2) throws FieldNotFoundException {
+        List<T> objList = queryListByOrKV(key1, value1, key2, value2);
+        if (objList == null || objList.isEmpty()) {
+            return null;
+        }
+        return objList.get(0);
+    }
 
     public List<T> queryListByKV(String key, Object value) throws FieldNotFoundException {
         Map<String, Object> params = new HashMap<>();
@@ -66,6 +73,13 @@ public class SimpleDAO<T> {
         params.put(key1, value1);
         params.put(key2, value2);
         return queryListByAndParams(params);
+    }
+
+    public List<T> queryListByOrKV(String key1, Object value1, String key2, Object value2) throws FieldNotFoundException {
+        Map<String, Object> params = new HashMap<>();
+        params.put(key1, value1);
+        params.put(key2, value2);
+        return queryListByOrParams(params);
     }
 
 

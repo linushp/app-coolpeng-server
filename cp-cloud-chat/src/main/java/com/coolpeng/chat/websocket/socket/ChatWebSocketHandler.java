@@ -28,7 +28,7 @@ public class ChatWebSocketHandler {
     }
 
     @OnClose
-    public void onClose(Session session, CloseReason closeReason){
+    public void onClose(Session session, CloseReason closeReason) {
         WebsocketContainer.onClose(session);
     }
 
@@ -40,7 +40,7 @@ public class ChatWebSocketHandler {
 
 
     @OnError
-    public void onError(Session session, Throwable error){
+    public void onError(Session session, Throwable error) {
         System.out.println("发生错误");
         error.printStackTrace();
     }

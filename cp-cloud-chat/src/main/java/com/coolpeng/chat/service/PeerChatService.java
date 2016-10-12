@@ -4,6 +4,7 @@ import com.coolpeng.blog.entity.UserEntity;
 import com.coolpeng.chat.entity.ChatPeerSession;
 import com.coolpeng.chat.model.ChatMsgVO;
 import com.coolpeng.chat.model.ChatSessionVO;
+import com.coolpeng.chat.model.ChatUserVO;
 import com.coolpeng.chat.service.api.IChatMsgService;
 import com.coolpeng.chat.websocket.event.CreateSessionEvent;
 import com.coolpeng.chat.websocket.event.PeerMsgEvent;
@@ -24,21 +25,54 @@ public class PeerChatService implements IChatMsgService {
     @Autowired
     private RecentSessionService recentSessionService;
 
+
+    /**
+     * @param sendMessageUser 发送消息的用户
+     * @param msg
+     * @param msgSummary
+     * @param msgId
+     * @param sessionVO
+     * @return
+     * @throws Exception
+     */
     @Override
-    public TMSEvent saveMessage(UserEntity user, String msg,String msgSummary,String msgId, ChatSessionVO sessionVO) throws Exception {
+    public TMSEvent saveMessage(UserEntity sendMessageUser, String msg, String msgSummary, String msgId, ChatSessionVO sessionVO,boolean isRefreshRecent) throws Exception {
         String entityId = sessionVO.getEntityId();
         ChatPeerSession chatSessionInfo = ChatPeerSession.DAO.queryObjectByKV("id", entityId);
-        ChatMsgVO chatMsgVO = new ChatMsgVO(user, msg,msgId);
-        String currentUid = user.getId();
+        ChatMsgVO chatMsgVO = new ChatMsgVO(sendMessageUser, msg, msgId);
+        String currentUid = sendMessageUser.getId();
         String receiveUserId = null;
+        ChatUserVO receiveUserVO = null;
+        ChatUserVO sendUserVO = new ChatUserVO(sendMessageUser);
         if (currentUid.equals(chatSessionInfo.getPeer1Uid())) {
             receiveUserId = chatSessionInfo.getPeer2Uid();
+            receiveUserVO = chatSessionInfo.pickOutPeer2Uid();
         } else {
             receiveUserId = chatSessionInfo.getPeer1Uid();
+            receiveUserVO = chatSessionInfo.pickOutPeer1Uid();
         }
 
-        chatSessionMessageService.saveSessionMessage(user,sessionVO,chatMsgVO);
-        return new PeerMsgEvent(chatMsgVO, receiveUserId,msgSummary);
+        chatSessionMessageService.saveSessionMessage(sendMessageUser, sessionVO, chatMsgVO);
+
+
+        ChatSessionVO sessionVO1 = toChatSessionVO(sessionVO, chatMsgVO, receiveUserVO); //sender
+        ChatSessionVO sessionVO2 = toChatSessionVO(sessionVO, chatMsgVO, sendUserVO);  //receive
+        sessionVO1.setLastMsgText(msgSummary);
+        sessionVO2.setLastMsgText(msgSummary);
+        if (isRefreshRecent) {
+            recentSessionService.asynSaveRecentSession(currentUid,sessionVO1);
+            recentSessionService.asynSaveRecentSession(receiveUserId,sessionVO2);
+        }
+
+        //只给一个人发送这个事件
+        return new PeerMsgEvent(chatMsgVO, receiveUserId, msgSummary,sessionVO2);
+    }
+
+    private ChatSessionVO toChatSessionVO(ChatSessionVO sessionVO, ChatMsgVO chatMsgVO, ChatUserVO anotherUser) {
+        ChatSessionVO vo = new ChatSessionVO(sessionVO,chatMsgVO);
+        vo.setSessionTitle("与 " + anotherUser.getNickname() + " 对话");
+        vo.setSessionIcon(anotherUser.getAvatar());
+        return vo;
     }
 
     @Override
@@ -58,29 +92,37 @@ public class PeerChatService implements IChatMsgService {
         UserEntity user2 = UserEntity.DAO.queryById(uid2);
         ChatPeerSession chatPeerSession = getOrCreateChatPeerSession(user1, user2);
 
-        ChatSessionVO sessionVO1 = toChatSessionVO(chatPeerSession, user1, user2);
-        ChatSessionVO sessionVO2 = toChatSessionVO(chatPeerSession, user2, user1);
-        recentSessionService.saveRecentSession(sessionVO1, user1,"");
-        recentSessionService.saveRecentSession(sessionVO2, user2,"");
+        ChatSessionVO sessionVO1 = toChatSessionVO(chatPeerSession, participateUidList, user2);
+        ChatSessionVO sessionVO2 = toChatSessionVO(chatPeerSession, participateUidList, user1);
 
+        recentSessionService.doSaveRecentSession(uid1,sessionVO1);
+        recentSessionService.doSaveRecentSession(uid2,sessionVO2);
 
-        sessionVO1.setParticipateUidList(tempSessionVO.getParticipateUidList());
         return new CreateSessionEvent(sessionVO1);
     }
 
 
-    private ChatSessionVO toChatSessionVO(ChatPeerSession chatPeerSession, UserEntity ownerUser,UserEntity anotherUser) {
-        ChatSessionVO vo = new ChatSessionVO(ChatSessionVO.TYPE_PEER,chatPeerSession.getId(), "与 " + anotherUser.getNickname() +" 对话") ;
+    @Override
+    public void deleteSession(UserEntity currentLoginUser,String sessionId) throws Exception {
+        recentSessionService.deleteRecentSession(currentLoginUser.getId(), sessionId);
+    }
+
+
+    private ChatSessionVO toChatSessionVO(ChatPeerSession chatPeerSession, List<String> participateUidList, UserEntity anotherUser) {
+        ChatSessionVO vo = new ChatSessionVO(ChatSessionVO.TYPE_PEER, chatPeerSession.getId(), "", "");
+        vo.setSessionTitle("与 " + anotherUser.getNickname() + " 对话");
         vo.setSessionIcon(anotherUser.getAvatar());
+        vo.setParticipateUidList(participateUidList);
         return vo;
     }
 
 
-    private ChatPeerSession getOrCreateChatPeerSession(UserEntity user1,UserEntity user2) throws Exception{
+    private ChatPeerSession getOrCreateChatPeerSession(UserEntity user1, UserEntity user2) throws Exception {
 
-        String uid1= user1.getId();
-        String uid2= user2.getId();
+        String uid1 = user1.getId();
+        String uid2 = user2.getId();
 
+        //select * from  ChatPeerSession where (peer1Uid = ui1 and peer2Uid = uid2) or (peer1Uid = ui2 and peer2Uid = uid1)
         ChatPeerSession chatPeerSession = ChatPeerSession.DAO.queryObjectByKV("peer1Uid", uid1, "peer2Uid", uid2);
         if (chatPeerSession == null) {
             chatPeerSession = ChatPeerSession.DAO.queryObjectByKV("peer2Uid", uid1, "peer1Uid", uid2);

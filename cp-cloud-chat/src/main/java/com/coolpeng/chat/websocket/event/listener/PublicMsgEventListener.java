@@ -24,17 +24,17 @@ public class PublicMsgEventListener extends TMSEventListener {
 
     @Override
     public void onEvent(TMSEvent event) {
-        if (event instanceof PublicMsgEvent){
+        if (event instanceof PublicMsgEvent) {
             List<Session> sessions = WebsocketContainer.getAllOnlineSession();
-            if(!CollectionUtil.isEmpty(sessions)){
-                PublicMsgEvent publicMsgEvent = (PublicMsgEvent)event;
+            if (!CollectionUtil.isEmpty(sessions)) {
+                PublicMsgEvent publicMsgEvent = (PublicMsgEvent) event;
                 String json = JSON.toJSONString(publicMsgEvent);
-                for (Session session : sessions){
+                for (Session session : sessions) {
                     try {
                         session.getBasicRemote().sendText(json);
                     } catch (IOException e) {
                         e.printStackTrace();
-                        logger.error("",e);
+                        logger.error("", e);
                     }
                 }
             }

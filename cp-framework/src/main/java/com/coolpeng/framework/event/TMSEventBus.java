@@ -43,19 +43,22 @@ public class TMSEventBus {
 
 
     public static void sendEvent(TMSEvent event) {
+        if (event == null) {
+            return;
+        }
+
         Collection<TMSEventListener> listeners = eventListeners.values();
         for (TMSEventListener listener : listeners) {
             if (listener != null) {
                 try {
                     listener.onEvent(event);
-                }catch (Throwable e){
+                } catch (Throwable e) {
                     //一个事件监听器报错了，让其不影响其他监听器
-                    logger.error("",e);
+                    logger.error("", e);
                 }
             }
         }
     }
-
 
 
     private static String getListenerName(TMSEventListener listener) {
@@ -67,8 +70,11 @@ public class TMSEventBus {
     }
 
 
-
     public static void asynSendEvent(final TMSEvent event) {
+        if (event == null) {
+            return;
+        }
+
         queueTaskRunner.addTask(new QueueTask() {
             @Override
             public void runTask() {
@@ -76,7 +82,7 @@ public class TMSEventBus {
                     sendEvent(event);
                 } catch (Throwable e) {
                     e.printStackTrace();
-                    logger.error("",e);
+                    logger.error("", e);
                 }
             }
         });

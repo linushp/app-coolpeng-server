@@ -18,7 +18,7 @@ public class ChatSessionMessageService {
 
     private static final int MAX_STORE_MSG_COUNT = 100;
 
-    public void saveSessionMessage(UserEntity user, ChatSessionVO sessionVO, ChatMsgVO chatMsgVO) throws Exception {
+    public void saveSessionMessage(UserEntity sendMessageUser, ChatSessionVO sessionVO, ChatMsgVO chatMsgVO) throws Exception {
         List<ChatMsgVO> msgList = this.getChatMsgList(sessionVO);
         msgList.add(chatMsgVO);
 
@@ -29,10 +29,10 @@ public class ChatSessionMessageService {
             msgList = msgList.subList(begin, end + 1);
         }
 
-        saveChatSessionMessage(user, msgList, sessionVO);
+        saveChatSessionMessage(sendMessageUser, msgList, sessionVO);
     }
 
-    private void saveChatSessionMessage(UserEntity user, List<ChatMsgVO> msgList, ChatSessionVO sessionVO) throws Exception {
+    private void saveChatSessionMessage(UserEntity sendMessageUser, List<ChatMsgVO> msgList, ChatSessionVO sessionVO) throws Exception {
         String sessionId = sessionVO.getSessionId(); //形如：public_1
         ChatSessionMessage entity = ChatSessionMessage.DAO.queryObjectByKV("sessionId", sessionId);
         if (entity == null) {
@@ -40,9 +40,9 @@ public class ChatSessionMessageService {
             entity.setEntityId(sessionVO.getEntityId());
             entity.setSessionId(sessionVO.getSessionId());
             entity.setSessionType(ChatSessionVO.TYPE_PEER);
-            entity.setCreateUserId(user.getId());
+            entity.setCreateUserId(sendMessageUser.getId());
         }
-        entity.setUpdateUserId(user.getId());
+        entity.setUpdateUserId(sendMessageUser.getId());
         entity.setChatMsg(msgList);
         ChatSessionMessage.DAO.insertOrUpdate(entity);
     }

@@ -1,6 +1,7 @@
 com/coolpeng/chat/websocket/event/listener/CreateSessionEventListener.class
 com/coolpeng/chat/websocket/event/init/EventListenerInit.class
 com/coolpeng/chat/model/ChatSessionVO.class
+com/coolpeng/chat/service/ChatUserService$1.class
 com/coolpeng/chat/websocket/ChatWsSession.class
 com/coolpeng/chat/websocket/event/PublicMsgEvent.class
 com/coolpeng/chat/service/RecentSessionService$1.class
@@ -10,10 +11,10 @@ com/coolpeng/chat/websocket/event/CreateSessionEvent.class
 com/coolpeng/chat/service/RobotChatService.class
 com/coolpeng/chat/service/api/IChatMsgService.class
 com/coolpeng/chat/model/ChatUserVO.class
-com/coolpeng/chat/utils/AsynDaoUtils.class
 com/coolpeng/chat/model/ChatMsgVO.class
 com/coolpeng/chat/websocket/socket/ChatWebSocketHandler.class
 com/coolpeng/chat/service/AppInit.class
+com/coolpeng/chat/service/ChatUserService.class
 com/coolpeng/chat/utils/ChatConstant.class
 com/coolpeng/chat/websocket/event/listener/PublicMsgEventListener.class
 com/coolpeng/chat/websocket/event/PeerMsgEvent.class

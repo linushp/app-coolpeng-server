@@ -6,16 +6,27 @@ import com.coolpeng.blog.entity.UserEntity;
  * Created by Administrator on 2016/9/15.
  */
 public class ChatUserVO {
+
+    public static final int STATUS_OFF_LINE = 0;
+    public static final int STATUS_ON_LINE = 1;
+    public static final int STATUS_UNKNOWN = 2;
+
     private String uid;
     private String username;
     private String nickname;
     private String avatar;
+    private int online = STATUS_UNKNOWN; // 0 不在线， 1 在线,    2 未知，
 
-    public ChatUserVO(UserEntity sendUser) {
+    public ChatUserVO(UserEntity sendUser, int online) {
         this.uid = sendUser.getId();
-        this.username  = sendUser.getUsername();
+        this.username = sendUser.getUsername();
         this.nickname = sendUser.getNickname();
         this.avatar = sendUser.getAvatar();
+        this.online = online;
+    }
+
+    public ChatUserVO(UserEntity sendUser) {
+        this(sendUser, STATUS_UNKNOWN);
     }
 
     public ChatUserVO(String uid, String username, String nickname, String avatar) {
@@ -23,6 +34,7 @@ public class ChatUserVO {
         this.username = username;
         this.nickname = nickname;
         this.avatar = avatar;
+        this.online = STATUS_UNKNOWN;
     }
 
     public ChatUserVO() {
@@ -58,6 +70,15 @@ public class ChatUserVO {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
+    }
+
+
+    public int getOnline() {
+        return online;
+    }
+
+    public void setOnline(int online) {
+        this.online = online;
     }
 
     @Override

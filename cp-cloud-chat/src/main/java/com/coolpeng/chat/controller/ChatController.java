@@ -8,18 +8,15 @@ import com.coolpeng.blog.entity.UserEntity;
 import com.coolpeng.chat.model.ChatMsgVO;
 import com.coolpeng.chat.model.ChatSessionVO;
 import com.coolpeng.chat.model.ChatUserVO;
-import com.coolpeng.chat.service.PeerChatService;
-import com.coolpeng.chat.service.PublicChatService;
-import com.coolpeng.chat.service.RecentSessionService;
-import com.coolpeng.chat.service.RobotChatService;
+import com.coolpeng.chat.service.*;
 import com.coolpeng.chat.service.api.IChatMsgService;
 import com.coolpeng.chat.websocket.WebsocketContainer;
 import com.coolpeng.chat.websocket.event.CreateSessionEvent;
-import com.coolpeng.chat.websocket.event.init.EventListenerInit;
 import com.coolpeng.framework.event.TMSEvent;
 import com.coolpeng.framework.event.TMSEventBus;
 import com.coolpeng.framework.exception.TMSMsgException;
 import com.coolpeng.framework.mvc.TMSResponse;
+import com.coolpeng.framework.utils.CollectionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -45,23 +42,15 @@ public class ChatController extends RestBaseController {
     private PeerChatService peerChatService;
     @Autowired
     private RecentSessionService recentSessionService;
+    @Autowired
+    private ChatUserService chatUserService;
 
 
     @ResponseBody
     @RequestMapping({"/getAllOnlineUserVO"})
     public TMSResponse getAllOnlineUserVO(@RequestBody JSONObject jsonObject) throws Exception {
         UserEntity user = assertIsUserLoginIfToken(jsonObject);
-        Collection<ChatUserVO> userVOList = WebsocketContainer.getAllOnlineUserVO();
-
-
-//        userVOList = new ArrayList<>();
-//        for (int i=0;i<100;i++){
-//            int x = (i%9) + 1;
-//            String avatar = "http://image.coolpeng.cn/avatar/mv-0001-1957/mv-001"+x+".jpg";
-//            userVOList.add(new ChatUserVO(""+i,"1001"+i,"张三"+i, avatar));
-//        }
-
-
+        List<ChatUserVO> userVOList = chatUserService.getChatUserList(user);
         return TMSResponse.success(userVOList);
     }
 
@@ -86,9 +75,24 @@ public class ChatController extends RestBaseController {
         /**********************************/
         UserEntity user = assertIsUserLoginIfToken(jsonObject);
         IChatMsgService chatMsgService = getChatMsgService(sessionVO.getSessionType());
-        CreateSessionEvent event  = chatMsgService.createSession(user, sessionVO);
+        CreateSessionEvent event = chatMsgService.createSession(user, sessionVO);
         TMSEventBus.asynSendEvent(event);
         return TMSResponse.success(event.getChatSessionVO());
+    }
+
+
+    @ResponseBody
+    @RequestMapping({"/deleteSession"})
+    public TMSResponse deleteSession(@RequestBody JSONObject jsonObject) throws Exception {
+
+        //只需要两个字段：participateUidList，sessionType
+        ChatSessionVO sessionVO = jsonObject.getObject("sessionVO", ChatSessionVO.class);
+
+        /**********************************/
+        UserEntity user = assertIsUserLoginIfToken(jsonObject);
+        IChatMsgService chatMsgService = getChatMsgService(sessionVO.getSessionType());
+        chatMsgService.deleteSession(user, sessionVO.getSessionId());
+        return TMSResponse.success();
     }
 
 
@@ -105,14 +109,10 @@ public class ChatController extends RestBaseController {
 
         /**********************/
         UserEntity user = assertIsUserLoginIfToken(jsonObject);
-        if (refreshRecent) {
-            recentSessionService.saveRecentSession(sessionVO, user,msgSummary);
-        }
-
         IChatMsgService chatMsgService = getChatMsgService(sessionVO.getSessionType());
-        TMSEvent event = chatMsgService.saveMessage(user, msg,msgSummary,msgId, sessionVO);
+        TMSEvent event = chatMsgService.saveMessage(user, msg, msgSummary, msgId, sessionVO,refreshRecent);
         TMSEventBus.asynSendEvent(event);
-        return TMSResponse.success().addExtendData("sessionVO",sessionVO);
+        return TMSResponse.success().addExtendData("sessionVO", sessionVO);
     }
 
 
@@ -123,20 +123,18 @@ public class ChatController extends RestBaseController {
         /**********************/
         IChatMsgService chatMsgService = getChatMsgService(sessionVO.getSessionType());
         List<ChatMsgVO> msgList = chatMsgService.getChatMsgList(sessionVO);
-        return TMSResponse.success(msgList).addExtendData("sessionVO",sessionVO);
+        return TMSResponse.success(msgList).addExtendData("sessionVO", sessionVO);
     }
-
 
 
     private IChatMsgService getChatMsgService(String sessionType) throws Exception {
         if (ChatSessionVO.TYPE_PUBLIC.equals(sessionType)) {
             return publicChatService;
-        } else if (ChatSessionVO.TYPE_PEER.equals(sessionType)) {
+        } else if (ChatSessionVO.TYPE_PEER.equalsIgnoreCase(sessionType)) {
             return peerChatService;
-        } else if (ChatSessionVO.TYPE_ROBOT.equals(sessionType)){
+        } else if (ChatSessionVO.TYPE_ROBOT.equalsIgnoreCase(sessionType)) {
             return robotChatService;
-        }
-        else {
+        } else {
             throw new TMSMsgException("sessionType error : " + sessionType);
         }
     }

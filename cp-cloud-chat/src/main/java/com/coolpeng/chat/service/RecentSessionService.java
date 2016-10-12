@@ -2,11 +2,15 @@ package com.coolpeng.chat.service;
 
 import com.coolpeng.blog.entity.UserEntity;
 import com.coolpeng.chat.entity.ChatRecentSession;
+import com.coolpeng.chat.model.ChatMsgVO;
 import com.coolpeng.chat.model.ChatSessionVO;
+import com.coolpeng.chat.model.ChatUserVO;
 import com.coolpeng.chat.utils.ChatConstant;
 import com.coolpeng.framework.exception.FieldNotFoundException;
 import com.coolpeng.framework.qtask.QueueTask;
 import com.coolpeng.framework.qtask.QueueTaskRunner;
+import com.coolpeng.framework.utils.StringUtils;
+import com.coolpeng.framework.utils.Tuple;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -22,41 +26,67 @@ public class RecentSessionService {
     private static final Logger logger = LoggerFactory.getLogger(RecentSessionService.class);
     private static final int MAX_RECENT_SIZE = 20;
 
-    private static QueueTaskRunner queueTaskRunner = new QueueTaskRunner();
+    private static final QueueTaskRunner queueTaskRunner = new QueueTaskRunner();
+    //一般里面只有两个元素
+    private static final Map<String, ChatSessionVO> publicChatSessionCache = new HashMap<>();
 
-    public void saveRecentSession(final ChatSessionVO sessionVO, final UserEntity user,final String msgSummary) throws Exception {
+
+    public void asynSaveRecentSession(final String ownerUserId,final ChatSessionVO sessionVO) throws Exception {
         queueTaskRunner.addTask(new QueueTask() {
             @Override
             public void runTask() {
                 try {
-                    doSaveRecentSession(sessionVO,user,msgSummary);
+                    doSaveRecentSession(ownerUserId,sessionVO);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    logger.error("",e);
+                    logger.error("", e);
                 }
             }
         });
     }
 
-    private void doSaveRecentSession(ChatSessionVO sessionVO, UserEntity user,String msgSummary) throws Exception {
-        ChatRecentSession userRecentSession = getUserRecentSession(user.getId());
+
+    /**
+     *
+     * @param sessionVO
+     * @throws Exception
+     */
+    public void doSaveRecentSession(String ownerUserId,ChatSessionVO sessionVO) throws Exception {
+
+        if (ChatSessionVO.TYPE_PUBLIC.equalsIgnoreCase(sessionVO.getSessionType())) {
+            //如果是public会话，记录一下最后一条消息
+            publicChatSessionCache.put(sessionVO.getSessionId(), sessionVO);
+        }
+        saveUserRecentSession(ownerUserId, sessionVO);
+    }
+
+
+    private void saveUserRecentSession(String ownerUserId, ChatSessionVO sessionVO) throws Exception {
+        ChatRecentSession userRecentSession = getUserRecentSession(ownerUserId);
         if (userRecentSession == null) {
-            userRecentSession = new ChatRecentSession(user.getId());
+            userRecentSession = new ChatRecentSession(ownerUserId);
         }
 
         List<ChatSessionVO> recentList = userRecentSession.getRecentSessions();
-        recentList = removeElement(recentList, sessionVO);
+        Tuple tuple = removeElement(recentList, sessionVO.getSessionId());
+        recentList = tuple.first();
 
-        sessionVO.setLastMsgText(msgSummary);
-        sessionVO.setLastMsgAvatar(user.getAvatar());
-        sessionVO.setLastMsgNickname(user.getNickname());
-        sessionVO.setLastMsgTimeMillis(System.currentTimeMillis());
-        sessionVO.setLastMsgUsername(user.getUsername());
-        sessionVO.setLastMsgUid(user.getId());
+
+        if (StringUtils.isBlank(sessionVO.getLastMsgText())){
+            ChatSessionVO oldSessionVo = tuple.second();
+            if (oldSessionVo!=null){
+                sessionVO.setLastMsgText(oldSessionVo.getLastMsgText());
+                sessionVO.setLastMsgAvatar(oldSessionVo.getLastMsgAvatar());
+                sessionVO.setLastMsgNickname(oldSessionVo.getLastMsgNickname());
+                sessionVO.setLastMsgTimeMillis(oldSessionVo.getLastMsgTimeMillis());
+                sessionVO.setLastMsgUsername(oldSessionVo.getLastMsgUsername());
+                sessionVO.setLastMsgUid(oldSessionVo.getLastMsgUid());
+            }
+        }
 
         recentList.add(sessionVO);
 
-        if (recentList.size()> MAX_RECENT_SIZE){
+        if (recentList.size() > MAX_RECENT_SIZE) {
             LinkedList<ChatSessionVO> linkedList = new LinkedList(recentList);
             linkedList.removeFirst();
             recentList = linkedList;
@@ -66,14 +96,19 @@ public class RecentSessionService {
         ChatRecentSession.DAO.insertOrUpdate(userRecentSession);
     }
 
-    private List<ChatSessionVO> removeElement( List<ChatSessionVO> recentList, ChatSessionVO sessionId) {
+    private Tuple removeElement(List<ChatSessionVO> recentList, String sessionId) {
         List<ChatSessionVO> result = new ArrayList<>();
-        for (ChatSessionVO s:recentList){
-            if(!sessionId.equals(s)){
+
+        ChatSessionVO chatSessionVO = null;
+        for (ChatSessionVO s : recentList) {
+            if (!sessionId.equals(s.getSessionId())) {
                 result.add(s);
+            }else {
+                chatSessionVO = s;
             }
         }
-        return result;
+
+        return new Tuple(result,chatSessionVO);
     }
 
 
@@ -90,26 +125,44 @@ public class RecentSessionService {
 
         List<ChatSessionVO> recentSessions = userRecentSession.getRecentSessions();
         ChatSessionVO m0 = new ChatSessionVO(ChatSessionVO.TYPE_ROBOT, "1", ChatConstant.UBIBI_ROBOT_USER.getNickname(), ChatConstant.UBIBI_ROBOT_ICON);
-        ChatSessionVO m1 = new ChatSessionVO(ChatSessionVO.TYPE_PUBLIC, "1", "公共频道");
-        ChatSessionVO m2 = new ChatSessionVO(ChatSessionVO.TYPE_PUBLIC, "2", "技术灌水");
+        ChatSessionVO m1 = new ChatSessionVO(ChatSessionVO.TYPE_PUBLIC, "1", "所有人",ChatConstant.PUBLIC_CHANNEL_ICON2);
+//        ChatSessionVO m2 = new ChatSessionVO(ChatSessionVO.TYPE_PUBLIC, "2", "技术灌水",ChatConstant.PUBLIC_CHANNEL_ICON2);
 
 
-        if (!recentSessions.contains(m0)){
+        if (!recentSessions.contains(m0)) {
+            m0.setLastMsgText(ChatConstant.UBIBI_ROBOT_HELLOWORLD);
             recentSessions.add(m0);
         }
 
-        if (!recentSessions.contains(m1)){
+        if (!recentSessions.contains(m1)) {
             recentSessions.add(m1);
         }
 
-        if (!recentSessions.contains(m2)){
-            recentSessions.add(m2);
-        }
-
+        addonPublicRecentMessage(recentSessions);
         return sortByLastMsgTimeMillis(recentSessions);
 
     }
 
+
+    //如果是public session
+    private void addonPublicRecentMessage(List<ChatSessionVO> recentSessions) {
+        for (ChatSessionVO sessionVO : recentSessions) {
+            if (ChatSessionVO.TYPE_PUBLIC.equalsIgnoreCase(sessionVO.getSessionType())) {
+                String sessionId = sessionVO.getSessionId();
+                ChatSessionVO m = publicChatSessionCache.get(sessionId);
+
+                if (m != null) {
+                    sessionVO.setLastMsgText(m.getLastMsgText());
+                    sessionVO.setLastMsgAvatar(m.getLastMsgAvatar());
+                    sessionVO.setLastMsgNickname(m.getLastMsgNickname());
+                    sessionVO.setLastMsgTimeMillis(m.getLastMsgTimeMillis());
+                    sessionVO.setLastMsgUsername(m.getLastMsgUsername());
+                    sessionVO.setLastMsgUid(m.getLastMsgUid());
+                }
+            }
+
+        }
+    }
 
 
     private List<ChatSessionVO> sortByLastMsgTimeMillis(List<ChatSessionVO> recentSessions) {
@@ -117,10 +170,28 @@ public class RecentSessionService {
             @Override
             public int compare(ChatSessionVO o1, ChatSessionVO o2) {
                 long m = o2.getLastMsgTimeMillis() - o1.getLastMsgTimeMillis();
-                return (int)m;
+                return (int) m;
             }
         });
         return recentSessions;
     }
+
+
+    public void deleteRecentSession(String ownerUserId, String sessionId) throws Exception {
+
+
+        ChatRecentSession userRecentSession = getUserRecentSession(ownerUserId);
+        if (userRecentSession == null) {
+            userRecentSession = new ChatRecentSession(ownerUserId);
+        }
+
+        List<ChatSessionVO> recentList = userRecentSession.getRecentSessions();
+        Tuple tuple = removeElement(recentList, sessionId);
+        recentList = tuple.first();
+
+        userRecentSession.setRecentSessions(recentList);
+        ChatRecentSession.DAO.insertOrUpdate(userRecentSession);
+    }
+
 
 }

@@ -12,8 +12,8 @@ public class EventListenerInit {
 
     private static boolean isInited = false;
 
-    public static void init(){
-        if (!isInited){
+    public static void init() {
+        if (!isInited) {
             TMSEventBus.addEventListener(new PublicMsgEventListener());
             TMSEventBus.addEventListener(new PeerMsgEventListener());
             TMSEventBus.addEventListener(new CreateSessionEventListener());
