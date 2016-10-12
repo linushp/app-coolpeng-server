@@ -26,17 +26,26 @@ public class PeerMsgEventListener extends TMSEventListener {
         if (event instanceof PeerMsgEvent) {
             PeerMsgEvent event1 = (PeerMsgEvent) event;
             String toUserId = event1.getReceiveUserId();
-            List<Session> sessions = WebsocketContainer.getSessionByUid(toUserId);
-            if (!CollectionUtil.isEmpty(sessions)) {
-                for (Session session : sessions) {
-                    if (session != null) {
-                        try {
-                            String json = JSON.toJSONString(event1);
-                            session.getBasicRemote().sendText(json);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            logger.error("", e);
-                        }
+            sendMessageByUID(toUserId,event1);
+            try {
+                sendMessageByUID(event1.getChatMsgVO().getSendUser().getUid(),event1);
+            }catch (Exception e){
+                logger.error("",e);
+            }
+        }
+    }
+
+    private void sendMessageByUID(String toUserId, PeerMsgEvent event1){
+        List<Session> sessions = WebsocketContainer.getSessionByUid(toUserId);
+        if (!CollectionUtil.isEmpty(sessions)) {
+            for (Session session : sessions) {
+                if (session != null) {
+                    try {
+                        String json = JSON.toJSONString(event1);
+                        session.getBasicRemote().sendText(json);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        logger.error("", e);
                     }
                 }
             }
