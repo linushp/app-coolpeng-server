@@ -181,8 +181,25 @@ public class TemplateSQL
 	public String getCountSQL(String[] where,String splitWord) throws FieldNotFoundException {
 		StringBuffer sql = new StringBuffer();
 		sql.append("SELECT count(0) FROM ");
-		sql.append("" + this.tableName + "");
+		sql.append("  " + this.tableName + "  ");
 		sql.append(toWhereSQL(where,splitWord));
+		return sql.toString();
+	}
+
+	public String getSelectSQL_inCondition(String keyName, List<String> inValueList) throws FieldNotFoundException {
+
+		String valueString = StringUtils.joinString(inValueList, ",");
+
+		String dbFieldName = getDbFieldName(keyName);
+
+		StringBuffer sql = new StringBuffer();
+		sql.append("SELECT * FROM  ");
+		sql.append(this.tableName + "  ");
+		sql.append("where  ");
+		sql.append("`"+dbFieldName+"`");
+		sql.append("  in  ( ");
+		sql.append(valueString);
+		sql.append("  ) ");
 		return sql.toString();
 	}
 
@@ -190,7 +207,7 @@ public class TemplateSQL
 	{
 		StringBuffer sql = new StringBuffer();
 		sql.append("SELECT * FROM ");
-		sql.append("" + this.tableName + "");
+		sql.append("  " + this.tableName + " ");
 		return sql.toString();
 	}
 
@@ -487,5 +504,6 @@ public class TemplateSQL
 	public void setSchemaPrefix(String schemaPrefix) {
 		this.schemaPrefix = schemaPrefix;
 	}
-	
+
+
 }

@@ -9,7 +9,7 @@ abstract public class TMSEventListener<T extends TMSEvent> {
      * 监听到事件后会调用此函数
      * @param event
      */
-    abstract public void onEvent(T event);
+    abstract public void onEvent(T event) throws Exception;
 
     /**
      * 事件监听器的唯一名字

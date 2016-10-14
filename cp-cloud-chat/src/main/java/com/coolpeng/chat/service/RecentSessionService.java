@@ -1,6 +1,8 @@
 package com.coolpeng.chat.service;
 
 import com.coolpeng.blog.entity.UserEntity;
+import com.coolpeng.blog.service.UserService;
+import com.coolpeng.chat.entity.ChatPeerSession;
 import com.coolpeng.chat.entity.ChatRecentSession;
 import com.coolpeng.chat.model.ChatMsgVO;
 import com.coolpeng.chat.model.ChatSessionVO;
@@ -9,12 +11,15 @@ import com.coolpeng.chat.utils.ChatConstant;
 import com.coolpeng.framework.exception.FieldNotFoundException;
 import com.coolpeng.framework.qtask.QueueTask;
 import com.coolpeng.framework.qtask.QueueTaskRunner;
+import com.coolpeng.framework.utils.CollectionUtil;
 import com.coolpeng.framework.utils.StringUtils;
 import com.coolpeng.framework.utils.Tuple;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 /**
@@ -29,6 +34,9 @@ public class RecentSessionService {
     private static final QueueTaskRunner queueTaskRunner = new QueueTaskRunner();
     //一般里面只有两个元素
     private static final Map<String, ChatSessionVO> publicChatSessionCache = new HashMap<>();
+
+    @Autowired
+    private UserService userService;
 
 
     public void asynSaveRecentSession(final String ownerUserId,final ChatSessionVO sessionVO) throws Exception {
@@ -117,7 +125,7 @@ public class RecentSessionService {
     }
 
 
-    public List<ChatSessionVO> getRecentChatSessionVOList(UserEntity user) throws FieldNotFoundException {
+    public List<ChatSessionVO> getRecentChatSessionVOList(UserEntity user) throws Exception {
         ChatRecentSession userRecentSession = getUserRecentSession(user.getId());
         if (userRecentSession == null) {
             userRecentSession = new ChatRecentSession(user.getId());
@@ -138,8 +146,54 @@ public class RecentSessionService {
             recentSessions.add(m1);
         }
 
+        //对于public的特殊处理，从缓存中获取lastMessage
         addonPublicRecentMessage(recentSessions);
+        //对于peer的特殊处理，打补丁修复头像，昵称的更改
+        resetPeerIconAndTitle(recentSessions,user);
         return sortByLastMsgTimeMillis(recentSessions);
+
+    }
+
+
+    private void resetPeerIconAndTitle(List<ChatSessionVO> recentSessions,UserEntity currentLoginUser) throws Exception{
+
+
+        String currentUid = currentLoginUser.getId();
+
+        List<String> anotherUserIdList = new ArrayList<>();
+        for (ChatSessionVO sessionVO:recentSessions){
+            if (ChatSessionVO.TYPE_PEER.equals(sessionVO.getSessionType())){
+                List<String> pUidList = sessionVO.getParticipateUidList();
+                if (!CollectionUtil.isEmpty(pUidList)){
+                    for (String pUid :pUidList){
+                        if (!currentUid.equals(pUid)){
+                            anotherUserIdList.add(pUid);
+                        }
+                    }
+                }
+            }
+        }
+
+
+        List<UserEntity> userList = userService.getUserEntityListByUidList(anotherUserIdList);
+        Map<String,UserEntity> userMap = CollectionUtil.toMap(userList,"id");
+
+        for (ChatSessionVO sessionVO:recentSessions){
+            if (ChatSessionVO.TYPE_PEER.equals(sessionVO.getSessionType())){
+                List<String> pUidList = sessionVO.getParticipateUidList();
+                if (!CollectionUtil.isEmpty(pUidList)){
+                    for (String pUid :pUidList){
+                        if (!currentUid.equals(pUid)){
+                            UserEntity anotherUser = userMap.get(pUid);
+                            if (anotherUser!=null){
+                                sessionVO.setSessionIcon(anotherUser.getAvatar());
+                                sessionVO.setSessionTitle("与 "+ anotherUser.getNickname() + " 对话");
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
     }
 
@@ -148,6 +202,7 @@ public class RecentSessionService {
     private void addonPublicRecentMessage(List<ChatSessionVO> recentSessions) {
         for (ChatSessionVO sessionVO : recentSessions) {
             if (ChatSessionVO.TYPE_PUBLIC.equalsIgnoreCase(sessionVO.getSessionType())) {
+
                 String sessionId = sessionVO.getSessionId();
                 ChatSessionVO m = publicChatSessionCache.get(sessionId);
 

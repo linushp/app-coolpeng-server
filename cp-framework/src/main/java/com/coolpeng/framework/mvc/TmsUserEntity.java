@@ -37,6 +37,8 @@ public class TmsUserEntity extends BaseEntity {
     //ALTER TABLE t_user_entity ADD last_login_ip_addr VARCHAR(100) NOT NULL;
     private String lastLoginIpAddr;
 
+    private String lastLoginIpStr;
+
     private int viewCount = 0;
 
     public TmsUserEntity(TmsUserEntity user) {
@@ -56,6 +58,7 @@ public class TmsUserEntity extends BaseEntity {
         this.username = user.username;
         this.loginCount = user.loginCount;
         this.viewCount = user.viewCount;
+        this.lastLoginIpStr = user.lastLoginIpStr;
     }
 
     public TmsUserEntity() {
@@ -171,5 +174,13 @@ public class TmsUserEntity extends BaseEntity {
 
     public void setViewCount(int viewCount) {
         this.viewCount = viewCount;
+    }
+
+    public String getLastLoginIpStr() {
+        return lastLoginIpStr;
+    }
+
+    public void setLastLoginIpStr(String lastLoginIpStr) {
+        this.lastLoginIpStr = lastLoginIpStr;
     }
 }

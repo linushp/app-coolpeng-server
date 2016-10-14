@@ -22,11 +22,12 @@ public class ChatSessionMessageService {
         List<ChatMsgVO> msgList = this.getChatMsgList(sessionVO);
         msgList.add(chatMsgVO);
 
+        //101
         if (msgList.size() > MAX_STORE_MSG_COUNT) {
             //101 -100
             int begin = msgList.size() - MAX_STORE_MSG_COUNT;//1
-            int end = msgList.size();//100
-            msgList = msgList.subList(begin, end + 1);
+            int end = msgList.size();//101
+            msgList = msgList.subList(begin, end);//1,101
         }
 
         saveChatSessionMessage(sendMessageUser, msgList, sessionVO);

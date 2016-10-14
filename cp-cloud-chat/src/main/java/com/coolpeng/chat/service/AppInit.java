@@ -2,7 +2,9 @@ package com.coolpeng.chat.service;
 
 
 import com.coolpeng.appbase.StaticConfigManager;
+import com.coolpeng.chat.listeners.UserInfoUpdateListener;
 import com.coolpeng.chat.utils.ChatConstant;
+import com.coolpeng.framework.event.TMSEventBus;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
 
@@ -14,5 +16,6 @@ public class AppInit implements InitializingBean {
 
     public void afterPropertiesSet() throws Exception {
         StaticConfigManager.pushInfo("UBIBI_ROBOT_USER", ChatConstant.UBIBI_ROBOT_USER);
+        TMSEventBus.addEventListener(new UserInfoUpdateListener());
     }
 }

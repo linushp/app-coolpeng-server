@@ -225,6 +225,17 @@ public class SimpleDAO<T> {
     }
 
 
+
+    //select * from table where ${keyName} in (${inValueList.toString});
+    public List<T> queryListIn(String keyName,List<String> inValueList) throws FieldNotFoundException {
+
+        String sql = this.sqlTemplate.getSelectSQL_inCondition(keyName, inValueList);
+
+        return this.queryListBySQL(sql,null);
+    }
+
+
+
     public List<T> queryByNamingSQL(String namingSqlID, Map<String, Object> params) {
         String sql = NamingSQL.getNamingSqlById(namingSqlID);
         if (sql == null) {

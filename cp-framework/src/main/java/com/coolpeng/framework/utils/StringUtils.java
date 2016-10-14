@@ -4,6 +4,8 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.charset.Charset;
+import java.util.Iterator;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -130,5 +132,9 @@ public class StringUtils
 			}
 		}
 		return true;
+	}
+
+	public static String joinString(List<String> stringList, String splitChar) {
+		return org.apache.commons.lang.StringUtils.join(stringList, splitChar);
 	}
 }

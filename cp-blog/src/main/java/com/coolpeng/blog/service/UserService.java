@@ -129,4 +129,10 @@ public class UserService {
     public void saveAndFlush(UserEntity user) throws UpdateErrorException {
         UserEntity.DAO.insertOrUpdate(user);
     }
+
+
+
+    public List<UserEntity> getUserEntityListByUidList(List<String> uidList) throws FieldNotFoundException {
+        return UserEntity.DAO.queryListIn("id",uidList);
+    }
 }

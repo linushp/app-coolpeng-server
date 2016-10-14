@@ -4,8 +4,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.coolpeng.appbase.RestBaseController;
 import com.coolpeng.appbase.ReqParams;
 import com.coolpeng.blog.entity.UserEntity;
+import com.coolpeng.cloud.common.event.UserInfoUpdateEvent;
+import com.coolpeng.cloud.reply.entity.CloudReply;
 import com.coolpeng.framework.db.EntityStatusEnum;
 import com.coolpeng.blog.service.UserService;
+import com.coolpeng.framework.event.TMSEventBus;
 import com.coolpeng.framework.exception.FieldNotFoundException;
 import com.coolpeng.framework.exception.ParameterErrorException;
 import com.coolpeng.framework.exception.TMSMsgException;
@@ -14,6 +17,12 @@ import com.coolpeng.framework.mvc.TMSResponse;
 import com.coolpeng.framework.mvc.TmsCurrentRequest;
 import com.coolpeng.framework.utils.DateUtil;
 import com.coolpeng.framework.utils.StringUtils;
+import com.coolpeng.framework.utils.ipaddr.IPAddrCallback;
+import com.coolpeng.framework.utils.ipaddr.IPAddrParse;
+import com.coolpeng.framework.utils.ipaddr.IPAddrResult;
+import com.sun.tools.internal.xjc.reader.xmlschema.bindinfo.BIConversion;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,6 +39,9 @@ import java.util.UUID;
 @Controller
 @RequestMapping(value = "/cloud/user/", produces = "application/json; charset=UTF-8")
 public class AppUserController extends RestBaseController {
+
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+
 
     @Autowired
     private UserService userService;
@@ -51,7 +63,7 @@ public class AppUserController extends RestBaseController {
         /****************************************************************/
 
         TMSMsgException e = new TMSMsgException("用户名或密码错误");
-        UserEntity user = userService.getUserEntityByUserName(username);
+        final UserEntity user = userService.getUserEntityByUserName(username);
 
         if (user == null) {
             throw e;
@@ -70,22 +82,42 @@ public class AppUserController extends RestBaseController {
         }
 
 
+        String ipAddr = TmsCurrentRequest.getClientIpAddr();
+
         UUID uuid = UUID.randomUUID();
         String tokenId = uuid.toString();
         user.setLastLoginToken(tokenId);
         user.setLastLoginTime(DateUtil.currentTimeFormat());
         user.setLastLoginDevPlatform(reqParams.getDevicePlatform());
         user.setLastLoginDevUid(reqParams.getUuid());
-        user.setLastLoginIpAddr(TmsCurrentRequest.getClientIpAddr());
+        user.setLastLoginIpAddr(ipAddr);
         user.setLoginCount(user.getLoginCount()+1);
         userService.saveAndFlush(user);
 
 
         setSessionLoginUser(user);
 
-        user = new UserEntity(user);
-        user.setPassword(null);//隐藏敏感信息
-        return TMSResponse.success(user);
+
+        //3、IP地址解析
+        IPAddrParse.parseIpAddr(ipAddr, new IPAddrCallback() {
+            @Override
+            public void onResult(IPAddrResult ipAddrResult) {
+                if (ipAddrResult.isOk()) {
+                    user.setLastLoginIpStr(ipAddrResult.toDisplayString());
+                    try {
+                        UserEntity.DAO.insertOrUpdate(user);
+                    } catch (Exception e) {
+                        logger.error("", e);
+                    }
+                }
+            }
+        });
+
+
+        UserEntity userReturn = new UserEntity(user);
+        userReturn.setPassword(null);//隐藏敏感信息
+
+        return TMSResponse.success(userReturn);
     }
 
 
@@ -195,6 +227,28 @@ public class AppUserController extends RestBaseController {
     }
 
 
+    /**
+     * 获取用户信息
+     * @return
+     * @throws TMSMsgException
+     * @throws FieldNotFoundException
+     */
+    @ResponseBody
+    @RequestMapping("/getUserInfoByUid")
+    public TMSResponse<UserEntity> getUserInfoByUid(@RequestBody JSONObject jsonObject) throws Exception {
+
+        String uid = jsonObject.getString("uid");
+
+        /****************************/
+        assertIsUserLoginIfToken(jsonObject);
+
+        UserEntity user0 = UserEntity.DAO.queryById(uid);
+        if (user0!=null){
+            user0.setPassword(null);////隐藏敏感信息
+        }
+        return TMSResponse.success(user0);
+    }
+
 
 
 
@@ -234,7 +288,10 @@ public class AppUserController extends RestBaseController {
             setSessionLoginUser(user);
         }
 
+        TMSEventBus.asynSendEvent(new UserInfoUpdateEvent(user));
 
+
+        user.setPassword(null);
         return TMSResponse.success(user);
     }
 
