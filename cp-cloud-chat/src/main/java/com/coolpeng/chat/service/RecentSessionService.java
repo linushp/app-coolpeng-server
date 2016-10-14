@@ -174,8 +174,16 @@ public class RecentSessionService {
             }
         }
 
+        if (CollectionUtil.isEmpty(anotherUserIdList)){
+            return;
+        }
 
         List<UserEntity> userList = userService.getUserEntityListByUidList(anotherUserIdList);
+
+        if (CollectionUtil.isEmpty(userList)){
+            return;
+        }
+
         Map<String,UserEntity> userMap = CollectionUtil.toMap(userList,"id");
 
         for (ChatSessionVO sessionVO:recentSessions){

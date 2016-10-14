@@ -228,9 +228,11 @@ public class SimpleDAO<T> {
 
     //select * from table where ${keyName} in (${inValueList.toString});
     public List<T> queryListIn(String keyName,List<String> inValueList) throws FieldNotFoundException {
+        if (CollectionUtil.isEmpty(inValueList)){
+            return new ArrayList<>();
+        }
 
         String sql = this.sqlTemplate.getSelectSQL_inCondition(keyName, inValueList);
-
         return this.queryListBySQL(sql,null);
     }
 
