@@ -169,6 +169,10 @@ public class AppUserController extends RestBaseController {
             throw new TMSMsgException("邮箱不能为空", "mail_empty");
         }
 
+        if (!StringUtils.checkEmail(mail)){
+            throw new TMSMsgException("邮箱格式输入不正确", "mail_format_error");
+        }
+
         UserEntity user = userService.getUserEntityByUserNameOrEmail(mail);
         if (user != null) {
             throw new TMSMsgException("此邮箱已经被注册过了", "mail_used");
