@@ -11,6 +11,7 @@ com/coolpeng/chat/websocket/event/CreateSessionEvent.class
 com/coolpeng/chat/service/RobotChatService.class
 com/coolpeng/chat/service/api/IChatMsgService.class
 com/coolpeng/chat/model/ChatUserVO.class
+com/coolpeng/chat/listeners/UserInfoUpdateListener.class
 com/coolpeng/chat/model/ChatMsgVO.class
 com/coolpeng/chat/websocket/socket/ChatWebSocketHandler.class
 com/coolpeng/chat/service/AppInit.class

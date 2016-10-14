@@ -30,8 +30,7 @@ public class ObjectUtils<T> {
 
 	/**
 	 * 将Map转成java对象
-	 * 
-	 * @param map
+	 *
 	 * @return
 	 * @throws InstantiationException
 	 * @throws IllegalAccessException
@@ -158,8 +157,7 @@ public class ObjectUtils<T> {
 
 	/**
 	 * 将JSONArray转成java对象
-	 * 
-	 * @param map
+	 *
 	 * @return
 	 * @throws SQLException
 	 * @throws IllegalAccessException
@@ -180,8 +178,7 @@ public class ObjectUtils<T> {
 
 	/**
 	 * 将JSON对象转换成对象实�?
-	 * 
-	 * @param rs
+	 *
 	 * @return
 	 * @throws SQLException
 	 * @throws InstantiationException
