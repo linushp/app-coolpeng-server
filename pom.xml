@@ -15,6 +15,7 @@
         <module>cp-blog</module>
         <module>cp-cloud</module>
         <module>cp-cloud-chat</module>
+        <module>cp-protobuf</module>
         <module>cp-web</module>
     </modules>
 
@@ -132,7 +133,7 @@
                     <useTestClasspath>true</useTestClasspath>
 
                     <!--<war>main/target/${project.artifactId}</war>-->
-                    <classesDirectory>cp-framework/target/classes/, cp-blog/target/classes/,cp-cloud/target/classes/,cp-cloud-chat/target/classes/,cp-web/target/classes/
+                    <classesDirectory>cp-framework/target/classes/, cp-blog/target/classes/,cp-cloud/target/classes/,cp-cloud-chat/target/classes/,cp-protobuf/target/classes/,cp-web/target/classes/
                     </classesDirectory>
 
                     <webAppSourceDirectory>cp-web/src/main/webapp</webAppSourceDirectory>

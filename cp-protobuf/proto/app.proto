@@ -1,0 +1,25 @@
+package app;
+option java_package="com.coolpeng.proto.pbfile";
+option java_generic_services = true;
+
+
+enum Gender {
+    MALE = 1;
+    FEMALE = 2;
+}
+
+message Person {
+    required string name = 1;
+    required int32  age  = 2;
+    optional string address = 3;
+    required int32 gender = 4;
+}
+
+
+message QueryCondition{
+    required string qc = 1;
+}
+
+service PersonService {
+    rpc queryPerson (QueryCondition) returns (Person);
+}
