@@ -33,11 +33,6 @@
             <artifactId>cp-cloud-chat</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
-        <dependency>
-            <groupId>com.coolpeng</groupId>
-            <artifactId>cp-protobuf</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
 
     </dependencies>
 
