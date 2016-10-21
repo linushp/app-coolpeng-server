@@ -53,7 +53,3 @@ public class CloudCodeController extends RestBaseController {
 
 }
 
-
-class DeviceTaskManager {
-
-}
