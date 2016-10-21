@@ -15,21 +15,24 @@ public class ChatMsgVO {
     private String createTime;
     private Long createTimeMillis;
     private String status = "sent"; //"sent,pending"
+    private String type = "common";//common,file,code
 
-    public ChatMsgVO(UserEntity sendUser, String msg, String msgId) {
+    public ChatMsgVO(UserEntity sendUser, String msg, String msgId, String messageType) {
         this.sendUser = new ChatUserVO(sendUser);
         this.msg = msg;
         this.msgId = msgId;
         this.createTime = DateUtil.currentTimeFormat();
         this.createTimeMillis = System.currentTimeMillis();
+        this.type = messageType;
     }
 
-    public ChatMsgVO(ChatUserVO sendUser, String msg, String msgId) {
+    public ChatMsgVO(ChatUserVO sendUser, String msg, String msgId,String messageType) {
         this.sendUser = (sendUser);
         this.msg = msg;
         this.msgId = msgId;
         this.createTime = DateUtil.currentTimeFormat();
         this.createTimeMillis = System.currentTimeMillis();
+        this.type = messageType;
     }
 
     public ChatMsgVO() {
@@ -81,5 +84,13 @@ public class ChatMsgVO {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

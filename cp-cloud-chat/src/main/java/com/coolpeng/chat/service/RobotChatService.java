@@ -25,7 +25,7 @@ public class RobotChatService implements IChatMsgService {
 
 
     @Override
-    public TMSEvent saveMessage(UserEntity user, String msg, String msgSummary, String msgId, ChatSessionVO sessionVO,boolean isRefreshRecent) throws Exception {
+    public TMSEvent saveMessage(UserEntity user, String msg, String msgSummary, String msgId, ChatSessionVO sessionVO,boolean isRefreshRecent,String messageType) throws Exception {
 
         recentSessionService.asynSaveRecentSession(user.getId(),sessionVO);
 
@@ -35,7 +35,7 @@ public class RobotChatService implements IChatMsgService {
     @Override
     public List<ChatMsgVO> getChatMsgList(ChatSessionVO sessionVO) throws Exception {
         List<ChatMsgVO> msgVOList = new ArrayList<>();
-        msgVOList.add(new ChatMsgVO(ChatConstant.UBIBI_ROBOT_USER, ChatConstant.UBIBI_ROBOT_HELLOWORLD, "001"));
+        msgVOList.add(new ChatMsgVO(ChatConstant.UBIBI_ROBOT_USER, ChatConstant.UBIBI_ROBOT_HELLOWORLD, "001",null));
         return msgVOList;
     }
 

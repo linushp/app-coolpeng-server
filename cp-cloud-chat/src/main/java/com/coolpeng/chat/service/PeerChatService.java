@@ -36,10 +36,10 @@ public class PeerChatService implements IChatMsgService {
      * @throws Exception
      */
     @Override
-    public TMSEvent saveMessage(UserEntity sendMessageUser, String msg, String msgSummary, String msgId, ChatSessionVO sessionVO,boolean isRefreshRecent) throws Exception {
+    public TMSEvent saveMessage(UserEntity sendMessageUser, String msg, String msgSummary, String msgId, ChatSessionVO sessionVO,boolean isRefreshRecent,String messageType) throws Exception {
         String entityId = sessionVO.getEntityId();
         ChatPeerSession chatSessionInfo = ChatPeerSession.DAO.queryObjectByKV("id", entityId);
-        ChatMsgVO chatMsgVO = new ChatMsgVO(sendMessageUser, msg, msgId);
+        ChatMsgVO chatMsgVO = new ChatMsgVO(sendMessageUser, msg, msgId,messageType);
         String currentUid = sendMessageUser.getId();
         String receiveUserId = null;
         ChatUserVO receiveUserVO = null;

@@ -14,7 +14,7 @@ import java.util.List;
 public interface IChatMsgService {
 
 
-    TMSEvent saveMessage(UserEntity user, String msg, String msgSummary, String msgId, ChatSessionVO sessionVO,boolean isRefreshRecentSession) throws Exception;
+    TMSEvent saveMessage(UserEntity user, String msg, String msgSummary, String msgId, ChatSessionVO sessionVO,boolean isRefreshRecentSession,String messageType) throws Exception;
 
     List<ChatMsgVO> getChatMsgList(ChatSessionVO sessionVO) throws Exception;
 

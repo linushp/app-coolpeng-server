@@ -30,10 +30,10 @@ public class PublicChatService implements IChatMsgService {
     private RecentSessionService recentSessionService;
 
     @Override
-    public TMSEvent saveMessage(UserEntity user, String msg, String msgSummary, String msgId, ChatSessionVO sessionVO, boolean isRefreshRecent) throws Exception {
+    public TMSEvent saveMessage(UserEntity user, String msg, String msgSummary, String msgId, ChatSessionVO sessionVO, boolean isRefreshRecent,String messageType) throws Exception {
         String sessionId = sessionVO.getSessionId();
         LinkedList<ChatMsgVO> msgList = getChatMsgList(sessionVO);
-        ChatMsgVO chatMsgVO = new ChatMsgVO(user, msg, msgId);
+        ChatMsgVO chatMsgVO = new ChatMsgVO(user, msg, msgId,messageType);
         msgList.add(chatMsgVO);
 
         if (msgList.size() > MAX_STORE_COUNT) {
