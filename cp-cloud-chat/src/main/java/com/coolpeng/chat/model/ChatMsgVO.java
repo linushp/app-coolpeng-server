@@ -11,7 +11,7 @@ public class ChatMsgVO {
 
     private String msgId;
     private ChatUserVO sendUser;
-    private String msg;
+    private String msg;  //{"title":"1477189821439.code","language":"Java","codeEntityId":"6"}
     private String createTime;
     private Long createTimeMillis;
     private String status = "sent"; //"sent,pending"

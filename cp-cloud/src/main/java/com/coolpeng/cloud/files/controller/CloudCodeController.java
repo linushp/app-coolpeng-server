@@ -30,6 +30,7 @@ public class CloudCodeController extends RestBaseController {
 
         cloudCode.setCreateUserId(currentUser.getId());
         cloudCode.setUpdateUserId(currentUser.getId());
+        cloudCode.setCodeSize(cloudCode.getContent().length());
 
         CloudCode.DAO.insert(cloudCode);
 

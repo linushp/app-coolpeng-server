@@ -13,7 +13,7 @@ public class CloudCode extends BlogBaseEntity {
     private String language;
     private String title;
     private String content;
-
+    private int codeSize;
 
 
     public String getLanguage() {
@@ -38,5 +38,13 @@ public class CloudCode extends BlogBaseEntity {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public int getCodeSize() {
+        return codeSize;
+    }
+
+    public void setCodeSize(int codeSize) {
+        this.codeSize = codeSize;
     }
 }
