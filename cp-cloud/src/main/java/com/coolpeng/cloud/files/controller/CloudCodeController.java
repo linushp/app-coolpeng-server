@@ -11,9 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 
-/**
- * Created by luanhaipeng on 16/10/21.
- */
+
 @Controller
 @RequestMapping(value = "/cloud/filesCode", produces = "application/json; charset=UTF-8")
 public class CloudCodeController extends RestBaseController {

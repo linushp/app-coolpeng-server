@@ -16,6 +16,7 @@ import com.coolpeng.framework.mvc.TMSResponse;
 import com.coolpeng.framework.mvc.TmsCurrentRequest;
 import com.coolpeng.framework.utils.DateUtil;
 import com.coolpeng.framework.utils.StringUtils;
+import com.coolpeng.framework.utils.UbibiPasswordUtils;
 import com.coolpeng.framework.utils.ipaddr.IPAddrCallback;
 import com.coolpeng.framework.utils.ipaddr.IPAddrParse;
 import com.coolpeng.framework.utils.ipaddr.IPAddrResult;
@@ -57,7 +58,7 @@ public class AppUserController extends RestBaseController {
     public TMSResponse login(@RequestBody JSONObject jsonObject) throws TMSMsgException, UpdateErrorException, FieldNotFoundException {
         ReqParams reqParams = ReqParams.parse(jsonObject);
         String username = jsonObject.getString("username");
-        String password = jsonObject.getString("password");
+        String password = jsonObject.getString("password");//md51
         /****************************************************************/
 
         TMSMsgException e = new TMSMsgException("用户名或密码错误");
@@ -75,7 +76,10 @@ public class AppUserController extends RestBaseController {
             throw e;
         }
 
-        if (!user.getPassword().equals(password)) {
+
+        String md52Password = UbibiPasswordUtils.md51ToMd52(password);
+
+        if (!user.getPassword().equals(md52Password)) {
             throw e;
         }
 
@@ -157,8 +161,7 @@ public class AppUserController extends RestBaseController {
     @ResponseBody
     @RequestMapping("/register")
     public TMSResponse register(@RequestBody JSONObject jsonObject) throws TMSMsgException, FieldNotFoundException, UpdateErrorException {
-        String password = jsonObject.getString("password");
-        String password2 = jsonObject.getString("password2");
+        String password = jsonObject.getString("password");//MD51
         String nickname = jsonObject.getString("nickname");
         String mail = jsonObject.getString("mail");
         String avatar = jsonObject.getString("avatar");
@@ -182,16 +185,19 @@ public class AppUserController extends RestBaseController {
             throw new TMSMsgException("密码不能为空", "password_empty");
         }
 
-        if (!password.equals(password2)){
-            throw new TMSMsgException("两次密码输入的不一致", "password_not_equal");
-        }
+//        if (!password.equals(password2)){
+//            throw new TMSMsgException("两次密码输入的不一致", "password_not_equal");
+//        }
+
         if (StringUtils.isBlank(nickname)) {
             throw new TMSMsgException("昵称不能为空", "nickname_empty");
         }
 
 
+        String md52Password = UbibiPasswordUtils.md51ToMd52(password);
+
         UserEntity newUser = new UserEntity();
-        newUser.setPassword(password);
+        newUser.setPassword(md52Password);
         newUser.setUsername(username);
         newUser.setNickname(nickname);
         newUser.setMail(mail);
