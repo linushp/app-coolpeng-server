@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.List;
+
 /**
  * Created by luanhaipeng on 16/10/26.
  */
@@ -31,8 +33,18 @@ public class UpgradeController {
             return TMSResponse.success("already upgrade");
         }
 
+        isDidUpgradePassword = true;
 
+        List<UserEntity> userList = UserEntity.DAO.findAll();
+        for (UserEntity userEntity:userList){
+            String password = userEntity.getPassword();
 
+            String md52Password = UbibiPasswordUtils.plainToMd52(password);
+
+            userEntity.setPassword(md52Password);
+
+            UserEntity.DAO.update(userEntity);
+        }
 
         return new TMSResponse();
     }
