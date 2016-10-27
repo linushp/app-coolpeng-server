@@ -251,7 +251,7 @@ public class AppUserController extends RestBaseController {
         UserEntity user0 = UserEntity.DAO.queryById(uid);
         if (user0!=null){
             //隐藏敏感信息
-            user0.hideSecretInfo();
+            user0 = user0.hideSecretInfo();
         }
         return TMSResponse.success(user0);
     }
@@ -303,7 +303,7 @@ public class AppUserController extends RestBaseController {
 
         if (user!=null){
             //隐藏敏感信息
-            user.hideSecretInfo();
+            user = user.hideSecretInfo();
         }
         return TMSResponse.success(user);
     }
