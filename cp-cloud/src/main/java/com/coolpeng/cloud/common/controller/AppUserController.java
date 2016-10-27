@@ -14,9 +14,7 @@ import com.coolpeng.framework.exception.TMSMsgException;
 import com.coolpeng.framework.exception.UpdateErrorException;
 import com.coolpeng.framework.mvc.TMSResponse;
 import com.coolpeng.framework.mvc.TmsCurrentRequest;
-import com.coolpeng.framework.utils.DateUtil;
-import com.coolpeng.framework.utils.StringUtils;
-import com.coolpeng.framework.utils.UbibiPasswordUtils;
+import com.coolpeng.framework.utils.*;
 import com.coolpeng.framework.utils.ipaddr.IPAddrCallback;
 import com.coolpeng.framework.utils.ipaddr.IPAddrParse;
 import com.coolpeng.framework.utils.ipaddr.IPAddrResult;
@@ -252,8 +250,12 @@ public class AppUserController extends RestBaseController {
 
         UserEntity user0 = UserEntity.DAO.queryById(uid);
         if (user0!=null){
-            user0.setPassword(null);////隐藏敏感信息
+            //隐藏敏感信息
+            user0.setLastLoginToken(null);
+            user0.setLastLoginIpAddr(null);
+            user0.setPassword(null);
         }
+
         return TMSResponse.success(user0);
     }
 
@@ -272,6 +274,9 @@ public class AppUserController extends RestBaseController {
 
         String id = jsonObject.getString("id");
         Map<String,Object> map = jsonObject.getObject("UserEntity", Map.class);
+
+        //暂时只允许修改昵称，头像，邮箱
+        map = CollectionUtil.pickupMapAttr(map,new String[]{"nickname","avatar","mail"});
 
         /***************************/
         UserEntity user = assertIsUserLoginIfToken(jsonObject);

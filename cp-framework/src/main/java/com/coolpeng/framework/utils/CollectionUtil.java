@@ -415,4 +415,14 @@ public class CollectionUtil {
     }
 
 
+    public static Map<String, Object> pickupMapAttr(Map<String, Object> map, String[] strings) {
+        Map<String, Object> result = new HashMap<>();
+
+        for (String s : strings){
+            Object value = map.get(s);
+            result.put(s,value);
+        }
+
+        return result;
+    }
 }
