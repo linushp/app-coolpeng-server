@@ -251,11 +251,8 @@ public class AppUserController extends RestBaseController {
         UserEntity user0 = UserEntity.DAO.queryById(uid);
         if (user0!=null){
             //隐藏敏感信息
-            user0.setLastLoginToken(null);
-            user0.setLastLoginIpAddr(null);
-            user0.setPassword(null);
+            user0.hideSecretInfo();
         }
-
         return TMSResponse.success(user0);
     }
 
@@ -304,11 +301,12 @@ public class AppUserController extends RestBaseController {
         TMSEventBus.asynSendEvent(new UserInfoUpdateEvent(user));
 
 
-        user.setPassword(null);
+        if (user!=null){
+            //隐藏敏感信息
+            user.hideSecretInfo();
+        }
         return TMSResponse.success(user);
     }
-
-
 
 
 }

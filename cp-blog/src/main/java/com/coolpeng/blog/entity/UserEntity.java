@@ -31,4 +31,10 @@ public class UserEntity extends TmsUserEntity {
         return PERMISSION_ADMIN.equals(this.getPermission());
     }
 
+    public void hideSecretInfo(){
+        this.setLastLoginToken(null);
+        this.setLastLoginIpAddr(null);
+        this.setPassword(null);
+    }
+
 }
