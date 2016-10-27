@@ -23,31 +23,4 @@ import java.util.List;
 @RequestMapping(value = "/cloud/upgrade/", produces = "application/json; charset=UTF-8")
 public class UpgradeController {
 
-    private static boolean isDidUpgradePassword = false;
-
-    @ResponseBody
-    @RequestMapping("/upgradePassword")
-    public TMSResponse upgradePassword() throws TMSMsgException, FieldNotFoundException, UpdateErrorException {
-
-        if (isDidUpgradePassword){
-            return TMSResponse.success("already upgrade");
-        }
-
-        isDidUpgradePassword = true;
-
-        List<UserEntity> userList = UserEntity.DAO.findAll();
-        for (UserEntity userEntity:userList){
-            String password = userEntity.getPassword();
-
-            String md52Password = UbibiPasswordUtils.plainToMd52(password);
-
-            userEntity.setPassword(md52Password);
-
-            UserEntity.DAO.update(userEntity);
-        }
-
-        return new TMSResponse();
-    }
-
-
 }
