@@ -10,59 +10,30 @@ import java.util.concurrent.TimeUnit;
  */
 public class QueueTaskRunner {
 
-    private LinkedBlockingQueue<QueueTask> taskQueue = null;
-
-    private boolean isRunning = false;
+    private ExecutorService threadPool = null;
 
     public QueueTaskRunner() {
-        this(1000);
+        threadPool = Executors.newSingleThreadExecutor();
     }
 
-    public QueueTaskRunner(int blockQueueCount) {
-        this.taskQueue = new LinkedBlockingQueue<>(blockQueueCount);
-    }
-
-    public void addTask(QueueTask task) {
-        startTaskRunner();
-        try {
-            taskQueue.put(task);
-        } catch (Exception e) {
-            e.printStackTrace();
+    public QueueTaskRunner(int threadCount) {
+        if(threadCount<=1){
+            threadPool = Executors.newSingleThreadExecutor();
+        }else {
+            threadPool = Executors.newFixedThreadPool(threadCount);
         }
     }
 
-    private void startTaskRunner() {
-
-        if (isRunning) {
-            return;
-        }
-
-        isRunning = true;
-
-
-        Thread thread = new Thread(new Runnable() {
+    public void addTask(final QueueTask task) {
+        threadPool.execute(new Runnable() {
             @Override
             public void run() {
-
-                while (true) {
-                    try {
-                        QueueTask task = taskQueue.poll();
-                        if (task != null) {
-                            try {
-                                task.runTask();
-                            } catch (Throwable e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    } catch (Throwable e) {
-                        e.printStackTrace();
-                    }
+                try {
+                    task.runTask();
+                }catch (Throwable e){
                 }
             }
         });
-
-        thread.start();
-
     }
 
 
