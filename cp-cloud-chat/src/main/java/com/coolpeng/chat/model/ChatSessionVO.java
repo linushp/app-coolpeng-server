@@ -30,6 +30,7 @@ public class ChatSessionVO {
     private String lastMsgNickname;
     private String lastMsgAvatar;
     private String lastMsgUid;
+    private int unReadCount = 0;// 未读消息数量
 
     public ChatSessionVO() {
     }
@@ -166,7 +167,6 @@ public class ChatSessionVO {
     public void setLastMsgAvatar(String lastMsgAvatar) {
         this.lastMsgAvatar = lastMsgAvatar;
     }
-
 
     @Override
     public boolean equals(Object o) {
