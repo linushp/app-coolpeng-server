@@ -4,6 +4,8 @@ import com.coolpeng.blog.entity.UserEntity;
 import com.coolpeng.chat.entity.ChatSessionMessage;
 import com.coolpeng.chat.model.ChatMsgVO;
 import com.coolpeng.chat.model.ChatSessionVO;
+import com.coolpeng.chat.utils.ChatConstant;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,16 +18,16 @@ import java.util.List;
 public class ChatSessionMessageService {
 
 
-    private static final int MAX_STORE_MSG_COUNT = 100;
-
     public void saveSessionMessage(UserEntity sendMessageUser, ChatSessionVO sessionVO, ChatMsgVO chatMsgVO) throws Exception {
         List<ChatMsgVO> msgList = this.getChatMsgList(sessionVO);
+
+
         msgList.add(chatMsgVO);
 
         //101
-        if (msgList.size() > MAX_STORE_MSG_COUNT) {
+        if (msgList.size() > ChatConstant.CHAT_SESSION_MAX_MSG_COUNT) {
             //101 -100
-            int begin = msgList.size() - MAX_STORE_MSG_COUNT;//1
+            int begin = msgList.size() - ChatConstant.CHAT_SESSION_MAX_MSG_COUNT;//1
             int end = msgList.size();//101
             msgList = msgList.subList(begin, end);//1,101
         }

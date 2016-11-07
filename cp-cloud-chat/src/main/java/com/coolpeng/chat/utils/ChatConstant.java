@@ -12,4 +12,6 @@ public class ChatConstant {
     public static final String PUBLIC_CHANNEL_ICON2 = "http://image.coolpeng.cn/avatar/fj-0001-0425/fj-0165.jpg";
     public static final ChatUserVO UBIBI_ROBOT_USER = new ChatUserVO("-1", "哔哔机器人", "哔哔机器人", UBIBI_ROBOT_ICON);
     public static final String UBIBI_ROBOT_HELLOWORLD = "你好，我是哔哔机器人，如果无聊了就跟我聊聊吧";
+
+    public static final int CHAT_SESSION_MAX_MSG_COUNT = 100;
 }

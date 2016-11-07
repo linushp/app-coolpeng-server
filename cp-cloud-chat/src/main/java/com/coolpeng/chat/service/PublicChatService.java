@@ -5,6 +5,7 @@ import com.coolpeng.chat.model.ChatMsgVO;
 import com.coolpeng.chat.model.ChatSessionVO;
 import com.coolpeng.chat.model.ChatUserVO;
 import com.coolpeng.chat.service.api.IChatMsgService;
+import com.coolpeng.chat.utils.ChatConstant;
 import com.coolpeng.chat.websocket.event.CreateSessionEvent;
 import com.coolpeng.chat.websocket.event.PublicMsgEvent;
 import com.coolpeng.framework.cache.CacheManager;
@@ -22,9 +23,8 @@ import java.util.List;
 @Service
 public class PublicChatService implements IChatMsgService {
 
-    private static final int MAX_STORE_COUNT = 100;
-
     private static final String CACHE_KEY = PublicChatService.class.getName();
+
 
     @Autowired
     private RecentSessionService recentSessionService;
@@ -34,12 +34,14 @@ public class PublicChatService implements IChatMsgService {
         String sessionId = sessionVO.getSessionId();
         LinkedList<ChatMsgVO> msgList = getChatMsgList(sessionVO);
         ChatMsgVO chatMsgVO = new ChatMsgVO(user, msg, msgId,messageType);
-        msgList.add(chatMsgVO);
 
-        if (msgList.size() > MAX_STORE_COUNT) {
+
+        msgList.add(chatMsgVO);
+        if (msgList.size() > ChatConstant.CHAT_SESSION_MAX_MSG_COUNT) {
             msgList.removeFirst();
         }
 
+        //0....100
         saveGroupChatMsgList(msgList, sessionId);
 
         if (isRefreshRecent){
